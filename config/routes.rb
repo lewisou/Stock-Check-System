@@ -1,4 +1,6 @@
 Scs::Application.routes.draw do
+  devise_for :admins
+
   resources :reports, :only => [] do
     collection do
       get 'count_varience'

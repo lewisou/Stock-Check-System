@@ -53,15 +53,18 @@ jQuery(function($) {
 	<div class="container_12 clearfix">
 		<div id="logo" class="grid_6">
 			<!-- replace with your website title or logo -->
-			<a id="site-title" href="dashboard.html"><span>Stock Check</span> system</a>
+			<a id="site-title" href="<%= root_path %>"><span>Stock Check</span> system</a>
 			<a id="view-site" href="http://www.vivax-metrotech.com">vivax-metrotech</a>
 		</div>
+		<% if admin_signed_in? %>
 		<div id="userinfo" class="grid_6">
 			Welcome, <a href="#">Rich</a>
 		</div>
+		<% end %>
 	</div>
 </header>
 
+<% if admin_signed_in? %>
 <nav id="topmenu">
 	<div class="container_12 clearfix">
 		<div class="grid_12">
@@ -107,26 +110,20 @@ jQuery(function($) {
 			</ul>
 			<ul id="usermenu">
 				<!-- <li><a href="#" class="inbox">Inbox (3)</a></li> -->
-				<li><a href="#">Logout</a></li>
+				<li><%= link_to 'Logout', destroy_admin_session_path %></li>
 			</ul>
 		</div>
 	</div>
 </nav>
+<% end %>
 
 <section id="content">
 <section class="container_12 clearfix">
-
-<% if flash[:notice] %>
-<div class="information msg">
-	This is an information message. Click to close.
-</div>
-<div class="clear"></div>
-<% end %>
-
 <%= content_for?(:content) ? yield(:content) : yield %>
 </section>
 </section>
 
+<% if admin_signed_in? %>
 <footer id="bottom">
 	<section class="container_12 clearfix">
 		<!-- <div class="grid_6">
@@ -140,6 +137,6 @@ jQuery(function($) {
 		</div>
 	</section>
 </footer>
-
+<% end %>
 </body>
 </html>

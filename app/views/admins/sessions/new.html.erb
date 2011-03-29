@@ -1,0 +1,38 @@
+<div id="login" class="box">
+	<h2>Login</h2>
+	<section>
+		<% if notice %>
+		<div class="information msg">
+		<%= notice %>
+		</div>
+		<div class="clear"></div>
+		<% end %>
+
+		<% if alert %>
+		<div class="error msg">
+		<%= alert %>
+		</div>
+		<div class="clear"></div>
+		<% end %>
+		
+		
+		<!-- <div class="error msg">Message if login failed</div> -->
+		<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+			<dl>
+				<dt><%= f.label :email %></dt>
+				<dd><%= f.text_field :email %></dd>
+			
+				<dt><%= f.label :password %></dt>
+				<dd><%= f.password_field :password %></dd>
+			</dl>
+			
+			<% if devise_mapping.rememberable? -%>
+			<label><%= f.check_box :remember_me %> Remember Me</label>
+			<% end -%>
+			
+			<p>
+				<%= f.submit "LOGIN", :class => "button gray", :id => "loginbtn" %>
+			</p>
+		<% end %>
+	</section>
+</div>

@@ -1,0 +1,23 @@
+<h1>Listing counters</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @counters.each do |counter| %>
+  <tr>
+    <td><%= counter.name %></td>
+    <td><%= link_to 'Show', counter %></td>
+    <td><%= link_to 'Edit', edit_counter_path(counter) %></td>
+    <td><%= link_to 'Destroy', counter, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Counter', new_counter_path %>

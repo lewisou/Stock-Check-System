@@ -1,0 +1,38 @@
+<%= form_for @tag, :html => {:class => 'uniform'} do |f| %>
+	<% if @tag.errors.any? %>
+		<div class="error msg">
+			<h2><%= pluralize(@tag.errors.count, "error") %> prohibited this tag from being saved:</h2>
+			<ul>
+			<% @tag.errors.full_messages.each do |msg| %>
+			<li><%= msg %></li>
+			<% end %>
+			</ul>
+		</div>	
+	<% end %>
+
+	<fieldset>
+		<legend>Form</legend>
+		<dl class="inline">
+			<dt><label for="name">Part Number</label></dt>
+			<dd>
+				<input type="text" id="name" class="medium required" size="50" />
+				<small>This is an input description</small>
+			</dd>
+
+			<dt><label for="select1">Location</label></dt>
+			<dd>
+				<select size="1" id="select1" class="medium required">
+					<option value="option1">AAA-XXX</option>
+					<option value="option2">BBB-DDD</option>
+					<option value="option3">CCC-123</option>
+					<option value="option4">FFFF-ccc</option>
+				</select>
+			</dd>
+		</dl>
+	</fieldset>
+	<div class="buttons">
+		<%= f.submit 'Save Tag', :class => 'button' %>
+		<button type="button" class="button white">Cancel</button>
+	</div>
+
+<% end %>

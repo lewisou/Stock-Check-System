@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<title>Stock Check System</title>
+<meta charset="utf-8">
+
+<%= stylesheet_link_tag 'style' %>
+<%= stylesheet_link_tag 'skins/yellow' %>
+
+<%= stylesheet_link_tag 'superfish' %>
+<%= stylesheet_link_tag 'uniform.default' %>
+<%= stylesheet_link_tag 'jquery.wysiwyg' %>
+<%= stylesheet_link_tag 'facebox' %>
+<%= stylesheet_link_tag 'demo_table_jui' %>
+<%= stylesheet_link_tag 'smoothness/jquery-ui-1.8.8.custom' %>
+
+<!--[if lte IE 8]>
+<%= javascript_include_tag 'html5' %>
+<%= javascript_include_tag 'selectivizr' %>
+<%= javascript_include_tag 'excanvas.min' %>
+<![endif]-->
+
+<%= javascript_include_tag 'jquery-1.4.4.min' %>
+<%= javascript_include_tag 'jquery-ui-1.8.8.custom.min' %>
+<%= javascript_include_tag 'jquery.dataTables.min' %>
+<%= javascript_include_tag 'jquery.validate.min' %>
+<%= javascript_include_tag 'jquery.uniform.min' %>
+<%= javascript_include_tag 'jquery.wysiwyg' %>
+<%= javascript_include_tag 'superfish' %>
+<%= javascript_include_tag 'cufon-yui' %>
+<%= javascript_include_tag 'Delicious_500.font' %>
+<%= javascript_include_tag 'jquery.flot.min' %>
+<%= javascript_include_tag 'custom' %>
+<%= javascript_include_tag 'facebox' %>
+
+<script type="text/javascript">
+jQuery(function($) {
+	$('#datatable').dataTable({
+		'bJQueryUI': true,
+		'sPaginationType': 'full_numbers'
+	});
+});
+</script>
+
+<%= javascript_include_tag 'rails' %>
+<%= csrf_meta_tag %>
+
+<style type="text/css"><%= yield :stylesheets %></style>
+</head>
+<body>
+
+<header id="top">
+	<div class="container_12 clearfix">
+		<div id="logo" class="grid_6">
+			<!-- replace with your website title or logo -->
+			<a id="site-title" href="dashboard.html"><span>Stock Check</span> system</a>
+			<a id="view-site" href="http://www.vivax-metrotech.com">vivax-metrotech</a>
+		</div>
+		<div id="userinfo" class="grid_6">
+			Welcome, <a href="#">Rich</a>
+		</div>
+	</div>
+</header>
+
+<nav id="topmenu">
+	<div class="container_12 clearfix">
+		<div class="grid_12">
+			<ul id="mainmenu" class="sf-menu">
+				<li class="current"><%= link_to 'Dashboard', root_path %></li>
+				<li><a href="#">Tags</a>
+					<ul>
+						<li><%= link_to 'Add', new_tag_path %></li>
+						<li><%= link_to 'Import From Quick Book', to_import_tags_path %></li>
+						<li><%= link_to 'List', tags_path %></li>
+						<li><%= link_to 'Missing Cost', missing_cost_tags_path %></li>
+						<li><%= link_to 'Print Tags', new_tag_path %></li>
+					</ul>
+				</li>
+				<li><a href="#">Count One</a>
+					<ul>
+						<li><%= link_to 'Date Entry', count_ones_path %></li>
+						<li><%= link_to 'Missing Tags', missing_tag_count_ones_path %></li>
+					</ul>
+				</li>
+				<li><a href="tables.html">Count Two</a>
+					<ul>
+						<li><a href="news.html">Date Entry</a></li>
+						<li><a href="gallery.html">Missing Tags</a></li>
+					</ul>
+				</li>
+				<li><a href="#">Reports</a>
+					<ul>
+						<li><%= link_to 'Count Varience', count_varience_reports_path %></li>
+						<li><%= link_to 'Final Valuation', to_import_tags_path %></li>
+						<li><%= link_to 'Final Valuation (Frozen QTYs)', tags_path %></li>
+					</ul>
+				</li>
+				<li><a href="#">Counters</a>
+					<ul>
+						<li><a href="news.html">News</a></li>
+						<li><a href="gallery.html">Photo Gallery</a></li>
+						<li><a href="settings.html">Settings</a></li>
+						<li><a href="login.html">Login</a></li>
+					</ul>
+				</li>
+				<li><a href="forms.html">Settings</a></li>
+			</ul>
+			<ul id="usermenu">
+				<!-- <li><a href="#" class="inbox">Inbox (3)</a></li> -->
+				<li><a href="#">Logout</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<section id="content">
+<section class="container_12 clearfix">
+
+<% if flash[:notice] %>
+<div class="information msg">
+	This is an information message. Click to close.
+</div>
+<div class="clear"></div>
+<% end %>
+
+<%= content_for?(:content) ? yield(:content) : yield %>
+</section>
+</section>
+
+<footer id="bottom">
+	<section class="container_12 clearfix">
+		<!-- <div class="grid_6">
+			<a href="#">Menu 1</a>
+			&middot; <a href="#">Menu 2</a>
+			&middot; <a href="#">Menu 3</a>
+			&middot; <a href="#">Menu 4</a>
+		</div> -->
+		<div class="grid_12 alignright">
+			Copyright (c) 2011 Vivax-Metrotech Group of Companies. All rights reserved. <br /><a href="www.vivax-metrotech.com">www.vivax-metrotech.com</a>
+		</div>
+	</section>
+</footer>
+
+</body>
+</html>

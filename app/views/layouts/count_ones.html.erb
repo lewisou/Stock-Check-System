@@ -1,0 +1,24 @@
+<% content_for :stylesheets do %>
+<% end %>
+
+<% content_for :content do %>
+<section id="main" class="grid_9 push_3">
+	<%= yield %>
+</section>
+
+<aside id="sidebar" class="grid_3 pull_9">
+	<div class="box menu">
+		<h2>Count One</h2>
+		<section>
+			<ul>
+				<li><%= link_to 'Date Entry', count_ones_path %></li>
+				<li><%= link_to 'Missing Tags', missing_tag_count_ones_path %></li>
+			</ul>
+		</section>
+	</div>
+
+</aside>
+
+<% end %>
+
+<%= render :file => 'layouts/application' %>

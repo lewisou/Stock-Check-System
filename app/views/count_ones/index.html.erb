@@ -1,0 +1,49 @@
+<% if @tag %>
+<article>
+	<h1>Count One Data Entry</h1>
+
+	<%= form_for @tag, :url => count_one_path(@tag) do |f| %>
+		<fieldset>
+			<legend>Input</legend>
+			<dl class="inline">
+				<dt><label>Tag Number</label></dt>
+				<dd><label><%= @tag.id %></label></dd>
+			
+				<dt><label>Location</label></dt>
+				<dd><label><%= @tag.location.try(:code) %> <%= @tag.location.try(:description) %> bla bla bla</label></dd>
+				
+				
+				<dt><label>Part Number</label></dt>
+				<dd><label><%= @tag.part.try(:code) %> 121212.1</label></dd>
+			
+				<dt><label>Description</label></dt>
+				<dd><label><%= @tag.part.try(:description) %> bla bla bla</label></dd>
+
+				<dt><%= f.label :count_1 %></dt>
+				<dd><%= f.text_field :count_1, :class => "medium required", :size => "50" %></dd>
+			</dl>
+
+			<div class="buttons">
+				<button type="submit" class="button">Save</button>
+			</div>
+		</fieldset>
+	<% end %>
+</article>
+<% end %>
+
+<article>
+	<%= form_for @search, :url => count_ones_path, :method => :get do |f| %>
+		<fieldset>
+			<legend>Search</legend>
+			<dl class="inline">
+				<dt><label for="name">Tag Number</label></dt>
+				<dd>
+					<%= f.text_field :id_eq, :class => "medium required", :size => "50" %>
+					<button type="submit" class="button small">Search</button>
+				</dd>
+			</dl>
+
+		</fieldset>
+	<% end %>
+</article>
+

@@ -1,0 +1,83 @@
+<article>
+	<form id="myForm" class="uniform" method="post">
+		<fieldset>
+			<legend>Filter</legend>
+			<dl class="inline">
+				<dt><label for="name">Tolerance</label></dt>
+				<dd>
+					<input type="text" id="name" class="small required" size="50" value="25" /> ($ in value)
+					<input type="text" id="name" class="small required" size="50" value="5" /> (% in quantity)
+				</dd>
+				<dt><label for="select1">Location</label></dt>
+				<dd>
+					<select size="1" id="select1" class="medium required">
+						<option value="option1">All Locations</option>
+						<option value="option1">AAA-1</option>
+						<option value="option2">AAA-2</option>
+						<option value="option3">AAA-3</option>
+						<option value="option4">AAA-4</option>
+					</select>
+				</dd>
+				
+			</dl>
+
+			<div class="buttons">
+				<button type="submit" class="button">Filter</button>
+			</div>
+
+		</fieldset>
+
+	</form>
+</article>
+
+
+<article>
+	<h1>Count Varience Report</h1>
+	
+	<table id="table1" class="gtable sortable">
+		<thead>
+			<tr>
+				<th>TAG #</th>
+				<th>Location</th>
+				<th>Part Number</th>
+				<th>Description</th>
+				<th>Count 1</th>
+				<th>Count 2</th>
+				<th>Value 1</th>
+				<th>Value 2</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% 50.times do |i| %>
+			<tr>
+				<td><%= i + 1 %></td>
+				<td>AAA-<%= i %></td>
+				<td>11111.2323.1</td>
+				<td>Bla bla bla bla bla bla blab lba</td>
+				<td>1</td>
+				<td>6</td>
+				<td>$1000</td>
+				<td>$6000</td>
+				<td><a href="#">count 3</a></td>
+			</tr>
+			<% end %>
+			
+			
+		</tbody>
+	</table>
+
+	<div class="tablefooter clearfix">
+		<div class="pagination">
+			<!--<a href="#">Prev</a>-->
+			<a href="#" class="current">1</a>
+			<a href="#">2</a>
+			<a href="#">3</a>
+			<a href="#">4</a>
+			<a href="#">5</a>
+			...
+			<a href="#">78</a>
+			<a href="#">Next</a>
+		</div>
+	</div>
+</article>

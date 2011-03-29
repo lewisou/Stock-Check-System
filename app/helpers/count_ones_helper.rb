@@ -1,0 +1,2 @@
+module CountOnesHelper
+end

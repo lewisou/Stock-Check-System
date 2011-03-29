@@ -69,8 +69,8 @@ jQuery(function($) {
 	<div class="container_12 clearfix">
 		<div class="grid_12">
 			<ul id="mainmenu" class="sf-menu">
-				<li class="current"><%= link_to 'Dashboard', root_path %></li>
-				<li><a href="#">Tags</a>
+				<li <%= "class='current'" if @nav == :dashboard %>><%= link_to 'Dashboard', root_path %></li>
+				<li <%= "class='current'" if @nav == :tag %>><a href="#">Tags</a>
 					<ul>
 						<li><%= link_to 'Add', new_tag_path %></li>
 						<li><%= link_to 'Import From Quick Book', to_import_tags_path %></li>
@@ -79,7 +79,7 @@ jQuery(function($) {
 						<li><%= link_to 'Print Tags', new_tag_path %></li>
 					</ul>
 				</li>
-				<li><a href="#">Count One</a>
+				<li <%= "class='current'" if @nav == :count_one %>><a href="#">Count One</a>
 					<ul>
 						<li><%= link_to 'Date Entry', count_ones_path %></li>
 						<li><%= link_to 'Missing Tags', missing_tag_count_ones_path %></li>
@@ -91,7 +91,7 @@ jQuery(function($) {
 						<li><a href="gallery.html">Missing Tags</a></li>
 					</ul>
 				</li>
-				<li><a href="#">Reports</a>
+				<li <%= "class='current'" if @nav == :report %>><a href="#">Reports</a>
 					<ul>
 						<li><%= link_to 'Count Varience', count_varience_reports_path %></li>
 						<li><%= link_to 'Final Valuation', to_import_tags_path %></li>
@@ -100,10 +100,8 @@ jQuery(function($) {
 				</li>
 				<li><a href="#">Counters</a>
 					<ul>
-						<li><a href="news.html">News</a></li>
-						<li><a href="gallery.html">Photo Gallery</a></li>
-						<li><a href="settings.html">Settings</a></li>
-						<li><a href="login.html">Login</a></li>
+						<li><a href="#">List</a></li>
+						<li><a href="#">Check Area</a></li>
 					</ul>
 				</li>
 				<li><a href="forms.html">Settings</a></li>

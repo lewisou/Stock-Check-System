@@ -1,0 +1,5 @@
+<ul>
+	<li <%= "class='current'" if @sub_menu == :entry && @c_i == count %>><%= link_to 'Date Entry', counts_path(:count => count) %></li>
+	<li <%= "class='current'" if @sub_menu == :missing && @c_i == count %>><%= link_to 'Missing Tags', missing_tag_counts_path(:count => count) %></li>
+	<li <%= "class='current'" if @sub_menu == :result && @c_i == count %>><%= link_to "Count #{count} Result", result_counts_path(:count => count) %></li>
+</ul>

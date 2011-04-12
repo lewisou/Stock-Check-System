@@ -1,0 +1,38 @@
+<% @sub_menu = :missing_cost %>
+<article>
+	<h1>Input cost</h1>
+	<%= form_for @part, :url => update_price_part_path(@part), :html => {:class => 'uniform'} do |f| %>
+		<% if @part.errors.any? %>
+			<div class="error msg">
+				<h2><%= pluralize(@part.errors.count, "error") %> prohibited this tag from being saved:</h2>
+				<ul>
+				<% @part.errors.full_messages.each do |msg| %>
+				<li><%= msg %></li>
+				<% end %>
+				</ul>
+			</div>	
+		<% end %>
+
+		<fieldset>
+			<legend>Form</legend>
+			<dl class="inline">
+				<dt><%= f.label :code %></dt>
+				<dd>
+					<%= f.label :code, @part.code %>
+				</dd>
+				<dt><%= f.label :description %></dt>
+				<dd>
+					<%= f.label :description, @part.description %>
+				</dd>
+				<dt><%= f.label :cost %></dt>
+				<dd>
+					<%= f.text_field :cost, :class => "medium required" %>
+				</dd>
+			</dl>
+		</fieldset>
+		<div class="buttons">
+			<%= f.submit 'Input price', :class => 'button' %>
+		</div>
+
+	<% end %>
+</article>

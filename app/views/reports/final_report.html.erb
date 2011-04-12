@@ -1,0 +1,61 @@
+<article>
+	<%= form_for @search, :url => final_report_reports_path, :method => :get do |f| %>
+		<fieldset>
+			<legend>Filter</legend>
+			<dl class="inline">
+				<dt><%= f.label :id_eq %></dt>
+				<dd><%= f.text_field :id_eq, :tabindex => 1 %></dd>
+
+				<dt><%= f.label :part_code_like %></dt>
+				<dd><%= f.text_field :part_code_like, :tabindex => 2 %></dd>
+
+				<dt><label for="select1">Location</label></dt>
+				<dd>
+					<%= f.collection_select(:location_id_eq, Location.all, :id, :code, {:include_blank => true}, {:class => "medium required", :tabindex => 3}) %>
+				</dd>
+			</dl>
+
+			<div class="buttons">
+				<button type="submit" class="button">Search</button>
+			</div>
+		</fieldset>
+	<% end %>
+</article>
+
+
+<article>
+	<h1>Final Report</h1>
+	
+	<table id="table1" class="gtable sortable">
+		<thead>
+			<tr>
+				<th>TAG #</th>
+				<th>Location</th>
+				<th>Part Number</th>
+				<th>Description</th>
+				<th>Counted</th>
+				<th>Cost</th>
+				<th>Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @tags.each do |tag| %>
+			<tr>
+				<td><%= tag.id %></td>
+				<td><%= tag.location.try(:code) %></td>
+				<td><%= tag.part.try(:code) %></td>
+				<td><%= tag.part.try(:description).to_s[0, 30] %></td>
+				<td><%= tag.final_count %></td>
+				<td><%= tag.part.try(:cost) %></td>
+				<td><%= tag.final_count * (tag.part.try(:cost) || 0) %></td>
+			</tr>
+			<% end %>
+			
+			
+		</tbody>
+	</table>
+
+	<div class="tablefooter clearfix">
+		<%= will_paginate @tags %>
+	</div>
+</article>

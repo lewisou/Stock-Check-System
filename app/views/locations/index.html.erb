@@ -1,0 +1,32 @@
+<article>
+	<h1>Locations</h1>
+
+	<table id="table1" class="gtable sortable">
+		<thead>
+			<tr>
+				<th>Code</th>
+				<th>Description</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @locations.each do |location| %>
+			<tr>
+				<td><%= location.code %></td>
+				<td><%= location.description %></td>
+				<td>
+					<a href="#" title="Edit"><img src="images/icons/edit.png" alt="Edit" /></a>
+					<a href="#" title="Delete"><img src="images/icons/cross.png" alt="Delete" /></a>
+				</td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+
+	<div class="tablefooter clearfix">
+		<div class="actions">
+			<%= link_to 'Add location', new_location_path %>
+		</div>
+	</div>
+
+</article>

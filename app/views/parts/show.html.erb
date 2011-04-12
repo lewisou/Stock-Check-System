@@ -1,0 +1,19 @@
+<% @sub_menu = :missing_cost %>
+<article>
+	<h1>Item</h1>
+	
+	<table class="infos">
+		<tr>
+			<th>Part Number</th>
+			<td><%= @part.code %></td>
+		</tr>
+		<tr>
+			<th>Description</th>
+			<td><%= @part.description %></td>
+		</tr>
+		<tr>
+			<th>Cost</th>
+			<td><%= @part.cost %></td>
+		</tr>
+	</table>
+</article>

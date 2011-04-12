@@ -1,0 +1,72 @@
+<article>
+	<%= form_for @search, :method => :get do |f| %>
+		<fieldset>
+			<legend>Filter</legend>
+			<dl class="inline">
+				<dt><%= f.label :code_like %></dt>
+				<dd>
+				<%= f.text_field :code_like, :class => "medium required", :size => "50" %>
+				<%= f.submit 'Search', :class => 'button' %>
+				</dd>
+			</dl>
+
+		</fieldset>
+	<% end %>
+</article>
+
+<article>
+	<h1>Items List</h1>
+	<table id="table2" class="gtable detailtable">
+		<thead>
+			<tr>
+				<th>Part Number</th>
+				<th>Description</th>
+				<th>Cost</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @parts.each do |part| %>
+			<tr>
+				<td><%= part.code %></td>
+				<td><%= part.description[0, 40] %> <%= "..." if part.description.size > 40 %></td>
+				<td><%= part.cost %></td>
+				<td>
+					<% if part.tags.count > 0 %>
+					<a href="#" class="detail-link">Tags (<%= part.tags.count %>)</a>
+					<% end %>
+					<%= link_to 'Create Tag', new_part_tag_path(part) %>
+				</td>
+			</tr>
+			<tr class="detail">
+				<td colspan="4">
+					<table>
+						<thead>
+							<tr>
+								<th>Tag Number</th>
+								<th>Location Code</th>
+								<th>Location Description</th>
+								<th>Created at</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% part.tags.each do |tag| %>
+							<tr>
+								<td><%= tag.id %></td>
+								<td><%= tag.location.try(:code) %></td>
+								<td><%= tag.location.try(:description) %></td>
+								<td><%= tag.created_at %></td>
+							</tr>
+							<% end %>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	
+	<div class="tablefooter clearfix">
+		<%= will_paginate @parts %>
+	</div>
+</article>

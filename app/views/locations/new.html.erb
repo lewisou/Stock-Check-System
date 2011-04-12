@@ -1,0 +1,38 @@
+<article>
+	<h1>New location</h1>
+
+	<%= form_for @location, :html => {:class => 'uniform'} do |f| %>
+		<% if @location.errors.any? %>
+			<div class="error msg">
+				<h2><%= pluralize(@location.errors.count, "error") %> prohibited this tag from being saved:</h2>
+				<ul>
+				<% @location.errors.full_messages.each do |msg| %>
+				<li><%= msg %></li>
+				<% end %>
+				</ul>
+			</div>	
+		<% end %>
+
+		<fieldset>
+			<legend>Form</legend>
+			<dl class="inline">
+				<dt><%= f.label :code %></dt>
+				<dd>
+					<%= f.text_field :code, :class => "medium required" %>
+				</dd>
+				
+				<dt><%= f.label :description %></dt>
+				<dd>
+					<%= f.text_area :description, :class => "medium required" %>
+				</dd>
+				
+			</dl>
+		</fieldset>
+		<div class="buttons">
+			<%= f.submit 'Save Tag', :class => 'button' %>
+		</div>
+
+	<% end %>
+
+
+</article>

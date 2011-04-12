@@ -1,0 +1,24 @@
+<article>
+	<h1>Enter Cost</h1>
+
+	<%= form_for @part do |f| %>
+		<fieldset>
+			<legend>Input</legend>
+			<dl class="inline">
+
+				<dt><label>Part Number</label></dt>
+				<dd><label><%= @part.try(:code) %></label></dd>
+
+				<dt><label>Description</label></dt>
+				<dd><label><%= @part.try(:description) %></label></dd>
+
+				<dt><%= f.label :cost %></dt>
+				<dd><%= f.text_field :count_1, :class => "medium required", :size => "50" %></dd>
+			</dl>
+
+			<div class="buttons">
+				<button type="submit" class="button">Save</button>
+			</div>
+		</fieldset>
+	<% end %>
+</article>

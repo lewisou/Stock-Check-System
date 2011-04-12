@@ -1,0 +1,52 @@
+<% @sub_menu = :missing %>
+<article>
+	<form id="myForm" class="uniform" method="post">
+		<fieldset>
+			<legend>Filter</legend>
+			<dl class="inline">
+				<dt><label>Filter by Location</label></dt>
+				<dd>
+					<select size="1" id="select1" class="medium required">
+						<option value="option1">All Locations</option>
+						<option value="option2">AAA-1</option>
+						<option value="option3">BBB-2</option>
+						<option value="option4">CCC-1</option>
+					</select>
+				</dd>
+			</dl>
+		</fieldset>
+	</form>
+</article>
+
+<article>
+	<h1>Missing Tags</h1>
+	<table id="table1" class="gtable sortable">
+		<thead>
+			<tr>
+				<th>Tag Number</th>
+				<th>Part Number</th>
+				<th>Location</th>
+				<th>Count <%= @c_i %></th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<% @tags.each do |tag| %>
+			<tr>
+				<td><%= tag.id %></td>
+				<td><%= tag.part.try(:code) %></td>
+				<td><%= tag.location.try(:code) %></td>
+				<td><%= tag.send(@c_s) %></td>
+				<td>
+					<a href="#">Print</a>
+				</td>
+			</tr>
+			<% end %>
+			
+		</tbody>
+	</table>
+	<div class="tablefooter clearfix">
+		<%= will_paginate @tags %>
+	</div>
+</article>

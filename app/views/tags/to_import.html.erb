@@ -1,15 +1,17 @@
+<% @sub_menu = :import %>
 <article>
-	<h1>Import from Quick Book</h1>
-	<form id="myForm" class="uniform" method="post">
-		<fieldset>
-			<legend>Form</legend>
-			<dl class="inline">
-				<dt><label for="upload">Excel/CSV</label></dt>
-				<dd><input type="file" id="upload" /></dd>
-			</dl>
-			<div class="buttons">
-				<button type="submit" class="button">Import</button>
-			</div>
-		</fieldset>
-	</form>
+	<h1>Import from All Order</h1>
+
+	<%= form_tag import_tags_path, :method => :post, :class => 'uniform', :multipart => true do %>
+	<fieldset>
+		<legend>Form</legend>
+		<dl class="inline">
+			<dt><label for="upload">Excel/CSV</label></dt>
+			<dd><%= file_field_tag :file %></dd>
+		</dl>
+		<div class="buttons">
+			<%= submit_tag 'Import', :class => 'button' %>
+		</div>
+	</fieldset>
+	<% end %>
 </article>

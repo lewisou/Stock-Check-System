@@ -1,4 +1,4 @@
-<%= form_for @tag, :html => {:class => 'uniform'} do |f| %>
+<%= form_for @tag, :url => part_tags_path(@part), :html => {:class => 'uniform'} do |f| %>
 	<% if @tag.errors.any? %>
 		<div class="error msg">
 			<h2><%= pluralize(@tag.errors.count, "error") %> prohibited this tag from being saved:</h2>
@@ -13,26 +13,22 @@
 	<fieldset>
 		<legend>Form</legend>
 		<dl class="inline">
-			<dt><label for="name">Part Number</label></dt>
+			<dt><%= f.label :item_code %></dt>
 			<dd>
-				<input type="text" id="name" class="medium required" size="50" />
-				<small>This is an input description</small>
+				<%= f.label :item_code, @tag.part.code %>
 			</dd>
-
+			<dt><%= f.label :item_description %></dt>
+			<dd>
+				<%= f.label :item_description, @tag.part.description %>
+			</dd>
 			<dt><label for="select1">Location</label></dt>
 			<dd>
-				<select size="1" id="select1" class="medium required">
-					<option value="option1">AAA-XXX</option>
-					<option value="option2">BBB-DDD</option>
-					<option value="option3">CCC-123</option>
-					<option value="option4">FFFF-ccc</option>
-				</select>
+				<%= f.collection_select(:location_id, Location.all, :id, :code, :include_blank => true) %>
 			</dd>
 		</dl>
 	</fieldset>
 	<div class="buttons">
-		<%= f.submit 'Save Tag', :class => 'button' %>
-		<button type="button" class="button white">Cancel</button>
+		<%= f.submit :class => 'button' %>
 	</div>
 
 <% end %>

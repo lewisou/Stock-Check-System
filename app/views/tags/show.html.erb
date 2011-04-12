@@ -1,20 +1,31 @@
-<p id="notice"><%= notice %></p>
+<article>
 
-<p>
-  <b>Count 1:</b>
-  <%= @tag.count_1 %>
-</p>
+<table class="infos">
+	<tr>
+		<th>Tag Number</th>
+		<td><%= @tag.id %> <%= barcode(@tag.id.to_s) %></td>
+	</tr>
+	<tr>
+		<th>Item Number</th>
+		<td><%= @tag.part.try(:code) %></td>
+	</tr>
+	<tr>
+		<th>Description</th>
+		<td><%= @tag.part.try(:description) %></td>
+	</tr>
+	<tr>
+		<th>Location</th>
+		<td><%= @tag.location.try(:code) %></td>
+	</tr>
+	<tr>
+		<th>Date</th>
+		<td><%= @tag.created_at.to_date %></td>
+	</tr>
+</table>
 
-<p>
-  <b>Count 2:</b>
-  <%= @tag.count_2 %>
-</p>
-
-<p>
-  <b>Count 3:</b>
-  <%= @tag.count_3 %>
-</p>
-
-
-<%= link_to 'Edit', edit_tag_path(@tag) %> |
-<%= link_to 'Back', tags_path %>
+<div class="tablefooter clearfix">
+	<div class="actions">
+	<%= link_to 'Print', root_path %>
+	</div>
+</div>
+</article>

@@ -1,3 +1,25 @@
+<% @sub_menu = :list %>
+
+<article>
+	<%= form_for @search do |f| %>
+		<fieldset>
+			<legend>Search</legend>
+			<dl class="inline">
+				<dt><%= f.label :part_code_contains %></dt>
+				<dd><%= f.text_field :part_code_contains %></dd>
+
+				<dt><%= f.label :location_id_eq %></dt>
+				<dd>
+					<%= f.collection_select(:location_id_eq, Location.all, :id, :code, :include_blank => true) %>
+					<button type="submit" class="button small">Search</button>
+					<button type="submit" class="button small">Print Result</button>
+				</dd>
+			</dl>
+
+		</fieldset>
+	<% end %>
+</article>
+
 <article>
 	<h1>All Tags</h1>
 	
@@ -15,15 +37,16 @@
 		</thead>
 		
 		<tbody>
+			<% @tags.each do |tag| %>
 			<tr>
-				<td>101</td>
-				<td>11122010.1 <a href="#" class="detail-link">Description</a></td>
-				<td>ACAASS</td>
-				<td>924.55</td>
+				<td><%= tag.id %></td>
+				<td><%= tag.part.try(:code) %> <a href="#" class="detail-link">Description</a></td>
+				<td><%= tag.location.try(:code) %></td>
+				<td><%= tag.part.try(:cost) %></td>
 				<td>
 					<a href="#" title="Edit"><img src="images/icons/edit.png" alt="Edit" /></a>
 					<a href="#" title="Delete"><img src="images/icons/cross.png" alt="Delete" /></a>
-					<a href="#" title="Print">Print</a>
+					<%= link_to 'Print', tag_path(tag), :title => 'Print' %>
 				</td>
 			</tr>
 			<tr class="detail">
@@ -32,74 +55,18 @@
 						<tbody>
 							<tr>
 								<th>Description</th>
-								<td>bla bla bla bla</td>
+								<td><%= tag.part.try(:description) %></td>
 							</tr>
 						</tbody>
 					</table>
 				</td>
 			</tr>
-
-			<tr>
-				<td>101</td>
-				<td>11122010.1 <a href="#" class="detail-link">Description</a></td>
-				<td>ACAASS</td>
-				<td>924.55</td>
-				<td>
-					<a href="#" title="Edit"><img src="images/icons/edit.png" alt="Edit" /></a>
-					<a href="#" title="Delete"><img src="images/icons/cross.png" alt="Delete" /></a>
-					<a href="#" title="Print">Print</a>
-				</td>
-			</tr>
-			<tr class="detail">
-				<td colspan="5">
-					<table>
-						<tbody>
-							<tr>
-								<th>Description</th>
-								<td>bla bla bla bla</td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-
-			<tr>
-				<td>101</td>
-				<td>11122010.1 <a href="#" class="detail-link">Description</a></td>
-				<td>ACAASS</td>
-				<td>924.55</td>
-				<td>
-					<a href="#" title="Edit"><img src="images/icons/edit.png" alt="Edit" /></a>
-					<a href="#" title="Delete"><img src="images/icons/cross.png" alt="Delete" /></a>
-					<a href="#" title="Print">Print</a>
-				</td>
-			</tr>
-			<tr class="detail">
-				<td colspan="5">
-					<table>
-						<tbody>
-							<tr>
-								<th>Description</th>
-								<td>bla bla bla bla</td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
+			<% end %>
 
 		</tbody>
 	</table>
 	
 	<div class="tablefooter clearfix">
-		<div class="pagination">
-			<!--<a href="#">Prev</a>-->
-			<a href="#" class="current">1</a>
-			<a href="#">2</a>
-			<a href="#">3</a>
-			<a href="#">4</a>
-			<a href="#">5</a>
-			...
-			<a href="#">78</a>
-			<a href="#">Next</a>
-		</div>
+		<%= will_paginate @tags %>
 	</div>
+</article>

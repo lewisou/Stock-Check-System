@@ -1,5 +1,7 @@
 class Part < ActiveRecord::Base
+  has_many :tags
 end
+
 
 # == Schema Information
 #
@@ -11,5 +13,6 @@ end
 #  cost        :float
 #  created_at  :datetime
 #  updated_at  :datetime
+#  qb_id       :integer
 #
 

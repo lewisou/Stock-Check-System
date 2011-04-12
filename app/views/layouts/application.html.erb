@@ -70,37 +70,28 @@ jQuery(function($) {
 		<div class="grid_12">
 			<ul id="mainmenu" class="sf-menu">
 				<li <%= "class='current'" if @nav == :dashboard %>><%= link_to 'Dashboard', root_path %></li>
-				<li <%= "class='current'" if @nav == :tag %>><a href="#">Tags</a>
-					<ul>
-						<li><%= link_to 'Add', new_tag_path %></li>
-						<li><%= link_to 'Import From Quick Book', to_import_tags_path %></li>
-						<li><%= link_to 'List', tags_path %></li>
-						<li><%= link_to 'Missing Cost', missing_cost_tags_path %></li>
-						<li><%= link_to 'Print Tags', new_tag_path %></li>
-					</ul>
+				<li <%= "class='current'" if @nav == :tag %>><a href="#">Inventory</a>
+					<%= render :partial => 'shared/inventory_ul' %>
 				</li>
-				<li <%= "class='current'" if @nav == :count_one %>><a href="#">Count One</a>
-					<ul>
-						<li><%= link_to 'Date Entry', count_ones_path %></li>
-						<li><%= link_to 'Missing Tags', missing_tag_count_ones_path %></li>
-					</ul>
+				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>><a href="#">Count 1</a>
+					<%= render :partial => 'shared/count_ul', :locals => {:count => 1} %>
 				</li>
-				<li><a href="tables.html">Count Two</a>
-					<ul>
-						<li><a href="news.html">Date Entry</a></li>
-						<li><a href="gallery.html">Missing Tags</a></li>
-					</ul>
+				<li <%= "class='current'" if @nav == :count && @c_i == 2 %>><a href="#">Count 2</a>
+					<%= render :partial => 'shared/count_ul', :locals => {:count => 2} %>
+				</li>
+				<li <%= "class='current'" if @nav == :count && @c_i == 3 %>><a href="#">Count 3</a>
+					<%= render :partial => 'shared/count_ul', :locals => {:count => 3} %>
 				</li>
 				<li <%= "class='current'" if @nav == :report %>><a href="#">Reports</a>
 					<ul>
 						<li><%= link_to 'Count Varience', count_varience_reports_path %></li>
-						<li><%= link_to 'Final Valuation', to_import_tags_path %></li>
+						<li><%= link_to 'Final Valuation', final_report_reports_path %></li>
 						<li><%= link_to 'Final Valuation (Frozen QTYs)', tags_path %></li>
 					</ul>
 				</li>
 				<li><a href="#">Counters</a>
 					<ul>
-						<li><a href="#">List</a></li>
+						<li><%= link_to 'List', counters_path %></li>
 						<li><a href="#">Check Area</a></li>
 					</ul>
 				</li>
@@ -131,7 +122,7 @@ jQuery(function($) {
 			&middot; <a href="#">Menu 4</a>
 		</div> -->
 		<div class="grid_12 alignright">
-			Copyright (c) 2011 Vivax-Metrotech Group of Companies. All rights reserved. <br /><a href="www.vivax-metrotech.com">www.vivax-metrotech.com</a>
+			Copyright (c) 2011 Vivax-Metrotech Group of Companies. All rights reserved. <br /><a href="http://www.vivax-metrotech.com">www.vivax-metrotech.com</a>
 		</div>
 	</section>
 </footer>

@@ -1,33 +1,24 @@
 <article>
-	<form id="myForm" class="uniform" method="post">
+	<%= form_for @search, :url => count_varience_reports_path, :method => :get do |f| %>
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
 				<dt><label for="name">Tolerance</label></dt>
 				<dd>
-					<input type="text" id="name" class="small required" size="50" value="25" /> ($ in value)
-					<input type="text" id="name" class="small required" size="50" value="5" /> (% in quantity)
+					<%= f.text_field :tolerance_v, :class => "small required", :tabindex => 1 %> (> $ in value)
+					<%= f.text_field :tolerance_q, :class => "small required", :tabindex => 2 %> (> % in quantity)
 				</dd>
 				<dt><label for="select1">Location</label></dt>
 				<dd>
-					<select size="1" id="select1" class="medium required">
-						<option value="option1">All Locations</option>
-						<option value="option1">AAA-1</option>
-						<option value="option2">AAA-2</option>
-						<option value="option3">AAA-3</option>
-						<option value="option4">AAA-4</option>
-					</select>
+					<%= f.collection_select(:location_id_eq, Location.all, :id, :code, {:include_blank => true}, {:class => "small required", :tabindex => 3}) %>
 				</dd>
-				
 			</dl>
 
 			<div class="buttons">
 				<button type="submit" class="button">Filter</button>
 			</div>
-
 		</fieldset>
-
-	</form>
+	<% end %>
 </article>
 
 
@@ -49,16 +40,16 @@
 			</tr>
 		</thead>
 		<tbody>
-			<% 50.times do |i| %>
+			<% @tags.each do |tag| %>
 			<tr>
-				<td><%= i + 1 %></td>
-				<td>AAA-<%= i %></td>
-				<td>11111.2323.1</td>
-				<td>Bla bla bla bla bla bla blab lba</td>
-				<td>1</td>
-				<td>6</td>
-				<td>$1000</td>
-				<td>$6000</td>
+				<td><%= tag.id %></td>
+				<td><%= tag.location.try(:code) %></td>
+				<td><%= tag.part.try(:code) %></td>
+				<td><%= tag.part.try(:description).to_s[0, 30] %></td>
+				<td><%= tag.count_1 %></td>
+				<td><%= tag.count_2 %></td>
+				<td><%= (tag.count_1 || 0) * (tag.part.try(:cost) || 0.0) %></td>
+				<td><%= (tag.count_2 || 0) * (tag.part.try(:cost) || 0.0) %></td>
 				<td><a href="#">count 3</a></td>
 			</tr>
 			<% end %>
@@ -68,16 +59,6 @@
 	</table>
 
 	<div class="tablefooter clearfix">
-		<div class="pagination">
-			<!--<a href="#">Prev</a>-->
-			<a href="#" class="current">1</a>
-			<a href="#">2</a>
-			<a href="#">3</a>
-			<a href="#">4</a>
-			<a href="#">5</a>
-			...
-			<a href="#">78</a>
-			<a href="#">Next</a>
-		</div>
+		<%= will_paginate @tags %>
 	</div>
 </article>

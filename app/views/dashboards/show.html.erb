@@ -2,30 +2,18 @@
 
 <section id="main" class="grid_12">
 	<article id="dashboard">
-		<% if notice %>
-		<div class="information msg">
-		<%= notice %>
-		</div>
-		<div class="clear"></div>
-		<% end %>
-
-		<% if alert %>
-		<div class="error msg">
-		<%= alert %>
-		</div>
-		<div class="clear"></div>
-		<% end %>
-
+		<%= render :partial => 'shared/flash' %>
+		
 		<h1>Dashboard</h1>
 
 		<h2>Quick Links</h2>
 		<section class="icons">
 			<ul>
 				<li>
-					<%= link_to raw("#{image_tag('eleganticons/Paper.png')} <span>Tags</span>"), tags_path %>
+					<%= link_to raw("#{image_tag('eleganticons/Paper.png')} <span>Inventory</span>"), tags_path %>
 				</li>
 				<li>
-					<%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count One</span>"), count_ones_path %>
+					<%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count One</span>"), counts_path %>
 				</li>
 				<li>
 					<a href="#">

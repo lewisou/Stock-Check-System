@@ -4,6 +4,7 @@ describe Part do
   pending "add some examples to (or delete) #{__FILE__}"
 end
 
+
 # == Schema Information
 #
 # Table name: parts
@@ -14,5 +15,6 @@ end
 #  cost        :float
 #  created_at  :datetime
 #  updated_at  :datetime
+#  qb_id       :integer
 #
 

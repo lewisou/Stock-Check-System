@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110329122720) do
+ActiveRecord::Schema.define(:version => 20110411063229) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -30,11 +30,6 @@ ActiveRecord::Schema.define(:version => 20110329122720) do
 
   add_index "admins", ["email"], :name => "index_admins_on_email", :unique => true
   add_index "admins", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
-
-  create_table "boxes", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "checks", :force => true do |t|
     t.string   "state"
@@ -61,6 +56,7 @@ ActiveRecord::Schema.define(:version => 20110329122720) do
     t.float    "cost"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "qb_id"
   end
 
   create_table "tags", :force => true do |t|
@@ -69,6 +65,8 @@ ActiveRecord::Schema.define(:version => 20110329122720) do
     t.integer  "count_3"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "location_id"
+    t.integer  "part_id"
   end
 
 end

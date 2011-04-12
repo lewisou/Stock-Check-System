@@ -1,17 +1,19 @@
 Scs::Application.routes.draw do
   devise_for :admins
 
+  resources :locations
+
   resources :reports, :only => [] do
     collection do
-      get 'count_varience'
+      get 'count_varience', 'final_report'
     end
   end
   
   resources :counters
 
-  resources :count_ones do
+  resources :counts do
     collection do
-      get 'missing_tag'
+      get 'missing_tag', 'result'
     end
   end
 
@@ -23,9 +25,24 @@ Scs::Application.routes.draw do
 
   resources :tags do
     collection do
-      get 'to_import', 'missing_cost'
+      get 'to_import'
       post 'import'
     end
+  end
+  
+  resources :prints
+    
+  resources :parts do
+    collection do
+      get 'missing_cost'
+    end
+    
+    member do
+      get 'input_price'
+      put 'update_price'
+    end
+    
+    resources :tags
   end
 
   # The priority is based upon order of creation:

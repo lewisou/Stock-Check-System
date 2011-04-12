@@ -1,0 +1,1 @@
+require 'ext/prawn/table/cell/image'

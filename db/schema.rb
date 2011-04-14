@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110411063229) do
+ActiveRecord::Schema.define(:version => 20110414081820) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -35,6 +35,9 @@ ActiveRecord::Schema.define(:version => 20110411063229) do
     t.string   "state"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "current",     :default => false
+    t.text     "description"
+    t.integer  "admin_id"
   end
 
   create_table "counters", :force => true do |t|
@@ -43,20 +46,54 @@ ActiveRecord::Schema.define(:version => 20110411063229) do
     t.datetime "updated_at"
   end
 
-  create_table "locations", :force => true do |t|
-    t.string   "code"
-    t.text     "description"
+  create_table "counters_locations", :id => false, :force => true do |t|
+    t.integer "counter_id"
+    t.integer "location_id"
+  end
+
+  add_index "counters_locations", ["counter_id"], :name => "index_counters_locations_on_counter_id"
+  add_index "counters_locations", ["location_id"], :name => "index_counters_locations_on_location_id"
+
+  create_table "inventories", :force => true do |t|
+    t.integer  "item_id"
+    t.integer  "location_id"
+    t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "parts", :force => true do |t|
+  create_table "item_groups", :force => true do |t|
+    t.text     "name"
+    t.string   "item_type"
+    t.string   "item_type_short"
+    t.boolean  "is_purchased"
+    t.boolean  "is_sold"
+    t.boolean  "is_used"
+    t.boolean  "is_active"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "check_id"
+  end
+
+  create_table "items", :force => true do |t|
     t.string   "code"
     t.text     "description"
     t.float    "cost"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "qb_id"
+    t.integer  "al_id"
+    t.integer  "max_quantity"
+    t.integer  "item_group_id"
+  end
+
+  create_table "locations", :force => true do |t|
+    t.string   "code"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "is_available"
+    t.boolean  "is_active"
+    t.integer  "check_id"
   end
 
   create_table "tags", :force => true do |t|
@@ -65,8 +102,7 @@ ActiveRecord::Schema.define(:version => 20110411063229) do
     t.integer  "count_3"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "location_id"
-    t.integer  "part_id"
+    t.integer  "inventory_id"
   end
 
 end

@@ -1,8 +1,7 @@
 <ul>
-	<li <%= "class='current'" if @sub_menu == :add %>><%= link_to 'Add tag', parts_path %></li>
-	<li <%= "class='current'" if @sub_menu == :import %>><%= link_to 'Import from AO', to_import_tags_path %></li>
-	<li <%= "class='current'" if @sub_menu == :list %>><%= link_to 'List tags', tags_path %></li>
-	<li <%= "class='current'" if @sub_menu == :missing_cost %>><%= link_to 'Missing Cost', missing_cost_parts_path %></li>
+	<li <%= "class='current'" if @sub_menu == :add %>><%= link_to 'Add tag', inventories_path %></li>
+	<li <%= "class='current'" if @sub_menu == :list %>><%= link_to 'List', inventories_path %></li>
+	<li <%= "class='current'" if @sub_menu == :missing_cost %>><%= link_to 'Missing Cost', missing_cost_items_path %></li>
 	<li <%= "class='current'" if @sub_menu == :print_tags %>><%= link_to 'Print tags', prints_path %></li>
 	<li <%= "class='current'" if @sub_menu == :locations %>><%= link_to 'Locations', locations_path %></li>
 </ul>

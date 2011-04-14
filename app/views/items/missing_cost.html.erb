@@ -1,7 +1,7 @@
 <% @sub_menu = :missing_cost %>
 
 <article>
-	<%= form_for @search, :url => missing_cost_parts_path do |f| %>
+	<%= form_for @search, :url => missing_cost_items_path do |f| %>
 		<fieldset>
 			<legend>Search</legend>
 			<dl class="inline">
@@ -17,25 +17,25 @@
 </article>
 
 <article>
-<h1>Part Numbers Missing Cost</h2>
+<h1>Item Numbers Missing Cost</h2>
 
 <table class="gtable sortable">
 	<thead>
 		<tr>
-			<th>Part Number</th>
+			<th>Item Number</th>
 			<th>Description</th>
 			<th>Cost</th>
 			<th>Action</th>
 		</tr>
 	</thead>
 	<tbody>
-		<% @parts.each do |part| %>
+		<% @items.each do |item| %>
 		<tr>
-			<td><%= part.code %></td>
-			<td><%= part.description[1, 40] if part.description %> <%= "..." if part.description && part.description.size > 40 %></td>
-			<td><%= part.cost %></td>
+			<td><%= item.code %></td>
+			<td><%= item.description[0, 40] if item.description %> <%= "..." if item.description && item.description.size > 40 %></td>
+			<td><%= item.cost %></td>
 			<td>
-				<%= link_to image_tag('icons/edit.png', :alt => 'Edit'), input_price_part_path(part), :title => "Input price" %>
+				<%= link_to image_tag('icons/edit.png', :alt => 'Edit'), input_price_item_path(item), :title => "Input price" %>
 			</td>
 		</tr>
 		<% end %>
@@ -43,7 +43,7 @@
 </table>
 
 <div class="tablefooter clearfix">
-	<%= will_paginate @parts %>
+	<%= will_paginate @items %>
 </div>
 
 </article>

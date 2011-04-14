@@ -1,4 +1,8 @@
 class ChecksController < ApplicationController
+  layout 'settings'
+  
+  before_filter { @sub_menu = :check }
+  
   # GET /checks
   # GET /checks.xml
   def index
@@ -42,14 +46,11 @@ class ChecksController < ApplicationController
   def create
     @check = Check.new(params[:check])
 
-    respond_to do |format|
-      if @check.save
-        format.html { redirect_to(@check, :notice => 'Check was successfully created.') }
-        format.xml  { render :xml => @check, :status => :created, :location => @check }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @check.errors, :status => :unprocessable_entity }
-      end
+    @check.admin = current_admin
+    if @check.save
+      redirect_to(checks_path, :notice => 'Check was successfully created.')
+    else
+      render :action => "new"
     end
   end
 
@@ -80,7 +81,22 @@ class ChecksController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
-  def archive
+
+  def make_current
+    @check = Check.find(params[:id])
+    if @check.make_current!
+      redirect_to checks_path, :notice => "CURREN CHECK has been changed to #{@check.description || @check.id}."
+    else
+      render index
+    end
   end
+
+  def change_state
+    curr_check.state = params[:state]
+    if curr_check.save
+      redirect_to checks_path, :notice => "CURREN CHECK has been changed to #{params[:state]}."
+    else
+      render index
+    end
+  end  
 end

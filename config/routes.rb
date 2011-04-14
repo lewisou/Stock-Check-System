@@ -1,7 +1,14 @@
 Scs::Application.routes.draw do
+
   devise_for :admins
 
   resources :locations
+
+  resources :settings
+
+  resources :inventories do
+    resources :tags
+  end
 
   resources :reports, :only => [] do
     collection do
@@ -17,9 +24,12 @@ Scs::Application.routes.draw do
     end
   end
 
-  resources :checks, :only => [:new, :create] do
+  resources :checks do
     collection do
-      put 'archive'
+      put 'change_state'
+    end
+    member do
+      put 'make_current'
     end
   end
 
@@ -32,7 +42,7 @@ Scs::Application.routes.draw do
   
   resources :prints
     
-  resources :parts do
+  resources :items do
     collection do
       get 'missing_cost'
     end
@@ -41,8 +51,6 @@ Scs::Application.routes.draw do
       get 'input_price'
       put 'update_price'
     end
-    
-    resources :tags
   end
 
   # The priority is based upon order of creation:

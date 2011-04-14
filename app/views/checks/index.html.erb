@@ -1,23 +1,108 @@
-<h1>Listing checks</h1>
+<article>
+	<%= render :partial => 'shared/flash' %>
+	<%= render :partial => 'shared/errors', :locals => {:object => curr_check} %>
 
-<table>
-  <tr>
-    <th>State</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+	<h2>Current State</h2>
+	<% if has_curr_check? %>
+	<table class="infos">
+		<tbody>
+			<tr>
+				<th>Description</th>
+				<td><%= curr_check.description %></td>
+			</tr>
+			<tr>
+				<th>State</th>
+				<td><%= curr_check.state %></td>
+			</tr>
+			
+			<tr>
+				<th>Launched by</th>
+				<td><%= curr_check.admin.try(:email) %></td>
+			</tr>
+			<tr>
+				<th>Started at</th>
+				<td><%= curr_check.created_at %></td>
+			</tr>
+			<tr>
+				<th>Inventory Size</td>
+				<td><%= Inventory.in_check(curr_check.id).count %></td>
+			</tr>
+			<tr>
+				<th>Tags</th>
+				<td><%= Tag.in_check(curr_check.id).count %></td>
+			</tr>
+			<tr>
+				<th>Counted once tags</th>
+				<td><%= Tag.in_check(curr_check.id).where(:count_1.not_eq => nil).count %></td>
+			</tr>
+			<tr>
+				<th>Counted twice tags</th>
+				<td><%= Tag.in_check(curr_check.id).where(:count_1.not_eq % nil & :count_2.not_eq % nil).count %></td>
+			</tr>
+			
+			<tr>
+				<th>Locations</th>
+				<td><%= curr_check.locations.count %></td>
+			</tr>
+		</tbody>
+	</table>
 
-<% @checks.each do |check| %>
-  <tr>
-    <td><%= check.state %></td>
-    <td><%= link_to 'Show', check %></td>
-    <td><%= link_to 'Edit', edit_check_path(check) %></td>
-    <td><%= link_to 'Destroy', check, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
-<% end %>
-</table>
+	<div class="tablefooter clearfix">
+		<div class="actions">
+			<% if curr_check.state == 'open' %>
+			<%= link_to 'Archive', change_state_checks_path(:state => :archive), :method => :put, :confirm => "Are you sure to archive the check?", :class => "button small" %>
+			<%= link_to 'Cancel', change_state_checks_path(:state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check?", :class => "button small" %>
+			<% elsif curr_check.state == 'archive' %>
+			<%= link_to 'Start New One', new_check_path, :class => "button small" %>
+			<% elsif curr_check.state == 'cancel' %>
+			<%= link_to 'Start New One', new_check_path, :class => "button small" %>
+			<%= link_to 'Reopen', change_state_checks_path(:state => :open), :method => :put, :confirm => "Are you sure to reopen the check?", :class => "button small" %>
+			<% end %>
+		</div>
+	</div>
 
-<br />
+	<% else %>
+	<div class="tablefooter clearfix">
+		<div class="actions">
+			<%= link_to 'Begin a new check', new_check_path %>
+		</div>
+	</div>
 
-<%= link_to 'New Check', new_check_path %>
+	<% end %>
+</div>
+	
+	
+</article>
+
+<article>
+	<h2>History</h2>
+
+	<table class="gtable sortable">
+		<thead>
+		<tr>
+			<th>Description</th>
+			<th>Launched by</th>
+			<th>Started at</th>
+			<th>State</th>
+			<th>Aciton</th>
+		</tr>
+		</thead>
+		
+		<tbody>
+		<% Check.all(:order => "created_at DESC").each do |check| %>
+		<% next if check == curr_check %>
+		<tr>
+			<td><%= check.description %></td>
+			<td><%= check.admin.try(:email) %></td>
+			<td><%= check.created_at %></td>
+			<td><%= check.state %></td>
+			<td>
+				<%= link_to 'Make current', make_current_check_path(check), :method => :put, :confirm => "Are you sure to change the current check to #{check.description || check.id}?", :class => "button small" %>
+			</td>
+		</tr>
+		<% end %>
+		</tbody>
+	</table>
+
+</article>
+

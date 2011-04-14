@@ -19,23 +19,23 @@
 	<table id="table2" class="gtable detailtable">
 		<thead>
 			<tr>
-				<th>Part Number</th>
+				<th>Item Number</th>
 				<th>Description</th>
 				<th>Cost</th>
 				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
-			<% @parts.each do |part| %>
+			<% @items.each do |item| %>
 			<tr>
-				<td><%= part.code %></td>
-				<td><%= part.description[0, 40] %> <%= "..." if part.description.size > 40 %></td>
-				<td><%= part.cost %></td>
+				<td><%= item.code %></td>
+				<td><%= item.description[0, 40] %> <%= "..." if item.description.size > 40 %></td>
+				<td><%= item.cost %></td>
 				<td>
-					<% if part.tags.count > 0 %>
-					<a href="#" class="detail-link">Tags (<%= part.tags.count %>)</a>
+					<% if item.tags.count > 0 %>
+					<a href="#" class="detail-link">Tags (<%= item.tags.count %>)</a>
 					<% end %>
-					<%= link_to 'Create Tag', new_part_tag_path(part) %>
+					<%= link_to 'Create Tag', new_item_tag_path(item) %>
 				</td>
 			</tr>
 			<tr class="detail">
@@ -50,7 +50,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<% part.tags.each do |tag| %>
+							<% item.tags.each do |tag| %>
 							<tr>
 								<td><%= tag.id %></td>
 								<td><%= tag.location.try(:code) %></td>
@@ -67,6 +67,6 @@
 	</table>
 	
 	<div class="tablefooter clearfix">
-		<%= will_paginate @parts %>
+		<%= will_paginate @items %>
 	</div>
 </article>

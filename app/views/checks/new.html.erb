@@ -1,5 +1,52 @@
-<h1>New check</h1>
+<article>
+	<h1>New check</h1>
+	
+	<% if @check.errors.any? %>
+		<div class="error msg">
+			<%= pluralize(@check.errors.count, "error") %> prohibited this tag from being saved:
+			<ul>
+			<% @check.errors.full_messages.each do |msg| %>
+			<li><%= msg %></li>
+			<% end %>
+			</ul>
+		</div>	
+	<% end %>
+	
+	<%= form_for @check, :method => :post, :html => {:class => 'uniform', :multipart => true} do |f| %>
+		<fieldset>
+		<legend>Data</legend>
+		<dl class='inline'>
 
-<%= render 'form' %>
+			<dt><%= f.label :description %></dt>
+			<dd><%= f.text_field :description %></dd>
+		
+			<dt><%= f.label :locations_xls %></dt>
+			<dd>
+				<%= f.file_field :locations_xls %>
+			</dd>
+		
+			<dt><%= f.label :item_groups_xls %></dt>
+			<dd>
+				<%= f.file_field :item_groups_xls %>
+			</dd>
 
-<%= link_to 'Back', checks_path %>
+			<dt><%= f.label :items_xls %></dt>
+			<dd>
+				<%= f.file_field :items_xls %>
+			</dd>
+
+			<dt><%= f.label :inventories_xls %></dt>
+			<dd>
+				<%= f.file_field :inventories_xls %>
+			</dd>
+
+		</dl>
+		</fieldset>
+
+		<div class="buttons">
+			<%= f.submit :class => 'button' %>
+		</div>
+		
+	<% end %>
+</article>
+

@@ -1,16 +1,16 @@
 <article>
 	<h1>Enter Cost</h1>
 
-	<%= form_for @part do |f| %>
+	<%= form_for @item do |f| %>
 		<fieldset>
 			<legend>Input</legend>
 			<dl class="inline">
 
-				<dt><label>Part Number</label></dt>
-				<dd><label><%= @part.try(:code) %></label></dd>
+				<dt><label>Item Number</label></dt>
+				<dd><label><%= @item.try(:code) %></label></dd>
 
 				<dt><label>Description</label></dt>
-				<dd><label><%= @part.try(:description) %></label></dd>
+				<dd><label><%= @item.try(:description) %></label></dd>
 
 				<dt><%= f.label :cost %></dt>
 				<dd><%= f.text_field :count_1, :class => "medium required", :size => "50" %></dd>

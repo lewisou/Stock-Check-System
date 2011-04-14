@@ -7,15 +7,15 @@
 	</tr>
 	<tr>
 		<th>Item Number</th>
-		<td><%= @tag.part.try(:code) %></td>
+		<td><%= @tag.inventory.item.try(:code) %></td>
 	</tr>
 	<tr>
 		<th>Description</th>
-		<td><%= @tag.part.try(:description) %></td>
+		<td><%= @tag.inventory.item.try(:description) %></td>
 	</tr>
 	<tr>
 		<th>Location</th>
-		<td><%= @tag.location.try(:code) %></td>
+		<td><%= @tag.inventory.location.try(:code) %></td>
 	</tr>
 	<tr>
 		<th>Date</th>

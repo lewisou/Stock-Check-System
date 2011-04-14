@@ -23,8 +23,8 @@ class TagsController < ApplicationController
   def new
     @sub_menu = :add
     
-    @part = Part.find(params[:part_id])
-    @tag = @part.tags.build
+    @inventory = Inventory.find(params[:inventory_id])
+    @tag = @inventory.tags.build
     # render :layout => 'tags'
   end
 
@@ -36,8 +36,8 @@ class TagsController < ApplicationController
   # POST /tags
   # POST /tags.xml
   def create
-    @part = Part.find(params[:part_id])
-    @tag = @part.tags.build(params[:tag])
+    @inventory = Inventory.find(params[:inventory_id])
+    @tag = @inventory.tags.build(params[:tag])
 
     respond_to do |format|
       if @tag.save
@@ -86,15 +86,15 @@ class TagsController < ApplicationController
     sheet1 = book.worksheet 0
 
     sheet1.each_with_index do |row, index|
-      @part = Part.find_by_code(row[0])
-      unless @part
+      @item = Item.find_by_code(row[0])
+      unless @item
         if row[34].to_i == 1
-          @part = Part.create :code => row[0], :description => row[1], :cost => row[20], :qb_id => row[75]
+          @item = Item.create :code => row[0], :description => row[1], :cost => row[20], :qb_id => row[75]
         end
       end
       
-      if @part && @part.tags.size() == 0
-        tag = @part.tags.create(:location_id => Location.first.id)
+      if @item && @item.tags.size() == 0
+        tag = @item.tags.create(:location_id => Location.first.id)
       end
       
       # puts "Item #{row[0]}"

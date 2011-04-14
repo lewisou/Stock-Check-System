@@ -1,0 +1,23 @@
+<% @nav = :setting %>
+<%= content_for :stylesheets do %>
+<% end %>
+
+<%= content_for :content do %>
+<section id="main" class="grid_9 push_3">
+	<%= yield %>
+</section>
+
+<aside id="sidebar" class="grid_3 pull_9">
+	<div class="box menu">
+		<h2>Settings</h2>
+		<section>
+			<%= render :partial => 'shared/settings_ul' %>
+		</section>
+	</div>
+
+</aside>
+
+
+<% end %>
+
+<%= render :file => 'layouts/application' %>

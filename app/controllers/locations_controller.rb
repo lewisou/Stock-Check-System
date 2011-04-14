@@ -8,7 +8,7 @@ class LocationsController < ApplicationController
   end
 
   def index
-    @locations = Location.all
+    @locations = curr_check.locations
   end
   
   def show

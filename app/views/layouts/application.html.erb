@@ -95,7 +95,9 @@ jQuery(function($) {
 						<li><a href="#">Check Area</a></li>
 					</ul>
 				</li>
-				<li><a href="forms.html">Settings</a></li>
+				<li <%= "class='current'" if @nav == :setting %>><a href="#">Settings</a>
+					<%= render :partial => 'shared/settings_ul' %>
+				</li>
 			</ul>
 			<ul id="usermenu">
 				<!-- <li><a href="#" class="inbox">Inbox (3)</a></li> -->

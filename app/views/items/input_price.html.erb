@@ -1,12 +1,12 @@
 <% @sub_menu = :missing_cost %>
 <article>
 	<h1>Input cost</h1>
-	<%= form_for @part, :url => update_price_part_path(@part), :html => {:class => 'uniform'} do |f| %>
-		<% if @part.errors.any? %>
+	<%= form_for @item, :url => update_price_part_path(@item), :html => {:class => 'uniform'} do |f| %>
+		<% if @item.errors.any? %>
 			<div class="error msg">
-				<h2><%= pluralize(@part.errors.count, "error") %> prohibited this tag from being saved:</h2>
+				<h2><%= pluralize(@item.errors.count, "error") %> prohibited this tag from being saved:</h2>
 				<ul>
-				<% @part.errors.full_messages.each do |msg| %>
+				<% @item.errors.full_messages.each do |msg| %>
 				<li><%= msg %></li>
 				<% end %>
 				</ul>
@@ -18,11 +18,11 @@
 			<dl class="inline">
 				<dt><%= f.label :code %></dt>
 				<dd>
-					<%= f.label :code, @part.code %>
+					<%= f.label :code, @item.code %>
 				</dd>
 				<dt><%= f.label :description %></dt>
 				<dd>
-					<%= f.label :description, @part.description %>
+					<%= f.label :description, @item.description %>
 				</dd>
 				<dt><%= f.label :cost %></dt>
 				<dd>

@@ -1,20 +1,18 @@
 require 'spec_helper'
 
-describe Part do
+describe Inventory do
   pending "add some examples to (or delete) #{__FILE__}"
 end
 
-
 # == Schema Information
 #
-# Table name: parts
+# Table name: inventories
 #
 #  id          :integer         not null, primary key
-#  code        :string(255)
-#  description :text
-#  cost        :float
+#  item_id     :integer
+#  location_id :integer
+#  quantity    :integer
 #  created_at  :datetime
 #  updated_at  :datetime
-#  qb_id       :integer
 #
 

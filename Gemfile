@@ -10,6 +10,7 @@ gem "meta_where", '~> 1.0.4'
 gem 'gbarcode', '~> 0.98.20'
 gem 'spreadsheet', '0.6.5.3'
 gem 'prawn', '0.11.1'
+gem 'jquery-rails', '~> 0.2.6'
 
 group :development, :test do
 	gem 'webrat', '~> 0.7.3'

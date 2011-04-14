@@ -1,21 +1,30 @@
-<%= form_for(@counter) do |f| %>
-  <% if @counter.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@counter.errors.count, "error") %> prohibited this counter from being saved:</h2>
+<%= form_for @counter do |f| %>
+	<% if @counter.errors.any? %>
+	<div id="error_explanation">
+		<h2><%= pluralize(@counter.errors.count, "error") %> prohibited this counter from being saved:</h2>
 
-      <ul>
-      <% @counter.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+		<ul>
+		<% @counter.errors.full_messages.each do |msg| %>
+			<li><%= msg %></li>
+		<% end %>
+		</ul>
+	</div>
+	<% end %>
 
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
+
+
+  <dl class="inline">
+    <dt><%= f.label :name %></dt>
+    <dd><%= f.text_field :name %></dd>
+
+		<dt><%= f.label :Locations %></dt>
+		<dd></dd>
+
+
+  </dl>
+
   <div class="actions">
     <%= f.submit %>
   </div>
+
 <% end %>

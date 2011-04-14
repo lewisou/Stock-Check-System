@@ -840,7 +840,7 @@ div.accordion h3.active {
 ------------------------------------------------------------------------- */
 .button {
 	font: 11px Tahoma, sans-serif;
-	font-weight: bold;
+	font-weight: bolder;
 	color: #fff;
 	display: inline-block;
 	zoom: 1;

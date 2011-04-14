@@ -5,17 +5,18 @@ describe Tag do
 end
 
 
+
+
 # == Schema Information
 #
 # Table name: tags
 #
-#  id          :integer         not null, primary key
-#  count_1     :integer
-#  count_2     :integer
-#  count_3     :integer
-#  created_at  :datetime
-#  updated_at  :datetime
-#  location_id :integer
-#  part_id     :integer
+#  id           :integer         not null, primary key
+#  count_1      :integer
+#  count_2      :integer
+#  count_3      :integer
+#  created_at   :datetime
+#  updated_at   :datetime
+#  inventory_id :integer
 #
 

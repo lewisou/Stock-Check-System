@@ -51,7 +51,8 @@ class Check < ActiveRecord::Base
       self.locations << Location.create(:code => row[0], 
                       :description => row[1],
                       :is_active => (row[7].downcase == 'yes'),
-                      :is_available => (row[8]))
+                      :is_available => (row[8]),
+                      :from_al => true)
     end
   end
 
@@ -68,8 +69,9 @@ class Check < ActiveRecord::Base
       Inventory.create(
         :item => self.items.find_by_code(row[0]),
         :location => self.locations.find_by_code(row[1]),
-        :quantity => row[7]
-      )
+        :quantity => row[7],
+        :from_al => true
+      ).create_default_tag!
     end
   end
 
@@ -92,6 +94,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: checks
@@ -102,5 +105,6 @@ end
 #  updated_at  :datetime
 #  current     :boolean         default(FALSE)
 #  description :text
+#  admin_id    :integer
 #
 

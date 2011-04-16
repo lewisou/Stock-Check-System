@@ -70,23 +70,31 @@ jQuery(function($) {
 		<div class="grid_12">
 			<ul id="mainmenu" class="sf-menu">
 				<li <%= "class='current'" if @nav == :dashboard %>><%= link_to 'Dashboard', root_path %></li>
+
+				<% if has_curr_check? %>
 				<li <%= "class='current'" if @nav == :tag %>><a href="#">Inventory</a>
 					<%= render :partial => 'shared/inventory_ul' %>
 				</li>
 				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>><a href="#">Count 1</a>
 					<%= render :partial => 'shared/count_ul', :locals => {:count => 1} %>
 				</li>
+				<% if Tag.in_check(curr_check.id).not_finish(1).count == 0 %>
 				<li <%= "class='current'" if @nav == :count && @c_i == 2 %>><a href="#">Count 2</a>
 					<%= render :partial => 'shared/count_ul', :locals => {:count => 2} %>
 				</li>
+				<% end %>
+
+				<% if Tag.in_check(curr_check.id).not_finish(1).count == 0 && Tag.in_check(curr_check.id).not_finish(2).count == 0 %>
 				<li <%= "class='current'" if @nav == :count && @c_i == 3 %>><a href="#">Count 3</a>
 					<%= render :partial => 'shared/count_ul', :locals => {:count => 3} %>
 				</li>
+				<% end %>
+				
 				<li <%= "class='current'" if @nav == :report %>><a href="#">Reports</a>
 					<ul>
 						<li><%= link_to 'Count Varience', count_varience_reports_path %></li>
 						<li><%= link_to 'Final Valuation', final_report_reports_path %></li>
-						<li><%= link_to 'Final Valuation (Frozen QTYs)', tags_path %></li>
+						<li><%= link_to 'Final Valuation (Frozen QTYs)', final_frozen_reports_path %></li>
 					</ul>
 				</li>
 				<li><a href="#">Counters</a>
@@ -95,6 +103,8 @@ jQuery(function($) {
 						<li><a href="#">Check Area</a></li>
 					</ul>
 				</li>
+				<% end %>
+				
 				<li <%= "class='current'" if @nav == :setting %>><a href="#">Settings</a>
 					<%= render :partial => 'shared/settings_ul' %>
 				</li>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110414081820) do
+ActiveRecord::Schema.define(:version => 20110415043135) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(:version => 20110414081820) do
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "from_al",     :default => false
   end
 
   create_table "item_groups", :force => true do |t|
@@ -94,6 +95,7 @@ ActiveRecord::Schema.define(:version => 20110414081820) do
     t.boolean  "is_available"
     t.boolean  "is_active"
     t.integer  "check_id"
+    t.boolean  "from_al",      :default => false
   end
 
   create_table "tags", :force => true do |t|

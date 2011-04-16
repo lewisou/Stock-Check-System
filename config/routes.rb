@@ -12,7 +12,7 @@ Scs::Application.routes.draw do
 
   resources :reports, :only => [] do
     collection do
-      get 'count_varience', 'final_report'
+      get 'count_varience', 'final_report', 'final_frozen'
     end
   end
   
@@ -33,16 +33,11 @@ Scs::Application.routes.draw do
     end
   end
 
-  resources :tags do
-    collection do
-      get 'to_import'
-      post 'import'
-    end
-  end
-  
-  resources :prints
-    
+  resources :tags
+
   resources :items do
+    resources :tags
+
     collection do
       get 'missing_cost'
     end

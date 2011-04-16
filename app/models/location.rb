@@ -1,8 +1,10 @@
 class Location < ActiveRecord::Base
   has_and_belongs_to_many :counters
   belongs_to :check
-
+  has_many :inventories
+  has_many :tags, :through => :inventories
 end
+
 
 
 # == Schema Information
@@ -17,5 +19,6 @@ end
 #  is_available :boolean
 #  is_active    :boolean
 #  check_id     :integer
+#  from_al      :boolean
 #
 

@@ -1,15 +1,15 @@
 class Inventory < ActiveRecord::Base
-  scope :in_check, lambda {|check_id| joins(:item => {:item_group => :check}).where(:checks => {:id => check_id}) }
-  
+  scope :in_check, lambda {|check_id| includes(:item => {:item_group => :check}).where(:checks => {:id => check_id}) }
+
   belongs_to :item
   belongs_to :location
   has_many :tags
-  
-  after_create :create_default_tag
-  def create_default_tag
+
+  def create_default_tag!
     self.tags.create
   end
 end
+
 
 # == Schema Information
 #
@@ -21,5 +21,6 @@ end
 #  quantity    :integer
 #  created_at  :datetime
 #  updated_at  :datetime
+#  from_al     :boolean         default(FALSE)
 #
 

@@ -1,4 +1,4 @@
-<%= form_for @tag, :url => inventory_tags_path(@inventory), :html => {:class => 'uniform'} do |f| %>
+<%= form_for @tag, :html => {:class => 'uniform'} do |f| %>
 	<% if @tag.errors.any? %>
 		<div class="error msg">
 			<h2><%= pluralize(@tag.errors.count, "error") %> prohibited this tag from being saved:</h2>
@@ -11,19 +11,20 @@
 	<% end %>
 
 	<fieldset>
-		<legend>Change location</legend>
+		<legend>Choose Location</legend>
 		<dl class="inline">
-			<dt><%= f.label :item_code %></dt>
+			<dt><%= f.label :item_id, 'Item Number' %></dt>
 			<dd>
-				<%= f.label :item_code, @tag.inventory.item.code %>
+				<%= f.label :item_id, @item.code %>
+				<%= f.hidden_field :item_id %>
 			</dd>
 			<dt><%= f.label :item_description %></dt>
 			<dd>
-				<%= f.label :item_description, @tag.inventory.item.description %>
+				<%= f.label :item_description, @item.description %>
 			</dd>
-			<dt><label for="select1">Location</label></dt>
+			<dt><%= f.label :location_id, 'Location' %></dt>
 			<dd>
-				<%= f.collection_select(:location_id, curr_check.locations, :id, :code, :include_blank => false)  %>
+				<%= f.collection_select(:location_id, curr_check.locations, :id, :code, {:include_blank => false}, {:class => "small", :tabindex => 1})  %>
 			</dd>
 		</dl>
 	</fieldset>

@@ -1,26 +1,22 @@
 <% @sub_menu = :missing %>
 <article>
-	<form id="myForm" class="uniform" method="post">
+	<%= form_for @search, :url => missing_tag_counts_path, :html => {:class => 'uniform'} do |f| %>
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
-				<dt><label>Filter by Location</label></dt>
-				<dd>
-					<select size="1" id="select1" class="medium required">
-						<option value="option1">All Locations</option>
-						<option value="option2">AAA-1</option>
-						<option value="option3">BBB-2</option>
-						<option value="option4">CCC-1</option>
-					</select>
-				</dd>
+				<%= render :partial => 'tags/search_dl', :locals => {:f => f} %>
 			</dl>
 		</fieldset>
-	</form>
+		<div class='buttons'>
+			<%= f.submit :class => 'button' %>
+		</div>
+
+	<% end %>
 </article>
 
 <article>
 	<h1>Missing Tags</h1>
-	<table id="table1" class="gtable sortable">
+	<table id="table1" class="gtable">
 		<thead>
 			<tr>
 				<th>Tag Number</th>
@@ -35,11 +31,12 @@
 			<% @tags.each do |tag| %>
 			<tr>
 				<td><%= tag.id %></td>
-				<td><%= tag.part.try(:code) %></td>
-				<td><%= tag.location.try(:code) %></td>
+				<td><%= tag.inventory.item.try(:code) %></td>
+				<td><%= tag.inventory.location.try(:code) %></td>
 				<td><%= tag.send(@c_s) %></td>
 				<td>
-					<a href="#">Print</a>
+					<%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf) %>
+					<%= link_to image_tag('icons/cross.png'), tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?" %>
 				</td>
 			</tr>
 			<% end %>

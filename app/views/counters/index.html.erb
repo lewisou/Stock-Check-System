@@ -3,7 +3,7 @@
 
 
 
-	<table class="gtable sortable">
+	<table class="gtable">
 		<thead>
 		<tr>
 			<th>Name</th>
@@ -32,7 +32,7 @@
 <article>
 	<h2>Listing locations</h2>
 
-	<table class="gtable sortable">
+	<table class="gtable">
 		<thead>
 		<tr>
 			<th>Code</th>
@@ -42,7 +42,7 @@
 		</thead>
 		
 		<tbody>
-		<% Location.all(:order => "code ASC").each do |location| %>
+		<% curr_check.locations.all(:order => "code ASC").each do |location| %>
 		<tr>
 			<td><%= location.code %> (<%= location.description %>)</td>
 			<td><%= location.counters.map(&:name).join(", ") %></td>

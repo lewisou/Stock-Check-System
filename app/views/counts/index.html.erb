@@ -13,24 +13,24 @@
 				<dd><label><%= @tag.id %></label></dd>
 			
 				<dt><label>Location</label></dt>
-				<dd><label><%= @tag.location.try(:code) %> <%= @tag.location.try(:description) %> bla bla bla</label></dd>
+				<dd><label><%= @tag.inventory.location.try(:code) %> <%= @tag.inventory.location.try(:description) %></label></dd>
 				
 				
 				<dt><label>Item Number</label></dt>
-				<dd><label><%= @tag.part.try(:code) %> 121212.1</label></dd>
+				<dd><label><%= @tag.inventory.item.try(:code) %></label></dd>
 			
 				<dt><label>Description</label></dt>
-				<dd><label><%= @tag.part.try(:description) %> bla bla bla</label></dd>
+				<dd><label><%= @tag.inventory.item.try(:description) %></label></dd>
 
 				<dt><%= f.label @c_s %></dt>
 				<dd>
-					<%= f.text_field @c_s, :class => "medium required", :size => "50", :tabindex => 1 %>
+					<%= f.text_field @c_s, :class => "small required", :size => "50", :tabindex => 1 %>
 					<%= hidden_field_tag :count, @c_i %>
 				</dd>
 			</dl>
 
 			<div class="buttons">
-				<button type="submit" class="button">Save</button>
+				<%= f.submit 'Save', :class => "button" %>
 			</div>
 		</fieldset>
 	<% end %>
@@ -46,7 +46,7 @@
 				<dd>
 					<%= f.text_field :id_eq, :class => "small required", :size => "50", :tabindex => 2 %>
 					<%= hidden_field_tag :count, @c_i %>
-					<button type="submit" class="button small">Search</button>
+					<%= f.submit 'Search', :class => "button" %>
 				</dd>
 			</dl>
 

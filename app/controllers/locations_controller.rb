@@ -8,14 +8,15 @@ class LocationsController < ApplicationController
   end
 
   def index
-    @locations = curr_check.locations
+    @search = curr_check.locations.search(params[:search])
+    @locations = @search.paginate(:page => params[:page])
   end
   
   def show
   end
   
   def create
-    @location = Location.new(params[:location])
+    @location = curr_check.locations.build(params[:location])
 
     respond_to do |format|
       if @location.save
@@ -26,6 +27,17 @@ class LocationsController < ApplicationController
         format.xml  { render :xml => @location.errors, :status => :unprocessable_entity }
       end
     end
-    
   end
+  
+  def destroy
+    @location = Location.find(params[:id])
+    @location.destroy
+
+    respond_to do |format|
+      format.html { redirect_to(locations_path, :notice => "Location has been deleted.") }
+      format.xml  { head :ok }
+    end
+  end
+  
+  
 end

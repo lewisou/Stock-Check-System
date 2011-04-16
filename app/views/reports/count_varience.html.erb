@@ -8,14 +8,12 @@
 					<%= f.text_field :tolerance_v, :class => "small required", :tabindex => 1 %> (> $ in value)
 					<%= f.text_field :tolerance_q, :class => "small required", :tabindex => 2 %> (> % in quantity)
 				</dd>
-				<dt><label for="select1">Location</label></dt>
-				<dd>
-					<%= f.collection_select(:location_id_eq, Location.all, :id, :code, {:include_blank => true}, {:class => "small required", :tabindex => 3}) %>
-				</dd>
+				<%= render :partial => 'tags/search_dl', :locals => {:f => f, :tab_index => 3} %>
 			</dl>
 
 			<div class="buttons">
-				<button type="submit" class="button">Filter</button>
+				<%= f.submit 'Filter', :class => "button" %>
+				<%= link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
 			</div>
 		</fieldset>
 	<% end %>
@@ -25,7 +23,7 @@
 <article>
 	<h1>Count Varience Report</h1>
 	
-	<table id="table1" class="gtable sortable">
+	<table id="table1" class="gtable">
 		<thead>
 			<tr>
 				<th>TAG #</th>
@@ -43,14 +41,14 @@
 			<% @tags.each do |tag| %>
 			<tr>
 				<td><%= tag.id %></td>
-				<td><%= tag.location.try(:code) %></td>
-				<td><%= tag.part.try(:code) %></td>
-				<td><%= tag.part.try(:description).to_s[0, 30] %></td>
+				<td><%= tag.inventory.location.try(:code) %></td>
+				<td><%= tag.inventory.item.try(:code) %></td>
+				<td><%= tag.inventory.item.try(:description).to_s[0, 30] %></td>
 				<td><%= tag.count_1 %></td>
 				<td><%= tag.count_2 %></td>
-				<td><%= (tag.count_1 || 0) * (tag.part.try(:cost) || 0.0) %></td>
-				<td><%= (tag.count_2 || 0) * (tag.part.try(:cost) || 0.0) %></td>
-				<td><a href="#">count 3</a></td>
+				<td><%= (tag.count_1 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
+				<td><%= (tag.count_2 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
+				<td><%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf) %></td>
 			</tr>
 			<% end %>
 			

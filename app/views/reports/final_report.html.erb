@@ -3,20 +3,11 @@
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
-				<dt><%= f.label :id_eq %></dt>
-				<dd><%= f.text_field :id_eq, :tabindex => 1 %></dd>
-
-				<dt><%= f.label :part_code_like %></dt>
-				<dd><%= f.text_field :part_code_like, :tabindex => 2 %></dd>
-
-				<dt><label for="select1">Location</label></dt>
-				<dd>
-					<%= f.collection_select(:location_id_eq, Location.all, :id, :code, {:include_blank => true}, {:class => "medium required", :tabindex => 3}) %>
-				</dd>
+				<%= render :partial => 'tags/search_dl', :locals => {:f => f} %>
 			</dl>
 
 			<div class="buttons">
-				<button type="submit" class="button">Search</button>
+				<%= f.submit 'Search' %>
 			</div>
 		</fieldset>
 	<% end %>
@@ -26,7 +17,7 @@
 <article>
 	<h1>Final Report</h1>
 	
-	<table id="table1" class="gtable sortable">
+	<table id="table1" class="gtable">
 		<thead>
 			<tr>
 				<th>TAG #</th>
@@ -42,16 +33,15 @@
 			<% @tags.each do |tag| %>
 			<tr>
 				<td><%= tag.id %></td>
-				<td><%= tag.location.try(:code) %></td>
-				<td><%= tag.part.try(:code) %></td>
-				<td><%= tag.part.try(:description).to_s[0, 30] %></td>
+				<td><%= tag.inventory.location.try(:code) %></td>
+				<td><%= tag.inventory.item.try(:code) %></td>
+				<td><%= tag.inventory.item.try(:description).to_s[0, 30] %></td>
 				<td><%= tag.final_count %></td>
-				<td><%= tag.part.try(:cost) %></td>
-				<td><%= tag.final_count * (tag.part.try(:cost) || 0) %></td>
+				<td><%= tag.inventory.item.try(:cost) %></td>
+				<td><%= tag.final_count * (tag.inventory.item.try(:cost) || 0) %></td>
 			</tr>
 			<% end %>
-			
-			
+
 		</tbody>
 	</table>
 

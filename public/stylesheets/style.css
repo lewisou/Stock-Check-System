@@ -620,7 +620,7 @@ table.sortable img.move {
 	margin: 7px 0;
 	text-align: right;
 }
-.pagination a, .pagination em, .pagination span.previous_page {
+.pagination a, .pagination em, .pagination span.disabled {
 	padding: 4px 7px;
 	color: #333;
 	background: #fff;

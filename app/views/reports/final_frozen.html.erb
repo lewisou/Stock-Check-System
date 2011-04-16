@@ -1,0 +1,58 @@
+<article>
+	<%= form_for @search, :url => final_frozen_reports_path, :method => :get do |f| %>
+		<fieldset>
+			<legend>Filter</legend>
+			<dl class="inline">
+				<dt><%= f.label :item_code_like, 'Item' %></dt>
+				<dd><%= f.text_field :item_code_like, :class => "small", :tabindex => 1 %></dd>
+				<dt><%= f.label :location_id_eq, 'Location' %></dt>
+				<dd>
+					<%= f.collection_select(:location_id_eq, curr_check.locations, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => 2})  %>
+				</dd>
+			</dl>
+
+			<div class="buttons">
+				<%= f.submit 'Search' %>
+			</div>
+		</fieldset>
+	<% end %>
+</article>
+
+
+<article>
+	<h1>Final Valuation Report with Frozen QTY's</h1>
+	
+	<table id="table1" class="gtable">
+		<thead>
+			<tr>
+				<th><%= sort_link @search, :location_id_and_item_id, 'Location' %></th>
+				<th><%= sort_link @search, :item_id_and_location_id, 'Item' %></th>
+				<th>Description</th>
+				<th>Cost</th>
+				<th>Frozen QTY</th>
+				<th>Counted</th>
+				<th>Frozen Value</th>
+				<th>Counted Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @inventories.each do |inventory| %>
+			<tr>
+				<td><%= inventory.location.try(:code) %></td>
+				<td><%= inventory.item.try(:code) %></td>
+				<td><%= inventory.item.try(:description).to_s[0, 30] %></td>
+				<td><%= inventory.item.try(:cost) %></td>
+				<td><%= inventory.quantity %></td>
+				<td><%= counted = inventory.tags.map(&:final_count).sum %></td>
+				<td><%= (inventory.quantity || 0) * inventory.item.try(:cost) %></td>
+				<td><%= counted * (inventory.item.try(:cost) || 0) %></td>
+			</tr>
+			<% end %>
+
+		</tbody>
+	</table>
+
+	<div class="tablefooter clearfix">
+		<%= will_paginate @inventories %>
+	</div>
+</article>

@@ -6,12 +6,12 @@ class CountsController < ApplicationController
   end
   
   def missing_tag
-    @search = Tag.where(@c_s.eq % nil | @c_s.eq % 0).search(params[:search])
+    @search = Tag.in_check(curr_check.id).not_finish(@c_i).search(params[:search])
     @tags = @search.paginate(:page => params[:page])
   end
 
   def index
-    @search = Tag.search(params[:search])
+    @search = Tag.in_check(curr_check.id).search(params[:search])
     
     if @search.count == 1
       @tag = @search.first
@@ -19,7 +19,7 @@ class CountsController < ApplicationController
   end
 
   def update
-    @tag = Tag.find(params[:id])
+    @tag = Tag.in_check(curr_check.id).find(params[:id])
     @tag.update_attributes(@c_s => params[:tag][@c_s])
 
     if @tag.save
@@ -30,7 +30,7 @@ class CountsController < ApplicationController
   end
   
   def result
-    @search = Tag.where(@c_s.gte % 0).search(params[:search])
+    @search = Tag.in_check(curr_check.id).where(@c_s.gte % 0).search(params[:search])
     @tags = @search.paginate(:page => params[:page])
   end
 end

@@ -4,6 +4,7 @@ describe Inventory do
   pending "add some examples to (or delete) #{__FILE__}"
 end
 
+
 # == Schema Information
 #
 # Table name: inventories
@@ -14,5 +15,6 @@ end
 #  quantity    :integer
 #  created_at  :datetime
 #  updated_at  :datetime
+#  from_al     :boolean         default(FALSE)
 #
 

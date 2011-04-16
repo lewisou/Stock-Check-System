@@ -4,39 +4,24 @@
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
-
-				<dt><label>Filter by Location</label></dt>
-				<dd>
-					<select size="1" id="select1" class="small required">
-						<option value="option1">All Locations</option>
-						<option value="option2">AAA-1</option>
-						<option value="option3">BBB-2</option>
-						<option value="option4">CCC-1</option>
-					</select>
-				</dd>
-				
-				<dt><label for="name">Tag Number</label></dt>
-				<dd>
-					<%= f.text_field :id_eq, :class => "small required", :size => "50", :tabindex => 2 %>
-					<%= hidden_field_tag :count, @c_i %>
-					<button type="submit" class="button small">Search</button>
-				</dd>
-				
+				<%= render :partial => 'tags/search_dl', :locals => {:f => f} %>
 			</dl>
+			<div class="buttons">
+				<%= f.submit 'Filter' %>
+			</div>
 		</fieldset>
 	<% end %>
 </article>
 
 <article>
-	<h1>Missing Tags</h1>
-	<table id="table1" class="gtable sortable">
+	<h1>Count <%= @c_i %> Result</h1>
+	<table id="table1" class="gtable">
 		<thead>
 			<tr>
 				<th>Tag Number</th>
 				<th>Item Number</th>
 				<th>Location</th>
 				<th>Count <%= @c_i %></th>
-				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -44,12 +29,9 @@
 			<% @tags.each do |tag| %>
 			<tr>
 				<td><%= tag.id %></td>
-				<td><%= tag.part.try(:code) %></td>
-				<td><%= tag.location.try(:code) %></td>
+				<td><%= tag.inventory.item.try(:code) %></td>
+				<td><%= tag.inventory.location.try(:code) %></td>
 				<td><%= tag.send(@c_s) %></td>
-				<td>
-					<a href="#">Print</a>
-				</td>
 			</tr>
 			<% end %>
 			

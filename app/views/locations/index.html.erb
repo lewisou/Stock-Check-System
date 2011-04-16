@@ -1,11 +1,15 @@
 <article>
+	<%= render :partial => 'shared/flash' %>
+
 	<h1>Locations</h1>
 
-	<table id="table1" class="gtable sortable">
+	<table id="table1" class="gtable">
 		<thead>
 			<tr>
-				<th>Code</th>
+				<th><%= sort_link @search, :code %></th>
 				<th>Description</th>
+				<th>Tags</th>
+				<th>AL</th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -15,8 +19,17 @@
 				<td><%= location.code %></td>
 				<td><%= location.description %></td>
 				<td>
-					<a href="#" title="Edit"><img src="images/icons/edit.png" alt="Edit" /></a>
-					<a href="#" title="Delete"><img src="images/icons/cross.png" alt="Delete" /></a>
+					<%= link_to location.tags.count, tags_path(:search => {:inventory_location_id_eq => location.id}) if location.tags.count > 0 %>
+					<%= location.tags.count if location.tags.count == 0 %>
+				</td>
+				<td><%= location.from_al %></td>
+				<td>
+					<% unless location.from_al %>
+						<%= link_to image_tag('icons/edit.png'), edit_location_path(location) %>
+						<% if location.tags.count == 0 %>
+						<%= link_to image_tag('icons/cross.png'), location_path(location), :method => :delete, :confirm => "Are you sure to delete Location #{location.code}?" %>
+						<% end %>
+					<% end %>
 				</td>
 			</tr>
 			<% end %>
@@ -25,8 +38,9 @@
 
 	<div class="tablefooter clearfix">
 		<div class="actions">
-			<%= link_to 'Add location', new_location_path %>
+			<%= link_to 'Add location', new_location_path, :class => "button small" %>
 		</div>
+		<%= will_paginate @locations %>
 	</div>
 
 </article>

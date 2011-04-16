@@ -10,7 +10,13 @@ nav#topmenu {
 	border-top: 1px solid #d1c164;
 	border-bottom: 1px solid #645d34;
 }
-.button {
+/*.button {
 	border: 1px solid #af9827;
 	background: #f2de6f;
+}
+*/
+
+.button {
+	border: 1px solid #af9827;
+	background: #d1c164;
 }

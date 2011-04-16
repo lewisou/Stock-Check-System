@@ -8,14 +8,20 @@ module Vivax
 
     VALID_BARCODE_OPTIONS = [:encoding_format, :output_format, :width, :height, :scaling_factor, :xoff, :yoff, :margin	]
     
+    def safe file_name
+      file_name.gsub(/[\/\"]/, "---")
+    end
+    
     def barcode(id, options = {:encoding_format => DEFAULT_ENCODING })
-
+      
+      
+      
       options.assert_valid_keys(VALID_BARCODE_OPTIONS)
       output_format = options[:output_format] ? options[:output_format] : DEFAULT_FORMAT
 
       id.upcase!
-      eps = "#{::Rails.root.to_s}/public/images/barcodes/#{id}.eps"
-      out = "#{::Rails.root.to_s}/public/images/barcodes/#{id}.#{output_format}"
+      eps = "#{::Rails.root.to_s}/public/images/barcodes/#{safe(id)}.eps"
+      out = "#{::Rails.root.to_s}/public/images/barcodes/#{safe(id)}.#{output_format}"
       
       #dont generate a barcode again, if already generated
       unless File.exists?(out)

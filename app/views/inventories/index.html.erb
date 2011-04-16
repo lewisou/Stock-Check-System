@@ -1,3 +1,4 @@
+<% @sub_menu = :list %>
 <article>
 	<%= form_for @search, :method => :get do |f| %>
 		<fieldset>
@@ -5,7 +6,7 @@
 			<dl class="inline">
 				<dt><%= f.label :item_code_like %></dt>
 				<dd>
-				<%= f.text_field :item_code_like, :class => "small required" %>
+				<%= f.text_field :item_code_like, :class => "small required", :tabindex => 1 %>
 				<%= f.submit 'Search', :class => 'button' %>
 				</dd>
 			</dl>
@@ -24,6 +25,7 @@
 				<th>Quantity</th>
 				<th>Cost</th>
 				<th>Value</th>
+				<th>New</th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -35,6 +37,7 @@
 				<td><%= inventory.quantity %></td>
 				<td><%= inventory.item.cost %></td>
 				<td><%= (inventory.quantity || 0) * inventory.item.cost %></td>
+				<td><%= !inventory.from_al %></td>
 				<td>
 					<% if inventory.tags.count > 0 %>
 					<a href="#" class="detail-link">Tags (<%= inventory.tags.count %>)</a>
@@ -43,7 +46,7 @@
 				</td>
 			</tr>
 			<tr class="detail">
-				<td colspan="6">
+				<td colspan="7">
 					<table>
 						<thead>
 							<tr>
@@ -51,6 +54,7 @@
 								<th>Item</th>
 								<th>Location</th>
 								<th>Created at</th>
+								<th>Print</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -59,7 +63,8 @@
 								<td><%= tag.id %></td>
 								<td><%= tag.inventory.item.try(:code) %></td>
 								<td><%= tag.inventory.location.try(:code) %></td>
-								<td><%= tag.created_at %></td>
+								<td><%= tag.created_at.to_date %></td>
+								<td><%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf), :title => 'Print' %></td>
 							</tr>
 							<% end %>
 						</tbody>

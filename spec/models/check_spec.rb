@@ -6,6 +6,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: checks
@@ -16,5 +17,6 @@ end
 #  updated_at  :datetime
 #  current     :boolean         default(FALSE)
 #  description :text
+#  admin_id    :integer
 #
 

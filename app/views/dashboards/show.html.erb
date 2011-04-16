@@ -1,58 +1,61 @@
 <% @nav = :dashboard %>
 
-<section id="main" class="grid_12">
-	<article id="dashboard">
-		<%= render :partial => 'shared/flash' %>
-		
-		<h1>Dashboard</h1>
+<article id="dashboard">
+	<%= render :partial => 'shared/flash' %>
 
-		<h2>Quick Links</h2>
-		<section class="icons">
-			<ul>
-				<li>
-					<%= link_to raw("#{image_tag('eleganticons/Paper.png')} <span>Inventory</span>"), tags_path %>
-				</li>
-				<li>
-					<%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count One</span>"), counts_path %>
-				</li>
-				<li>
-					<a href="#">
-						<img src="images/eleganticons/Paper-pencil.png" />
-						<span>Count Two</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<img src="images/eleganticons/Person-group.png" />
-						<span>Counters</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<img src="images/eleganticons/Graph.png" />
-						<span>Reports</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<img src="images/eleganticons/Config.png" />
-						<span>Settings</span>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<img src="images/eleganticons/Info.png" />
-						<span>Help</span>
-					</a>
-				</li>
-				<li>
-					<a href="<%= destroy_admin_session_path %>">
-						<img src="images/eleganticons/X.png" />
-						<span>Logout</span>
-					</a>
-				</li>
-			</ul>
-		</section>
-	</article>
+	<h1>Dashboard</h1>
 
-</section>
+	<h2>Quick Links</h2>
+	<section class="icons">
+		<ul>
+			<li>
+				<%= link_to raw("#{image_tag('eleganticons/Paper.png')} <span>Inventory</span>"), tags_path %>
+			</li>
+			<li>
+				<%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count One</span>"), counts_path %>
+			</li>
+			<li>
+				<a href="#">
+					<img src="images/eleganticons/Paper-pencil.png" />
+					<span>Count Two</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<img src="images/eleganticons/Person-group.png" />
+					<span>Counters</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<img src="images/eleganticons/Graph.png" />
+					<span>Reports</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<img src="images/eleganticons/Config.png" />
+					<span>Settings</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<img src="images/eleganticons/Info.png" />
+					<span>Help</span>
+				</a>
+			</li>
+			<li>
+				<a href="<%= destroy_admin_session_path %>">
+					<img src="images/eleganticons/X.png" />
+					<span>Logout</span>
+				</a>
+			</li>
+		</ul>
+	</section>
+</article>
+
+
+<article>
+	<h2>Current State</h2>
+	<%= render :partial => 'shared/curr_check', :locals => {:curr_check => curr_check} %>
+</article>

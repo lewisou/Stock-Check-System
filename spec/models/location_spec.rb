@@ -6,6 +6,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: locations
@@ -18,6 +19,6 @@ end
 #  is_available :boolean
 #  is_active    :boolean
 #  check_id     :integer
-#  from_al      :boolean
+#  from_al      :boolean         default(FALSE)
 #
 

@@ -11,6 +11,7 @@ gem 'gbarcode', '~> 0.98.20'
 gem 'spreadsheet', '0.6.5.3'
 gem 'prawn', '0.11.1'
 gem 'jquery-rails', '~> 0.2.6'
+gem 'paperclip', '2.3.11'
 
 group :development, :test do
 	gem 'webrat', '~> 0.7.3'

@@ -1,9 +1,12 @@
+require 'ext/all_order'
+
 class Check < ActiveRecord::Base
   scope :curr_s, where(:current.eq => true).limit(1)
   has_many :item_groups
   has_many :items, :through => :item_groups
   has_many :locations
   belongs_to :admin
+  belongs_to :location_xls, :class_name => "::Attachment"
 
   attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
@@ -90,7 +93,12 @@ class Check < ActiveRecord::Base
     return self.save
   end
 
+  def generate_xls
+    self.location_xls = ::Attachment.new(:data => ALL_ORDER::Import.locations(self))
+  end
+
 end
+
 
 
 
@@ -99,12 +107,13 @@ end
 #
 # Table name: checks
 #
-#  id          :integer         not null, primary key
-#  state       :string(255)
-#  created_at  :datetime
-#  updated_at  :datetime
-#  current     :boolean         default(FALSE)
-#  description :text
-#  admin_id    :integer
+#  id              :integer         not null, primary key
+#  state           :string(255)
+#  created_at      :datetime
+#  updated_at      :datetime
+#  current         :boolean         default(FALSE)
+#  description     :text
+#  admin_id        :integer
+#  location_xls_id :integer
 #
 

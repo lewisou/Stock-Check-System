@@ -2,6 +2,14 @@ Scs::Application.routes.draw do
 
   devise_for :admins
 
+  resources :all_orders, :only => [] do
+    collection do
+      post 'generate'
+    end
+  end
+
+  resources :attachments
+
   resources :locations
 
   resources :settings

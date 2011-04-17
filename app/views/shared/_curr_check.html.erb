@@ -40,11 +40,11 @@
 			<%= third = Tag.in_check(curr_check.id).where(:count_1.not_eq % nil & :count_2.not_eq % nil & :count_3.not_eq % nil).count %>
 			</td>
 		</tr>
-
 		<tr>
-			<th>Locations</th>
-			<td><%= curr_check.locations.count %></td>
+			<th>ALL ORDER Import</th>
+			<td><%= link_to 'locations', attachment_path(curr_check.location_xls) %></td>
 		</tr>
+		
 	</tbody>
 </table>
 
@@ -56,7 +56,7 @@
 		<%= link_to 'Cancel', change_state_checks_path(:state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button small" %>
 		<% elsif curr_check.state == 'archive' %>
 		<%= link_to 'Start New One', new_check_path, :class => "button small" %>
-		<%= link_to 'Generate ALL ORDER import EXCEL', root_path, :class => "button small" %>
+		<%= link_to 'Generate ALL ORDER import EXCEL', generate_all_orders_path, :class => "button small", :method => :post, :confirm => "Are you sure to generate the excels now?" %>
 		<% elsif curr_check.state == 'cancel' %>
 		<%= link_to 'Start New One', new_check_path, :class => "button small" %>
 		<% end %>

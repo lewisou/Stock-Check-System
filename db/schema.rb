@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110415043135) do
+ActiveRecord::Schema.define(:version => 20110417070938) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -31,13 +31,23 @@ ActiveRecord::Schema.define(:version => 20110415043135) do
   add_index "admins", ["email"], :name => "index_admins_on_email", :unique => true
   add_index "admins", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
 
+  create_table "attachments", :force => true do |t|
+    t.string   "data_file_name"
+    t.string   "data_content_type"
+    t.integer  "data_file_size"
+    t.datetime "data_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "checks", :force => true do |t|
     t.string   "state"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "current",     :default => false
+    t.boolean  "current",         :default => false
     t.text     "description"
     t.integer  "admin_id"
+    t.integer  "location_xls_id"
   end
 
   create_table "counters", :force => true do |t|

@@ -1,6 +1,7 @@
 .bundle
 db/*.sqlite3
 log/*.log
+public/system/*/*
 tmp/
 .DS_Store
 public/images/barcodes/*.*

@@ -7,16 +7,18 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: checks
 #
-#  id          :integer         not null, primary key
-#  state       :string(255)
-#  created_at  :datetime
-#  updated_at  :datetime
-#  current     :boolean         default(FALSE)
-#  description :text
-#  admin_id    :integer
+#  id              :integer         not null, primary key
+#  state           :string(255)
+#  created_at      :datetime
+#  updated_at      :datetime
+#  current         :boolean         default(FALSE)
+#  description     :text
+#  admin_id        :integer
+#  location_xls_id :integer
 #
 

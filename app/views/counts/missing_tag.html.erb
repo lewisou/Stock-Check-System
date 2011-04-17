@@ -5,10 +5,12 @@
 			<legend>Filter</legend>
 			<dl class="inline">
 				<%= render :partial => 'tags/search_dl', :locals => {:f => f} %>
+				<%= hidden_field_tag :count, @c_i %>
 			</dl>
 		</fieldset>
 		<div class='buttons'>
-			<%= f.submit :class => 'button' %>
+			<%= f.submit 'Filter', :class => 'button' %>
+			<%= link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
 		</div>
 
 	<% end %>
@@ -36,7 +38,7 @@
 				<td><%= tag.send(@c_s) %></td>
 				<td>
 					<%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf) %>
-					<%= link_to image_tag('icons/cross.png'), tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?" %>
+					<%= link_to image_tag('icons/cross.png'), tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?", :title => 'Delete' %>
 				</td>
 			</tr>
 			<% end %>

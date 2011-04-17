@@ -8,6 +8,18 @@ class Inventory < ActiveRecord::Base
   def create_default_tag!
     self.tags.create
   end
+  
+  def counted
+    self.tags.map(&:final_count).sum
+  end
+  
+  def frozen_value
+    (self.quantity || 0) * (self.item.cost || 0)
+  end
+  
+  def counted_value
+    self.counted * (self.item.cost || 0)
+  end
 end
 
 

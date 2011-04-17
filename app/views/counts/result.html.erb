@@ -5,9 +5,10 @@
 			<legend>Filter</legend>
 			<dl class="inline">
 				<%= render :partial => 'tags/search_dl', :locals => {:f => f} %>
+				<%= hidden_field_tag :count, @c_i %>
 			</dl>
 			<div class="buttons">
-				<%= f.submit 'Filter' %>
+				<%= f.submit 'Search', :class => "button" %>
 			</div>
 		</fieldset>
 	<% end %>

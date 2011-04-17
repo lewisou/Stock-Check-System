@@ -7,8 +7,12 @@
 			</dl>
 
 			<div class="buttons">
-				<%= f.submit 'Search' %>
+				<%= f.submit 'Search', :class => "button" %>
+				<!-- link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' -->
+				<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 			</div>
+			
+			
 		</fieldset>
 	<% end %>
 </article>
@@ -37,8 +41,8 @@
 				<td><%= tag.inventory.item.try(:code) %></td>
 				<td><%= tag.inventory.item.try(:description).to_s[0, 30] %></td>
 				<td><%= tag.final_count %></td>
-				<td><%= tag.inventory.item.try(:cost) %></td>
-				<td><%= tag.final_count * (tag.inventory.item.try(:cost) || 0) %></td>
+				<td><%=number_to_currency tag.inventory.item.try(:cost) %></td>
+				<td><%=number_to_currency tag.final_count * (tag.inventory.item.try(:cost) || 0) %></td>
 			</tr>
 			<% end %>
 

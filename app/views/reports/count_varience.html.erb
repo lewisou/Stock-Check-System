@@ -8,12 +8,20 @@
 					<%= f.text_field :tolerance_v, :class => "small required", :tabindex => 1 %> (> $ in value)
 					<%= f.text_field :tolerance_q, :class => "small required", :tabindex => 2 %> (> % in quantity)
 				</dd>
-				<%= render :partial => 'tags/search_dl', :locals => {:f => f, :tab_index => 3} %>
+				<dt>
+					<%= label_tag :count_3_finished %>
+				</dt>
+				<dd>
+					<%= check_box_tag :count_3_finished, nil, @count_3_finished, :tabindex => 3 %>
+				</dd>
+				
+				<%= render :partial => 'tags/search_dl', :locals => {:f => f, :tab_index => 4} %>
 			</dl>
 
 			<div class="buttons">
 				<%= f.submit 'Filter', :class => "button" %>
-				<%= link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
+				<!-- link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' -->
+				<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 			</div>
 		</fieldset>
 	<% end %>
@@ -34,6 +42,7 @@
 				<th>Count 2</th>
 				<th>Value 1</th>
 				<th>Value 2</th>
+				<th>Count 3</th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -46,9 +55,10 @@
 				<td><%= tag.inventory.item.try(:description).to_s[0, 30] %></td>
 				<td><%= tag.count_1 %></td>
 				<td><%= tag.count_2 %></td>
-				<td><%= (tag.count_1 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
-				<td><%= (tag.count_2 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
-				<td><%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf) %></td>
+				<td><%=number_to_currency (tag.count_1 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
+				<td><%=number_to_currency (tag.count_2 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
+				<td><%= tag.count_3 %></td>
+				<td><%= link_to 'Count 3', counts_path(:search => {:id_eq => tag.id}, :count => 3) %></td>
 			</tr>
 			<% end %>
 			

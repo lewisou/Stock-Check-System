@@ -1,6 +1,6 @@
 <% bg_ind = defined?(tab_index) ? tab_index : 1 %>
 
-<dt><%= "aa" if defined?(tab_index) %><%= f.label :id_eq, 'Tag' %></dt>
+<dt><%= f.label :id_eq, 'Tag' %></dt>
 <dd><%= f.text_field :id_eq, :class => "small", :tabindex => bg_ind %></dd>
 
 <dt><%= f.label :id_gte, 'Tag range' %></dt>

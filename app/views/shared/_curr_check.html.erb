@@ -24,7 +24,7 @@
 		</tr>
 		<tr>
 			<th>Tags</th>
-			<td><%= Tag.in_check(curr_check.id).count %></td>
+			<td><%= totel = Tag.in_check(curr_check.id).count %></td>
 		</tr>
 		<tr>
 			<th>Counted once tags</th>
@@ -34,7 +34,13 @@
 			<th>Counted twice tags</th>
 			<td><%= Tag.in_check(curr_check.id).where(:count_1.not_eq % nil & :count_2.not_eq % nil).count %></td>
 		</tr>
-		
+		<tr>
+			<th>Counted three times</th>
+			<td>
+			<%= third = Tag.in_check(curr_check.id).where(:count_1.not_eq % nil & :count_2.not_eq % nil & :count_3.not_eq % nil).count %>
+			</td>
+		</tr>
+
 		<tr>
 			<th>Locations</th>
 			<td><%= curr_check.locations.count %></td>
@@ -46,14 +52,15 @@
 <div class="tablefooter clearfix">
 	<div class="actions">
 		<% if curr_check.state == 'open' %>
-		<%= link_to 'Archive', change_state_checks_path(:state => :archive), :method => :put, :confirm => "Are you sure to archive the check?", :class => "button small" %>
-		<%= link_to 'Cancel', change_state_checks_path(:state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check?", :class => "button small" %>
+		<%= link_to 'Archive', change_state_checks_path(:state => :archive), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button small" %>
+		<%= link_to 'Cancel', change_state_checks_path(:state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button small" %>
 		<% elsif curr_check.state == 'archive' %>
 		<%= link_to 'Start New One', new_check_path, :class => "button small" %>
+		<%= link_to 'Generate ALL ORDER import EXCEL', root_path, :class => "button small" %>
 		<% elsif curr_check.state == 'cancel' %>
 		<%= link_to 'Start New One', new_check_path, :class => "button small" %>
-		<%= link_to 'Reopen', change_state_checks_path(:state => :open), :method => :put, :confirm => "Are you sure to reopen the check?", :class => "button small" %>
 		<% end %>
+		<%= link_to 'Reopen', change_state_checks_path(:state => :open), :method => :put, :confirm => "Are you sure to reopen the check '#{curr_check.description}' ?", :class => "button small" %>
 	</div>
 </div>
 

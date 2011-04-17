@@ -42,7 +42,7 @@
 					<% if inventory.tags.count > 0 %>
 					<a href="#" class="detail-link">Tags (<%= inventory.tags.count %>)</a>
 					<% end %>
-					<%= link_to 'Create Tag', new_inventory_tag_path(inventory) %>
+					<%= link_to 'Create Tag', new_inventory_tag_path(inventory) if curr_check.state == 'open' %>
 				</td>
 			</tr>
 			<tr class="detail">

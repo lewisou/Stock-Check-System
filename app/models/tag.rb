@@ -14,12 +14,7 @@ class Tag < ActiveRecord::Base
   }
 
   search_methods :tolerance_v
-  scope :tolerance_v, lambda { |value|
-    {
-      :joins => {:inventory => :item},
-      :conditions => ["abs(tags.count_1 * items.cost - tags.count_2 * items.cost) >= ?", value.to_f.abs]
-    }
-  }
+  scope :tolerance_v, lambda{|value| includes(:inventory => :item).where(["abs(tags.count_1 * items.cost - tags.count_2 * items.cost) >= ?", value.to_f.abs])}
 
   before_save :adj_inventory
   def adj_inventory
@@ -70,8 +65,8 @@ class Tag < ActiveRecord::Base
     if self.count_1 == self.count_2
       return self.count_1 || 0
     end
-    
-    return self.count_3 || 0
+
+    self.count_3.nil? ? [self.count_1, self.count_2].min : self.count_3
   end
 
 end

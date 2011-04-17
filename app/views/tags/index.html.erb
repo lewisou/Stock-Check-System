@@ -40,8 +40,10 @@
 				<td><%= tag.inventory.location.try(:code) %></td>
 				<td><%= tag.inventory.item.try(:cost) %></td>
 				<td>
+					<% if curr_check.state == 'open' %>
 					<%= link_to image_tag('icons/edit.png'), edit_tag_path(tag), :title => 'Edit' %>
 					<%= link_to image_tag('icons/cross.png'), tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?", :title => 'Delete' %>
+					<% end %>
 					<%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf), :title => 'Print' %>
 				</td>
 			</tr>

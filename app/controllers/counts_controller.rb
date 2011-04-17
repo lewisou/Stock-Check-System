@@ -7,7 +7,19 @@ class CountsController < ApplicationController
   
   def missing_tag
     @search = Tag.in_check(curr_check.id).not_finish(@c_i).search(params[:search])
-    @tags = @search.paginate(:page => params[:page])
+
+    respond_to do |format|
+      format.html { @tags = @search.paginate(:page => params[:page]) }
+
+      format.pdf {
+        @tags = @search.all
+
+        pdf = Prawn::Document.generate_tags @tags
+        send_data pdf.render, :filename => "tags.pdf", :disposition => 'attachment'
+      }
+    end
+
+
   end
 
   def index

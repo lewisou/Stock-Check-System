@@ -12,7 +12,9 @@
 			</dl>
 
 			<div class="buttons">
-				<%= f.submit 'Search' %>
+				<%= f.submit 'Search', :class => "button" %>
+				<!-- link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' -->
+				<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 			</div>
 		</fieldset>
 	<% end %>
@@ -41,11 +43,11 @@
 				<td><%= inventory.location.try(:code) %></td>
 				<td><%= inventory.item.try(:code) %></td>
 				<td><%= inventory.item.try(:description).to_s[0, 30] %></td>
-				<td><%= inventory.item.try(:cost) %></td>
+				<td><%=number_to_currency inventory.item.try(:cost) %></td>
 				<td><%= inventory.quantity %></td>
-				<td><%= counted = inventory.tags.map(&:final_count).sum %></td>
-				<td><%= (inventory.quantity || 0) * inventory.item.try(:cost) %></td>
-				<td><%= counted * (inventory.item.try(:cost) || 0) %></td>
+				<td><%= inventory.counted %></td>
+				<td><%=number_to_currency inventory.frozen_value %></td>
+				<td><%=number_to_currency inventory.counted_value %></td>
 			</tr>
 			<% end %>
 

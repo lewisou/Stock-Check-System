@@ -39,5 +39,18 @@ class LocationsController < ApplicationController
     end
   end
   
+  def edit
+    @location = curr_check.locations.find(params[:id])
+  end
+  
+  def update
+    @location = Location.find(params[:id])
+
+    if @location.update_attributes(params[:location])
+      redirect_to locations_path, :notice => "Location #{@location.code} has been updated."
+    else
+      render :edit
+    end
+  end
   
 end

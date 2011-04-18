@@ -1,9 +1,31 @@
 class Location < ActiveRecord::Base
-  has_and_belongs_to_many :counters
+  has_many :assigns
+  has_many :counters, :through => :assigns
+  
   belongs_to :check
   has_many :inventories
   has_many :tags, :through => :inventories
+
+  before_update :mark_flag
+  def mark_flag
+    self.data_changed = true
+  end
+  
+  def description
+    "#{desc1} #{desc2} #{desc3}"
+  end
+
+  def available_counters count
+    Counter.all - self.assigns.where(:count => 3 - count).map(&:counter)
+  end
+  
+  def has_available_counters?
+    Counter.count - self.assigns.count > 0
+  end
+  
 end
+
+
 
 
 
@@ -14,12 +36,15 @@ end
 #
 #  id           :integer         not null, primary key
 #  code         :string(255)
-#  description  :text
 #  created_at   :datetime
 #  updated_at   :datetime
 #  is_available :boolean
 #  is_active    :boolean
 #  check_id     :integer
 #  from_al      :boolean         default(FALSE)
+#  data_changed :boolean         default(FALSE)
+#  desc1        :text
+#  desc2        :text
+#  desc3        :text
 #
 

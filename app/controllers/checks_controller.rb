@@ -93,7 +93,10 @@ class ChecksController < ApplicationController
 
   def change_state
     curr_check.state = params[:state]
+    curr_check.generate_xls if curr_check.state == 'archive'
+
     if curr_check.save
+
       redirect_to checks_path, :notice => "CURREN CHECK has been changed to #{params[:state]}."
     else
       render index

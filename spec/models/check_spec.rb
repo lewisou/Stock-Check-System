@@ -8,6 +8,8 @@ end
 
 
 
+
+
 # == Schema Information
 #
 # Table name: checks
@@ -20,5 +22,7 @@ end
 #  description     :text
 #  admin_id        :integer
 #  location_xls_id :integer
+#  inv_adj_xls_id  :integer
+#  item_xls_id     :integer
 #
 

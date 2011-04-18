@@ -1,0 +1,34 @@
+<%= form_for @location, :html => {:class => 'uniform'} do |f| %>
+	<%= render :partial => 'shared/errors', :locals => {:object => @location} %>
+
+	<fieldset>
+		<legend>Form</legend>
+		<dl class="inline">
+
+			<dt><%= f.label :code %></dt>
+			<dd>
+				<%= f.text_field :code, :class => "medium required" %>
+			</dd>
+			
+			<dt><%= f.label :desc1 %></dt>
+			<dd>
+				<%= f.text_area :desc1, :class => "medium required" %>
+			</dd>
+			
+			<dt><%= f.label :desc2 %></dt>
+			<dd>
+				<%= f.text_area :desc2, :class => "medium required" %>
+			</dd>
+
+			<dt><%= f.label :desc3 %></dt>
+			<dd>
+				<%= f.text_area :desc3, :class => "medium required" %>
+			</dd>
+
+		</dl>
+	</fieldset>
+	<div class="buttons">
+		<%= f.submit 'Save', :class => 'button' %>
+	</div>
+
+<% end %>

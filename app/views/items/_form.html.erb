@@ -1,0 +1,36 @@
+<%= form_for @item, :html => {:class => 'uniform'} do |f| %>
+	<%= render :partial => 'shared/errors', :locals => {:object => @item} %>
+	
+	<fieldset>
+		<legend>Item</legend>
+		<dl class="inline">
+			<dt><%= f.label :code, 'Item Full Name' %></dt>
+			<dd>
+				<%= f.text_field :code, :tabindex => 1 %>
+			</dd>
+
+			<dt><%= f.label :cost %></dt>
+			<dd>
+				<%= f.text_field :cost, :tabindex => 2 %>
+			</dd>
+
+			<dt><%= f.label :max_quantity %></dt>
+			<dd>
+				<%= f.text_field :max_quantity, :tabindex => 3 %>
+			</dd>
+
+			<dt><%= f.label :description %></dt>
+			<dd>
+				<%= f.text_area :description, :tabindex => 4 %>
+			</dd>
+			<dt><%= f.label :item_group %></dt>
+			<dd>
+				<%= f.collection_select(:item_group_id, curr_check.item_groups, :id, :name, {:include_blank => false}, {:class => "small", :tabindex => 5})  %>
+			</dd>
+		</dl>
+	</fieldset>
+	<div class="buttons">
+		<%= f.submit :class => 'button' %>
+	</div>
+
+<% end %>

@@ -24,11 +24,8 @@
 				</td>
 				<td><%= location.from_al %></td>
 				<td>
-					<% unless location.from_al %>
+					<% if curr_check.state == 'open' %>
 						<%= link_to image_tag('icons/edit.png'), edit_location_path(location) %>
-						<% if location.tags.count == 0 %>
-						<%= link_to image_tag('icons/cross.png'), location_path(location), :method => :delete, :confirm => "Are you sure to delete Location #{location.code}?" %>
-						<% end %>
 					<% end %>
 				</td>
 			</tr>

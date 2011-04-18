@@ -1,0 +1,35 @@
+<article>
+	<%= form_for @assign, :url => location_assigns_path(@location), :html => {:class => 'uniform'} do |f| %>
+		<%= render :partial => 'shared/errors', :locals => {:object => @assign} %>
+
+		<fieldset>
+			<legend>Add</legend>
+			<dl class="inline">
+				<dt><%= f.label :location_id, 'Location' %></dt>
+				<dd>
+					<%= f.label :location_id, @location.code %>
+				</dd>
+				<dt><%= f.label :location_description %></dt>
+				<dd>
+					<%= f.label :location_description, @location.description %>
+				</dd>
+				<dt><%= f.label :count %></dt>
+				<dd>
+					<%= f.label :count, @assign.count %>
+					<%= f.hidden_field :count %>
+					<!-- f.select :count, [[1, 1], [2, 2]] -->
+				</dd>
+				
+				<dt><%= f.label :counter_id, 'Counter' %></dt>
+				<dd>
+					<%= f.collection_select(:counter_id, @location.available_counters(@assign.count), :id, :name, {:include_blank => false}, {:class => "small", :tabindex => 1})  %>
+				</dd>
+			</dl>
+		</fieldset>
+		<div class="buttons">
+			<%= f.submit 'Add', :class => 'button' %>
+		</div>
+
+	<% end %>
+	
+</article>

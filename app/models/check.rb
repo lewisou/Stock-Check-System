@@ -5,8 +5,11 @@ class Check < ActiveRecord::Base
   has_many :item_groups
   has_many :items, :through => :item_groups
   has_many :locations
+  has_many :assigns, :through => :locations
   belongs_to :admin
   belongs_to :location_xls, :class_name => "::Attachment"
+  belongs_to :inv_adj_xls, :class_name => "::Attachment"
+  belongs_to :item_xls, :class_name => "::Attachment"
 
   attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
@@ -36,9 +39,11 @@ class Check < ActiveRecord::Base
       Item.create(:description => row[1],
       :item_group => (self.item_groups.select {|g| g.name == row[6]}).first,
       :cost => row[20],
+      :al_cost => row[20],
       :max_quantity => row[72],
       :code => row[74],
-      :al_id => row[75]
+      :al_id => row[75],
+      :from_al => false
       )
     end
   end
@@ -52,7 +57,9 @@ class Check < ActiveRecord::Base
       next if (index == 0 || row[0].blank?)
 
       self.locations << Location.create(:code => row[0], 
-                      :description => row[1],
+                      :desc1 => row[1],
+                      :desc2 => row[2],
+                      :desc3 => row[3],
                       :is_active => (row[7].downcase == 'yes'),
                       :is_available => (row[8]),
                       :from_al => true)
@@ -95,9 +102,13 @@ class Check < ActiveRecord::Base
 
   def generate_xls
     self.location_xls = ::Attachment.new(:data => ALL_ORDER::Import.locations(self))
+    self.item_xls = ::Attachment.new(:data => ALL_ORDER::Import.items(self))
+    self.inv_adj_xls = ::Attachment.new(:data => ALL_ORDER::Import.inventory_adjustment(self))
   end
 
 end
+
+
 
 
 
@@ -115,5 +126,7 @@ end
 #  description     :text
 #  admin_id        :integer
 #  location_xls_id :integer
+#  inv_adj_xls_id  :integer
+#  item_xls_id     :integer
 #
 

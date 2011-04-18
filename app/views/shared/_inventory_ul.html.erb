@@ -1,9 +1,9 @@
 <ul>
 	<li <%= "class='current'" if @sub_menu == :items %>><%= link_to 'Items', items_path %></li>
+	<li <%= "class='current'" if @sub_menu == :locations %>><%= link_to 'Locations', locations_path %></li>
 	<li <%= "class='current'" if @sub_menu == :list %>><%= link_to 'Location by Item', inventories_path %></li>
 	<li <%= "class='current'" if @sub_menu == :tags %>><%= link_to 'Tags', tags_path %></li>
 	<% if curr_check && curr_check.state == 'open' %>
 	<li <%= "class='current'" if @sub_menu == :missing_cost %>><%= link_to 'Missing Cost', missing_cost_items_path %></li>
-	<li <%= "class='current'" if @sub_menu == :locations %>><%= link_to 'Locations', locations_path %></li>
 	<% end %>
 </ul>

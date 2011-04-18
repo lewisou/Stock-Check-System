@@ -1,5 +1,7 @@
 <% @sub_menu = :items %>
 <article>
+	<%= render :partial => 'shared/flash' %>
+	
 	<%= form_for @search, :method => :get do |f| %>
 		<fieldset>
 			<legend>Filter</legend>
@@ -10,8 +12,8 @@
 				<%= f.submit 'Search', :class => 'button' %>
 				</dd>
 			</dl>
-
 		</fieldset>
+		<%= link_to "New Item", new_item_path, :class => 'button' %>
 	<% end %>
 </article>
 
@@ -23,6 +25,7 @@
 				<th>Item Number</th>
 				<th>Description</th>
 				<th>Cost</th>
+				<th>AL</th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -30,24 +33,27 @@
 			<% @items.each do |item| %>
 			<tr>
 				<td><%= item.code %></td>
-				<td><%= item.description[0, 40] %> <%= "..." if item.description.size > 40 %></td>
+				<td><%= item.description[0, 35] %> <%= "..." if item.description.size > 35 %></td>
 				<td><%= item.cost %></td>
+				<td><%= item.from_al %></td>
 				<td>
-					<% if item.inventories.count > 0 %>
-					<a href="#" class="detail-link">Locations (<%= item.inventories.count %>)</a>
+					<% if curr_check.state == 'open' %>
+					<%= link_to image_tag('icons/edit.png'), edit_item_path(item), :title => 'Edit' %>
 					<% end %>
-					<%= link_to 'Create Tag', new_item_tag_path(item) if curr_check.state == 'open' %>
+					<%= link_to 'New Tag', new_item_tag_path(item) if curr_check.state == 'open' %>
+					<% if item.inventories.count > 0 %>
+					<a href="#" class="detail-link", title="Location"><%= image_tag('icons/box.png') %>(<%= item.inventories.count %>)</a>
+					<% end %>
 				</td>
 			</tr>
 			<tr class="detail">
-				<td colspan="4">
+				<td colspan="5">
 					<table>
 						<thead>
 							<tr>
 								<th>Location Code</th>
 								<th>Location Description</th>
 								<th>Quantity</th>
-								<th>Created at</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -56,7 +62,6 @@
 								<td><%= inventory.location.try(:code) %></td>
 								<td><%= inventory.location.try(:description) %></td>
 								<td><%= inventory.quantity %></td>
-								<td><%= inventory.created_at %></td>
 							</tr>
 							<% end %>
 						</tbody>

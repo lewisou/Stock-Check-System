@@ -2,27 +2,27 @@
 	<h2>Listing counters</h2>
 
 
-
-	<table class="gtable">
+	<table id="table2" class="gtable">
 		<thead>
-		<tr>
-			<th>Name</th>
-			<th>Locations</th>
-			<th>Action</th>
-		</tr>
+			<tr>
+				<th>Name</th>
+				<th>Count 1</th>
+				<th>Count 2</th>
+				<th>Action</th>
+			</tr>
 		</thead>
-		
 		<tbody>
-		<% @counters.each do |counter| %>
-		<tr>
-			<td><%= counter.name %></td>
-			<td><%= counter.locations.map(&:code).join(", ") %></td>
-			<td>
-				<%= link_to image_tag('icons/edit.png', :alt => "Edit"), edit_counter_path(counter), :title => "Edit" %>
-				<%= link_to image_tag('icons/cross.png', :alt => "Delete"), counter, :confirm => 'Are you sure?', :method => :delete, :title => "Delete" %>
-			</td>
-		</tr>
-		<% end %>
+			<% @counters.each do |counter| %>
+			<% assigns = counter.assigns.includes(:location).where(:locations => {:check_id => curr_check.id}) %>
+			<tr>
+				<td><%= counter.name %></td>
+				<td><%=raw (assigns.where(:count => 1).collect {|assign| assign.location.code + remove_assign_link(assign)}).join(", ") %></td>
+				<td><%=raw (assigns.where(:count => 2).collect {|assign| assign.location.code + remove_assign_link(assign)}).join(", ") %></td>
+				<td>
+					<%= link_to image_tag('icons/edit.png'), edit_counter_path(counter), :title => 'Edit' %>
+				</td>
+			</tr>
+			<% end %>
 		</tbody>
 	</table>
 
@@ -30,13 +30,14 @@
 </article>
 
 <article>
-	<h2>Listing locations</h2>
+	<h2>Check Table</h2>
 
 	<table class="gtable">
 		<thead>
 		<tr>
-			<th>Code</th>
-			<th>Counters</th>
+			<th>Location</th>
+			<th>Count 1</th>
+			<th>Count 2</th>
 			<th>Action</th>
 		</tr>
 		</thead>
@@ -44,10 +45,17 @@
 		<tbody>
 		<% curr_check.locations.all(:order => "code ASC").each do |location| %>
 		<tr>
-			<td><%= location.code %> (<%= location.description %>)</td>
-			<td><%= location.counters.map(&:name).join(", ") %></td>
+			<td><%= location.code %></td>
+			<% 
+			location.assigns.where(:count => 1).each do |assign|
+				assign_path(assign, :method => :delete)
+			end
+			%>
+			<td><%=raw (location.assigns.where(:count => 1).collect {|assign| assign.counter.name + remove_assign_link(assign)}).join(", ") %></td>
+			<td><%=raw (location.assigns.where(:count => 2).collect {|assign| assign.counter.name + remove_assign_link(assign)}).join(", ") %></td>
 			<td>
-				<%= link_to "Assign", location_path(location) %>
+				<%= link_to "Add Count 1", new_location_assign_path(location, :assign => {:count => 1}) if location.has_available_counters? %><br />
+				<%= link_to "Add Count 2", new_location_assign_path(location, :assign => {:count => 2}) if location.has_available_counters? %>
 			</td>
 		</tr>
 		<% end %>

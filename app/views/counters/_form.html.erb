@@ -1,26 +1,15 @@
 <%= form_for @counter do |f| %>
-	<% if @counter.errors.any? %>
-	<div id="error_explanation">
-		<h2><%= pluralize(@counter.errors.count, "error") %> prohibited this counter from being saved:</h2>
-
-		<ul>
-		<% @counter.errors.full_messages.each do |msg| %>
-			<li><%= msg %></li>
-		<% end %>
-		</ul>
-	</div>
-	<% end %>
-
+	<%= render :partial => 'shared/errors', :locals => {:object => @counter} %>
 
 
   <dl class="inline">
     <dt><%= f.label :name %></dt>
-    <dd><%= f.text_field :name %></dd>
+    <dd><%= f.text_field :name, :tabindex => 1 %></dd>
 
 		<dt><%= f.label :Locations %></dt>
-		<dd></dd>
-
-
+		<dd>
+			<%= f.collection_select(:location_ids, curr_check.locations, :id, :code, {:include_blank => false, :multiple => true}, {:class => "small", :tabindex => 2})  %>
+		</dd>
   </dl>
 
   <div class="actions">

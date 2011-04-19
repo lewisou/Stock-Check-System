@@ -42,7 +42,7 @@
 					<% end %>
 					<%= link_to 'New Tag', new_item_tag_path(item) if curr_check.state == 'open' %>
 					<% if item.inventories.count > 0 %>
-					<a href="#" class="detail-link", title="Location"><%= image_tag('icons/box.png') %>(<%= item.inventories.count %>)</a>
+					<a href="#" class="detail-link", title="Location"><%= image_tag('icons/box.png') %>(<%= item.inventories.where(:quantity.gt => 0).count %>)</a>
 					<% end %>
 				</td>
 			</tr>
@@ -57,7 +57,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<% item.inventories.each do |inventory| %>
+							<% item.inventories.where(:quantity.gt => 0).each do |inventory| %>
 							<tr>
 								<td><%= inventory.location.try(:code) %></td>
 								<td><%= inventory.location.try(:description) %></td>

@@ -1,4 +1,9 @@
 class CountersController < ApplicationController
+  layout "tags"
+
+  before_filter do
+    @sub_menu = :counters
+  end
   # GET /counters
   # GET /counters.xml
   def index
@@ -42,9 +47,10 @@ class CountersController < ApplicationController
   def create
     @counter = Counter.new(params[:counter])
 
+    @counter.new_assigns, @counter.curr_check = get_count_assigns(:location), curr_check
     respond_to do |format|
       if @counter.save
-        format.html { redirect_to(@counter, :notice => 'Counter was successfully created.') }
+        format.html { redirect_to(counters_path, :notice => 'Counter was successfully created.') }
         format.xml  { render :xml => @counter, :status => :created, :location => @counter }
       else
         format.html { render :action => "new" }
@@ -58,9 +64,11 @@ class CountersController < ApplicationController
   def update
     @counter = Counter.find(params[:id])
 
+    @counter.new_assigns, @counter.curr_check = get_count_assigns(:location), curr_check
+
     respond_to do |format|
       if @counter.update_attributes(params[:counter])
-        format.html { redirect_to(@counter, :notice => 'Counter was successfully updated.') }
+        format.html { redirect_to(counters_path, :notice => 'Counter was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

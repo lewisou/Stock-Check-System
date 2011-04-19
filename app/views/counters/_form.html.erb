@@ -1,19 +1,46 @@
-<%= form_for @counter do |f| %>
+<%= form_for @counter, :html => {:class => 'uniform'} do |f| %>
 	<%= render :partial => 'shared/errors', :locals => {:object => @counter} %>
 
+	<ul class="tabs">
+		<li><a href="#general">General</a></li>
+		<li><a href="#count">Count</a></li>
+	</ul>
+	
+	<div class="tabcontent">
 
-  <dl class="inline">
-    <dt><%= f.label :name %></dt>
-    <dd><%= f.text_field :name, :tabindex => 1 %></dd>
+		<div id="general">
+			<dl class="inline">
+				<dt><%= f.label :name %></dt>
+				<dd>
+				<%= f.text_field :name, :tabindex => 1, :class => "medium" %>
+				<small>Team name or People name</small>
+				</dd>
 
-		<dt><%= f.label :Locations %></dt>
-		<dd>
-			<%= f.collection_select(:location_ids, curr_check.locations, :id, :code, {:include_blank => false, :multiple => true}, {:class => "small", :tabindex => 2})  %>
-		</dd>
-  </dl>
+				<dt><%= f.label :description %></dt>
+				<dd>
+				<%= f.text_area :description, :tabindex => 2, :class => "medium" %>
+				<small>Members of Team or Whatever</small>
+				</dd>
+			</dl>
+		</div>
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+		<div id="count">
+			<dl class="inline">
+				<% curr_check.locations.each do |location| %>
+				<dt><%= label_tag :locations, location.code %></dt>
+				<dd>
+					<%= radio_button(:count, location.id, 1, :checked => @counter.check_location_by_count?(location, 1)) %> <%= label_tag "count_#{location.id}_1", 'Count 1' %>
+					<%= radio_button(:count, location.id, 2, :checked => @counter.check_location_by_count?(location, 2)) %> <%= label_tag "count_#{location.id}_2", 'Count 2' %>
+					<%= radio_button(:count, location.id, 0, :checked => !@counter.check_location?(location)) %> <%= label_tag "count_#{location.id}_0", 'None' %>
+				</dd>
+				<% end %>
+			</dl>
+		</div>
+
+	</div>
+
+	<div class="buttons" style="clear:both">
+		<%= f.submit :class => "button" %>
+	</div>
 
 <% end %>

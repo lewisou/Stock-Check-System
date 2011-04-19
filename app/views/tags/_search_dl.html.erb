@@ -16,3 +16,8 @@
 <dd>
 	<%= f.collection_select(:inventory_location_id_eq, curr_check.locations, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => bg_ind + 4})  %>
 </dd>
+
+<dt><%= f.label :counted_by %></dt>
+<dd>
+	<%= f.select(:counted_by, Counter.counted_bys, { :include_blank => true }, {:class => "small", :tabindex => bg_ind + 5}) %>
+</dd>

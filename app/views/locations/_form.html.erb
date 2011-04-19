@@ -1,33 +1,60 @@
 <%= form_for @location, :html => {:class => 'uniform'} do |f| %>
 	<%= render :partial => 'shared/errors', :locals => {:object => @location} %>
+	<ul class="tabs">
+		<li><a href="#general">General</a></li>
+		<li><a href="#count">Counter</a></li>
+	</ul>
 
-	<fieldset>
-		<legend>Form</legend>
-		<dl class="inline">
+	<div class="tabcontent">
 
-			<dt><%= f.label :code %></dt>
-			<dd>
-				<%= f.text_field :code, :class => "medium required" %>
-			</dd>
-			
-			<dt><%= f.label :desc1 %></dt>
-			<dd>
-				<%= f.text_area :desc1, :class => "medium required" %>
-			</dd>
-			
-			<dt><%= f.label :desc2 %></dt>
-			<dd>
-				<%= f.text_area :desc2, :class => "medium required" %>
-			</dd>
+		<div id="general">
+			<dl class="inline">
 
-			<dt><%= f.label :desc3 %></dt>
-			<dd>
-				<%= f.text_area :desc3, :class => "medium required" %>
-			</dd>
+				<dt><%= f.label :code %></dt>
+				<dd>
+				<%= f.text_field :code, :tabindex => 1, :class => "medium" %>
+				<small>Location Code</small>
+				</dd>
 
-		</dl>
-	</fieldset>
-	<div class="buttons">
+				<dt><%= f.label :desc1 %></dt>
+				<dd>
+				<%= f.text_field :desc1, :tabindex => 2, :class => "medium" %>
+				<small>Address 1</small>
+				</dd>
+
+				<dt><%= f.label :desc2 %></dt>
+				<dd>
+				<%= f.text_field :desc2, :tabindex => 3, :class => "medium" %>
+				<small>Address 2</small>
+				</dd>
+
+				<dt><%= f.label :desc3 %></dt>
+				<dd>
+				<%= f.text_field :desc3, :tabindex => 4, :class => "medium" %>
+				<small>Address 3</small>
+				</dd>
+
+			</dl>
+		</div>
+
+		<div id="count">
+			<dl class="inline">
+
+				<% Counter.all.each do |counter| %>
+				<dt><%= label_tag :counters, counter.name %></dt>
+				<dd>
+					<%= radio_button(:count, counter.id, 1, :checked => counter.check_location_by_count?(@location, 1)) %> <%= label_tag "count_#{counter.id}_1", 'Count 1' %>
+					<%= radio_button(:count, counter.id, 2, :checked => counter.check_location_by_count?(@location, 2)) %> <%= label_tag "count_#{counter.id}_2", 'Count 2' %>
+					<%= radio_button(:count, counter.id, 0, :checked => !counter.check_location?(@location)) %> <%= label_tag "count_#{counter.id}_0", 'None' %>
+				</dd>
+				<% end %>
+
+			</dl>
+		</div>
+
+	</div>
+
+	<div class="buttons" style="clear:both">
 		<%= f.submit 'Save', :class => 'button' %>
 	</div>
 

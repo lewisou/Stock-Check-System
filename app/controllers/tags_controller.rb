@@ -4,7 +4,7 @@ class TagsController < ApplicationController
 
   # GET /tags
   # GET /tags.xml
-  def index
+  def index    
     @search = Tag.in_check(curr_check.id).includes(:inventory => :item, :inventory => :location).search(params[:search])
 
     respond_to do |format|

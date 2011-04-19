@@ -11,6 +11,16 @@ class Location < ActiveRecord::Base
     self.data_changed = true
   end
   
+  attr_accessor :new_assigns, :curr_check
+
+  before_save :refresh_assigns
+  def refresh_assigns
+    unless @new_assigns.nil? || @curr_check.nil?
+      self.assigns.in_check(@curr_check.id).each {|ass| ass.destroy }
+      self.assigns << @new_assigns
+    end
+  end
+
   def description
     "#{desc1} #{desc2} #{desc3}"
   end
@@ -22,7 +32,7 @@ class Location < ActiveRecord::Base
   def has_available_counters?
     Counter.count - self.assigns.count > 0
   end
-  
+
 end
 
 

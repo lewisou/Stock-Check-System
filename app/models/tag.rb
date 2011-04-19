@@ -7,6 +7,14 @@ class Tag < ActiveRecord::Base
   belongs_to :inventory
 
   attr_accessor :location_id, :item_id
+  
+  search_methods :counted_by
+  scope :counted_by, lambda { |counter_count|
+    counter = Counter.find(counter_count.split('_').first)
+    count = counter_count.split('_').last.to_i
+    
+    includes(:inventory => :location).where(:locations => {:id => counter.assigns.where(:count => count).map(&:location).map(&:id)})
+  }
 
   search_methods :tolerance_q
   scope :tolerance_q, lambda { |quantity|

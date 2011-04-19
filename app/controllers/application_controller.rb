@@ -17,4 +17,14 @@ class ApplicationController < ActionController::Base
 
     @curr_check
   end
+  
+  def get_count_assigns symbol
+    assigns = []
+    curr_check.send("#{symbol.to_s}s".to_sym).each do |obj|
+      if params[:count][obj.id.to_s].to_i > 0 && params[:count][obj.id.to_s].to_i < 3
+        assigns << Assign.new(:count => params[:count][obj.id.to_s], symbol => obj)
+      end
+    end
+    assigns
+  end
 end

@@ -13,20 +13,31 @@
 		</thead>
 		<tbody>
 			<% @counters.each do |counter| %>
-			<% assigns = counter.assigns.includes(:location).where(:locations => {:check_id => curr_check.id}) %>
 			<tr>
 				<td><%= counter.name %></td>
-				<td><%=raw (assigns.where(:count => 1).collect {|assign| assign.location.code + remove_assign_link(assign)}).join(", ") %></td>
-				<td><%=raw (assigns.where(:count => 2).collect {|assign| assign.location.code + remove_assign_link(assign)}).join(", ") %></td>
 				<td>
-					<%= link_to image_tag('icons/edit.png'), edit_counter_path(counter), :title => 'Edit' %>
+					<% counter.assigns.in_check(curr_check.id).where(:count => 1).each_with_index do |ass, index| %>
+						<%= raw("<br />") unless index == 0 %>
+						<%= ass.location.code %>
+					<% end %>
+				</td>
+				<td>
+					<% counter.assigns.in_check(curr_check.id).where(:count => 2).each_with_index do |ass, index| %>
+						<%= raw("<br />") unless index == 0 %>
+						<%= ass.location.code %>
+					<% end %>
+				</td>
+				<td>
+					<%= link_to image_tag('icons/edit.png'), edit_counter_path(counter), :title => 'Edit' if curr_check.state == 'open' %>
 				</td>
 			</tr>
 			<% end %>
 		</tbody>
 	</table>
-
-	<%= link_to 'New Counter', new_counter_path %>
+	
+	<div class="tablefooter clearfix">
+		<%= link_to 'New Counter', new_counter_path, :class => "button" if curr_check.state == 'open' %>
+	</div>
 </article>
 
 <article>
@@ -35,31 +46,39 @@
 	<table class="gtable">
 		<thead>
 		<tr>
-			<th>Location</th>
+			<th width="30%">Location</th>
 			<th>Count 1</th>
 			<th>Count 2</th>
 			<th>Action</th>
 		</tr>
 		</thead>
-		
+
 		<tbody>
 		<% curr_check.locations.all(:order => "code ASC").each do |location| %>
 		<tr>
 			<td><%= location.code %></td>
-			<% 
-			location.assigns.where(:count => 1).each do |assign|
-				assign_path(assign, :method => :delete)
-			end
-			%>
-			<td><%=raw (location.assigns.where(:count => 1).collect {|assign| assign.counter.name + remove_assign_link(assign)}).join(", ") %></td>
-			<td><%=raw (location.assigns.where(:count => 2).collect {|assign| assign.counter.name + remove_assign_link(assign)}).join(", ") %></td>
 			<td>
-				<%= link_to "Add Count 1", new_location_assign_path(location, :assign => {:count => 1}) if location.has_available_counters? %><br />
-				<%= link_to "Add Count 2", new_location_assign_path(location, :assign => {:count => 2}) if location.has_available_counters? %>
+				<% location.assigns.in_check(curr_check.id).where(:count => 1).each_with_index do |ass, index| %>
+					<%= raw("<br />") unless index == 0 %>
+					<%= ass.counter.name %>
+				<% end %>
+			</td>
+			<td>
+				<% location.assigns.in_check(curr_check.id).where(:count => 2).each_with_index do |ass, index| %>
+					<%= raw("<br />") unless index == 0 %>
+					<%= ass.counter.name %>
+				<% end %>
+			</td>
+			<td>
+				<%= link_to image_tag('icons/edit.png'), edit_location_path(location), :title => 'Edit' if curr_check.state == 'open' %>
 			</td>
 		</tr>
 		<% end %>
 		</tbody>
 	</table>
-</article>
 
+	<div class="tablefooter clearfix">
+		<%= link_to 'Add location', new_location_path, :class => "button" %>
+	</div>
+
+</article>

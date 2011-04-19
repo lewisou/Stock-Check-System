@@ -9,7 +9,6 @@ Scs::Application.routes.draw do
   end
 
   resources :attachments
-  resources :assigns
 
   resources :locations do
     resources :assigns

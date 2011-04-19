@@ -72,7 +72,8 @@ jQuery(function($) {
 				<li <%= "class='current'" if @nav == :dashboard %>><%= link_to 'Dashboard', root_path %></li>
 
 				<% if has_curr_check? %>
-				<li <%= "class='current'" if @nav == :tag %>><a href="#">Inventory</a>
+				<li <%= "class='current'" if @nav == :tag %>>
+					<%= link_to 'Inventory', items_path %>
 					<%= render :partial => 'shared/inventory_ul' %>
 				</li>
 				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>><a href="#">Count 1</a>
@@ -95,12 +96,6 @@ jQuery(function($) {
 						<li><%= link_to 'Count Varience', count_varience_reports_path %></li>
 						<li><%= link_to 'Final Valuation', final_report_reports_path %></li>
 						<li><%= link_to 'Final Valuation (Frozen QTYs)', final_frozen_reports_path %></li>
-					</ul>
-				</li>
-				<li><a href="#">Counters</a>
-					<ul>
-						<li><%= link_to 'List', counters_path %></li>
-						<li><a href="#">Check Area</a></li>
 					</ul>
 				</li>
 				<% end %>

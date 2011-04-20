@@ -9,7 +9,7 @@ module Vivax
     VALID_BARCODE_OPTIONS = [:encoding_format, :output_format, :width, :height, :scaling_factor, :xoff, :yoff, :margin	]
     
     def safe file_name
-      file_name.gsub(/[\/\"]/, "---")
+      file_name.gsub(/[\/\" \t\r\n]/, "---")
     end
     
     def barcode(id, options = {:encoding_format => DEFAULT_ENCODING })

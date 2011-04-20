@@ -1,5 +1,5 @@
 class Tag < ActiveRecord::Base
-  scope :in_check, lambda {|check_id| includes(:inventory => {:item => {:item_group => :check}}).where(:checks => {:id => check_id}) }
+  scope :in_check, lambda {|check_id| includes(:inventory => {:location => :check}).where(:checks => {:id => check_id}) }
   scope :not_finish, lambda{|count| where("count_#{count}".to_sym.eq % nil | "count_#{count}".to_sym.eq % 0)}
   scope :finish, lambda{|count| where("count_#{count}".to_sym.gt % 0)}
 
@@ -18,7 +18,7 @@ class Tag < ActiveRecord::Base
 
   search_methods :tolerance_q
   scope :tolerance_q, lambda { |quantity|
-    {:conditions => ["(abs(tags.count_1 - tags.count_2) / tags.count_1) * 100 >= ? and tags.count_1 is not null", quantity.to_i.abs]}
+    {:conditions => ["abs((tags.count_1 - tags.count_2) / cast(tags.count_2 as float)) * 100 >= ? and tags.count_2 > 0", quantity.to_f.abs]}
   }
 
   search_methods :tolerance_v
@@ -70,11 +70,19 @@ class Tag < ActiveRecord::Base
   # end
 
   def final_count
+    if self.count_1.nil? || self.count_2.nil?
+      return 0
+    end
+    
     if self.count_1 == self.count_2
-      return self.count_1 || 0
+      return self.count_1
     end
 
     self.count_3.nil? ? [self.count_1, self.count_2].min : self.count_3
+  end
+  
+  def counted_value
+    final_count * (self.inventory.item.try(:cost) || 0)
   end
 
 end

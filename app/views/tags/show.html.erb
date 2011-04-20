@@ -1,9 +1,10 @@
+<% @sub_menu = :tags %>
 <article>
 
 <table class="infos">
 	<tr>
 		<th>Tag Number</th>
-		<td><%= @tag.id %> <%= barcode(@tag.id.to_s) %></td>
+		<td><%= @tag.id %></td>
 	</tr>
 	<tr>
 		<th>Item Number</th>
@@ -25,7 +26,7 @@
 
 <div class="tablefooter clearfix">
 	<div class="actions">
-	<%= link_to image_tag('icons/printer.png'), root_path %>
+	<%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf) %>
 	</div>
 </div>
 </article>

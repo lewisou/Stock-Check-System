@@ -1,10 +1,14 @@
 class Inventory < ActiveRecord::Base
-  scope :in_check, lambda {|check_id| includes(:item => {:item_group => :check}).where(:checks => {:id => check_id}) }
+  scope :in_check, lambda {|check_id| includes(:location => :check).where(:checks => {:id => check_id}) }
   scope :need_adjustment, where("quantity <> cached_counted")
 
   belongs_to :item
   belongs_to :location
   has_many :tags
+
+  def self.cache_counted check
+    in_check(check.id).all.each {|inv| inv.cached_counted = inv.counted; inv.save(:validate => false)}
+  end
 
   def create_default_tag!
     self.tags.create

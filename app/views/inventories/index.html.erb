@@ -32,11 +32,11 @@
 		<tbody>
 			<% @inventories.each do |inventory| %>
 			<tr>
-				<td><%= inventory.item.code %></td>
-				<td><%= inventory.location.code %></td>
+				<td><%= inventory.item.try(:code) %></td>
+				<td><%= inventory.location.try(:code) %></td>
 				<td><%= inventory.quantity %></td>
-				<td><%= inventory.item.cost %></td>
-				<td><%= (inventory.quantity || 0) * inventory.item.cost %></td>
+				<td><%=number_to_currency inventory.item.try(:cost) %></td>
+				<td><%=number_to_currency (inventory.quantity || 0) * (inventory.item.try(:cost) || 0) %></td>
 				<td><%= !inventory.from_al %></td>
 				<td>
 					<% if inventory.tags.count > 0 %>
@@ -64,7 +64,12 @@
 								<td><%= tag.inventory.item.try(:code) %></td>
 								<td><%= tag.inventory.location.try(:code) %></td>
 								<td><%= tag.created_at.to_date %></td>
-								<td><%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf), :title => 'Print' %></td>
+								<td>
+								<%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf), :title => 'Print' %>
+								<% if curr_check.state == 'open' %>
+									<%= link_to image_tag('icons/cross.png'), tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?", :title => 'Delete' %>
+								<% end %>
+								</td>
 							</tr>
 							<% end %>
 						</tbody>

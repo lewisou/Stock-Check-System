@@ -1,3 +1,5 @@
+require 'ext/tag_table'
+
 class CountsController < ApplicationController
 
   before_filter do

@@ -1,4 +1,6 @@
 class Item < ActiveRecord::Base
+  scope :missing_cost, where(:cost.eq % nil | :cost.eq % 0).includes(:inventories).where(:inventories => (:quantity.gt % 0 | :cached_counted.gt % 0))
+  
   belongs_to :item_group
   has_many :inventories
   

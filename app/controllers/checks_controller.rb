@@ -101,5 +101,12 @@ class ChecksController < ApplicationController
     else
       render index
     end
-  end  
+  end
+  
+  def refresh_count
+    curr_check.cache_counted!
+    
+    redirect_to missing_cost_items_path, :notice => "Refresh finished."
+  end
+
 end

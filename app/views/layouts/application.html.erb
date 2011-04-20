@@ -76,7 +76,7 @@ jQuery(function($) {
 					<%= link_to 'Inventory', items_path %>
 					<%= render :partial => 'shared/inventory_ul' %>
 				</li>
-				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>><a href="#">Count 1</a>
+				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>><%= link_to 'Count 1', counts_path(:count => 1) %>
 					<%= render :partial => 'shared/count_ul', :locals => {:count => 1} %>
 				</li>
 				<% if Tag.in_check(curr_check.id).not_finish(1).count == 0 %>

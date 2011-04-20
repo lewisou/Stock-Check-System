@@ -5,15 +5,17 @@
 		<fieldset>
 			<legend>Search</legend>
 			<dl class="inline">
-				<dt><%= f.label :code_contains %></dt>
+				<dt><%= f.label :code_contains, 'Item Number' %></dt>
 				<dd>
 					<%= f.text_field :code_contains, :tabindex => 1 %>
 					<%= f.submit 'Search', :class => "button" %>
+					<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 				</dd>
 			</dl>
-
 		</fieldset>
 	<% end %>
+	<%= link_to 'Refresh count Result', refresh_count_checks_path, :method => :put, :class => "button" %>
+	
 </article>
 
 <article>
@@ -22,7 +24,7 @@
 <table class="gtable">
 	<thead>
 		<tr>
-			<th>Item Number</th>
+			<th><%= sort_link @search, :code, 'Item Number' %></th>
 			<th>Description</th>
 			<th>Cost</th>
 			<th>Action</th>

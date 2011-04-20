@@ -33,6 +33,10 @@ class Location < ActiveRecord::Base
     Counter.count - self.assigns.count > 0
   end
 
+  def counter_names count
+    self.assigns.where(:count => count).map(&:counter).map(&:name).join(", ")
+  end
+
 end
 
 

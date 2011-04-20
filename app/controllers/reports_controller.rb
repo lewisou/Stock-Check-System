@@ -40,7 +40,8 @@ class ReportsController < ApplicationController
       format.xls {
         @tags = @search.all
         book = Spreadsheet::Workbook.new
-        send_data book.render_tags(@tags, "Final Report"), :filename => "Final Report.xls", :disposition => 'attachment'
+        # data = book.generate_xls("Final Report", @tags, %w{Tag Location Item Description Counted Cost Value}, [:id, [:inventory, :location, :code], [:inventory, :item, :code], [:inventory, :item, :description], :final_count, [:inventory, :item, :cost], :counted_value])
+        send_data book.render_final_report(@tags), :filename => "Final Report.xls", :disposition => 'attachment'
       }
     end
 

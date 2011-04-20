@@ -12,7 +12,11 @@
 
 				<dt><%= f.label :code %></dt>
 				<dd>
+				<% if @location.new_record? %>
 				<%= f.text_field :code, :tabindex => 1, :class => "medium" %>
+				<% else %>
+				<%= f.label :code, @location.code %>
+				<% end %>
 				<small>Location Code</small>
 				</dd>
 

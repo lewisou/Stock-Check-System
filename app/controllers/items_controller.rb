@@ -1,3 +1,5 @@
+require 'ext/spreadsheet'
+
 class ItemsController < ApplicationController
   layout "tags"
 
@@ -55,8 +57,20 @@ class ItemsController < ApplicationController
   end
 
   def missing_cost
-    @search = curr_check.items.where(:cost.eq % nil | :cost.eq % 0).search(params[:search])
-    @items = @search.paginate(:page => params[:page])
+    # curr_check.cache_counted!
+    @search = curr_check.items.missing_cost.search(params[:search])
+    
+    
+    respond_to do |format|
+      format.html {
+        @items = @search.paginate(:page => params[:page])
+      }
+      format.xls {
+        @items = @search.all
+        send_data Spreadsheet::Workbook.new.render_missing_cost(@items), 
+        :filename => "Missing Cost.xls", :disposition => 'attachment'
+      }
+    end
   end
 
 end

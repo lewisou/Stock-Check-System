@@ -13,14 +13,13 @@
 		</tr>
 		<tr>
 			<th>Cost</th>
-			<td><%= @item.cost %></td>
+			<td><%=number_to_currency (@item.cost || 0) %></td>
 		</tr>
 	</table>
 
 	<div class="tablefooter clearfix">	
 	<div class="actions">
-		<%= link_to 'Change Cost', input_price_item_path(@item), :class => "button small" %>
-		
+		<%= link_to 'Change Cost', input_price_item_path(@item), :class => "button" %>
 	</div>
 	</div>
 </article>

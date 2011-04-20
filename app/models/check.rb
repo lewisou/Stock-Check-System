@@ -43,7 +43,7 @@ class Check < ActiveRecord::Base
       :max_quantity => row[72],
       :code => row[74],
       :al_id => row[75],
-      :from_al => false
+      :from_al => true
       )
     end
   end
@@ -104,6 +104,10 @@ class Check < ActiveRecord::Base
     self.location_xls = ::Attachment.new(:data => ALL_ORDER::Import.locations(self))
     self.item_xls = ::Attachment.new(:data => ALL_ORDER::Import.items(self))
     self.inv_adj_xls = ::Attachment.new(:data => ALL_ORDER::Import.inventory_adjustment(self))
+  end
+  
+  def cache_counted!
+    Inventory.cache_counted self
   end
 
 end

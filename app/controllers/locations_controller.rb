@@ -1,3 +1,5 @@
+require 'ext/spreadsheet'
+
 class LocationsController < ApplicationController
   layout "tags"
   
@@ -9,7 +11,17 @@ class LocationsController < ApplicationController
 
   def index
     @search = curr_check.locations.search(params[:search])
-    @locations = @search.paginate(:page => params[:page])
+    
+    respond_to do |format|
+      format.html {
+        @locations = @search.paginate(:page => params[:page])
+      }
+      format.xls {
+        @locations = @search.all
+        send_data Spreadsheet::Workbook.new.render_location_counters(@locations), 
+        :filename => "Counter_by_Location.xls", :disposition => 'attachment'
+      }
+    end
   end
 
   def show

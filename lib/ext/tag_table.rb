@@ -9,19 +9,24 @@ module Prawn
     include Vivax::Barcode
     
     TAG_TABLE_WIDTH = 8.9.cm 
-    PADDING = [0.2.cm, 0.5.cm]
+    PADDING = [0.84.cm, 0.5.cm, 0.14.cm, 0.5.cm] #top right buttom left
     
     def self.generate_tags tags, tag_colors = ['db4653', '009f6e', '418bb9', 'b89466']
       pdf = Prawn::Document.new(
         :page_layout => :portrait,
         :left_margin => 0, #1.3.cm,    # different
         :right_margin => 0, #1.3.cm,    # units
-        :top_margin => 0, #0.7.cm,    # work
+        :top_margin => 0.05.cm, #0.7.cm,    # work
         :bottom_margin => 0, #0.7.cm, # well
+        # :font_size => 11,
+        # :font => "Arial",
         # :page_size => 'A3',
         :page_size   => [35.56.cm, 21.59.cm]
         # :page_size => 'A4'
         ) do
+
+        font_size 11
+        # font "Courier"
 
         tags.each_with_index do |tag, index|
           start_new_page if index % 3 == 0 && index != 0
@@ -34,6 +39,7 @@ module Prawn
           end
 
           table([tables], :width => TAG_TABLE_WIDTH * 4, :cell_style => {:borders => [], :padding => 0})
+          puts "#{index} finished"
         end
       end
 
@@ -54,11 +60,12 @@ module Prawn
       item = tag.inventory.item.try(:code) || "No content"
       description = (tag.inventory.item.try(:description) || "No descrption")[0, 20]
       data = [
-        [make_tag_sub_table(["\n#{tag.id}", image_wrapper(tag.id.to_s)], tag_color)],
-        ["\n#{item}"],
-        [image_wrapper(item)],
-        ["\n#{description}"],
-        [make_tag_sub_table(["\n#{tag.inventory.location.code}", "\n#{tag.created_at.to_date}", " "], tag_color)]
+        # [make_tag_sub_table(["\n#{tag.id}", image_wrapper(tag.id.to_s)], tag_color)],
+        [make_tag_sub_table(["#{tag.id}", " "], tag_color)],        
+        ["#{item}"],
+        [" "], #image_wrapper(item)
+        ["#{description}"],
+        [make_tag_sub_table(["#{tag.inventory.location.code}", "#{tag.created_at.to_date}", " "], tag_color)]
       ]
 
 

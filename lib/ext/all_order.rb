@@ -4,7 +4,7 @@ require 'spreadsheet'
 module ALL_ORDER
   class Import
     def self.inventory_adjustment check
-      Inventory.in_check(check.id).all.each {|inv| inv.cached_counted = inv.counted; inv.save(:validate => false)}
+      check.cache_counted!
 
       self.xls('InvAdjustment', [
         {:list => Inventory.in_check(check.id).need_adjustment.map(&:location).uniq, :symbols => [:id, "INVENTORY:INVENTORY ADJUSTMENTS", :code]},
@@ -50,6 +50,7 @@ module ALL_ORDER
          end
         end
 
+        # sheet.row(index + 1).concat cells
         sheet.row(index + 1).concat cells
       end
     end

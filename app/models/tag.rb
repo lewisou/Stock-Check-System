@@ -2,12 +2,12 @@ class Tag < ActiveRecord::Base
   scope :in_check, lambda {|check_id| includes(:inventory => {:item => {:item_group => :check}}).where(:checks => {:id => check_id}) }
   scope :not_finish, lambda{|count| where("count_#{count}".to_sym.eq % nil | "count_#{count}".to_sym.eq % 0)}
   scope :finish, lambda{|count| where("count_#{count}".to_sym.gt % 0)}
-  
+
 
   belongs_to :inventory
 
   attr_accessor :location_id, :item_id
-  
+
   search_methods :counted_by
   scope :counted_by, lambda { |counter_count|
     counter = Counter.find(counter_count.split('_').first)

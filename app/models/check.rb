@@ -110,6 +110,9 @@ class Check < ActiveRecord::Base
     Inventory.cache_counted self
   end
 
+  def finish_count?
+    Tag.in_check(self.id).not_finish(1).count == 0 && Tag.in_check(self.id).not_finish(2).count == 0
+  end
 end
 
 

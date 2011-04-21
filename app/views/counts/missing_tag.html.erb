@@ -11,6 +11,7 @@
 		<div class='buttons'>
 			<%= f.submit 'Filter', :class => 'button' %>
 			<%= link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
+			<%= link_to 'Export to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 		</div>
 
 	<% end %>

@@ -5,45 +5,43 @@
 
 	<h1>Dashboard</h1>
 
-	<h2>Quick Links</h2>
 	<section class="icons">
 		<ul>
 			<li>
-				<%= link_to raw("#{image_tag('eleganticons/Paper.png')} <span>Inventory</span>"), tags_path %>
+				<%= link_to raw("#{image_tag('eleganticons/Paper.png')} <span>Inventory</span>"), inventories_path %>
 			</li>
+			
 			<li>
-				<%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count One</span>"), counts_path %>
+				<%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count One</span>"), curr_check.state == 'open' ? counts_path(:count => 1) : result_counts_path(:count => 1) %>
 			</li>
+
+			<% if curr_check.state != 'open' || Tag.in_check(curr_check.id).not_finish(1).count == 0 %>
 			<li>
-				<a href="#">
-					<img src="images/eleganticons/Paper-pencil.png" />
-					<span>Count Two</span>
-				</a>
+				<%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count Two</span>"), curr_check.state == 'open' ? counts_path(:count => 2) : result_counts_path(:count => 2) %>
 			</li>
+			<% end %>
+			
+			<% if curr_check.finish_count? %>
 			<li>
-				<a href="#">
-					<img src="images/eleganticons/Person-group.png" />
-					<span>Counters</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
+				<a href="<%= count_varience_reports_path %>">
 					<img src="images/eleganticons/Graph.png" />
 					<span>Reports</span>
 				</a>
 			</li>
+			<% end %>
+			
 			<li>
-				<a href="#">
+				<a href="<%= checks_path %>">
 					<img src="images/eleganticons/Config.png" />
 					<span>Settings</span>
 				</a>
 			</li>
-			<li>
+			<!-- <li>
 				<a href="#">
 					<img src="images/eleganticons/Info.png" />
 					<span>Help</span>
 				</a>
-			</li>
+			</li> -->
 			<li>
 				<a href="<%= destroy_admin_session_path %>">
 					<img src="images/eleganticons/X.png" />

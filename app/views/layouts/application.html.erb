@@ -85,19 +85,21 @@ jQuery(function($) {
 				</li>
 				<% end %>
 
-				<% if Tag.in_check(curr_check.id).not_finish(1).count == 0 && Tag.in_check(curr_check.id).not_finish(2).count == 0 %>
+				<% if curr_check.finish_count? %>
 				<li <%= "class='current'" if @nav == :count && @c_i == 3 %>><a href="#">Count 3</a>
 					<%= render :partial => 'shared/count_ul', :locals => {:count => 3} %>
 				</li>
 				<% end %>
-				
-				<li <%= "class='current'" if @nav == :report %>><a href="#">Reports</a>
+
+				<% if curr_check.finish_count? %>
+				<li <%= "class='current'" if @nav == :report %>><%= link_to 'Reports', count_varience_reports_path %>
 					<ul>
 						<li><%= link_to 'Count Varience', count_varience_reports_path %></li>
 						<li><%= link_to 'Final Valuation', final_report_reports_path %></li>
 						<li><%= link_to 'Final Valuation (Frozen QTYs)', final_frozen_reports_path %></li>
 					</ul>
 				</li>
+				<% end %>
 				<% end %>
 				
 				<li <%= "class='current'" if @nav == :setting %>><a href="#">Settings</a>

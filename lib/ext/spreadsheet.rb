@@ -3,6 +3,10 @@ require 'spreadsheet'
 module Spreadsheet
   class Workbook
     
+    def render_missing_tags tags
+      generate_xls "Missing Tags", tags, %w{Tag Item Location}, [:id, [:inventory, :item, :code], [:inventory, :location, :code]]
+    end
+    
     def render_missing_cost items
       generate_xls "Missing Cost", items, %w{ItemNumber Description Cost}, [:code, :description]
     end

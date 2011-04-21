@@ -4,7 +4,7 @@
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
-				<dt><%= f.label :item_code_like %></dt>
+				<dt><%= f.label :item_code_like, 'Item Number contains' %></dt>
 				<dd>
 				<%= f.text_field :item_code_like, :class => "small required", :tabindex => 1 %>
 				<%= f.submit 'Search', :class => 'button' %>

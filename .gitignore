@@ -2,6 +2,7 @@
 db/*.sqlite3
 log/*.log
 public/system/*/*
+config/database.yml
 tmp/
 .DS_Store
 public/images/barcodes/*.*

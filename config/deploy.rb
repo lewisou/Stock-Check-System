@@ -19,6 +19,13 @@ role :db,  "192.168.1.199", :primary => true # This is where Rails migrations wi
 # if you're still using the script/reaper helper you will need
 # these http://github.com/rails/irs_process_scripts
 
+desc "Make symlink for database yaml" 
+namespace :db do
+  task :symlink do
+    run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml" 
+  end
+end
+
 # If you are using Passenger mod_rails uncomment this:
 namespace :deploy do
   task :start do ; end
@@ -27,3 +34,5 @@ namespace :deploy do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
 end
+
+after "deploy:update_code", "db:symlink"

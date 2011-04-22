@@ -36,8 +36,10 @@ Scs::Application.routes.draw do
 
   resources :checks do
     collection do
-      put 'change_state', 'refresh_count'
+      put 'change_state', 'refresh_count', 'color_update'
+      get 'color'
     end
+
     member do
       put 'make_current'
     end

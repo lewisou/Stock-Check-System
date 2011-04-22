@@ -24,9 +24,9 @@
 	<table id="table1" class="gtable">
 		<thead>
 			<tr>
-				<th>TAG #</th>
-				<th>Location</th>
-				<th>Item Number</th>
+				<th><%= sort_link @search, :id, 'Tag' %></th>
+				<th><%= sort_link @search, :inventory_location_id, 'Location' %></th>
+				<th><%= sort_link @search, :inventory_item_id, 'Item Number' %></th>
 				<th>Description</th>
 				<th>Counted</th>
 				<th>Cost</th>

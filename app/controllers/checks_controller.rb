@@ -109,4 +109,16 @@ class ChecksController < ApplicationController
     redirect_to missing_cost_items_path, :notice => "Refresh finished."
   end
 
+  def color
+    @check = curr_check
+  end
+  
+  def color_update
+    if curr_check.update_attributes(params[:check])
+      redirect_to color_checks_path, :notice => "Colors changed."
+    else
+      render :color
+    end
+  end
+
 end

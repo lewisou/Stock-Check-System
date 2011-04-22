@@ -23,9 +23,9 @@
 	<table class="gtable detailtable">
 		<thead>
 			<tr>
-				<th>Tag #</th>
-				<th>Item #</th>
-				<th>Location</th>
+				<th><%= sort_link @search, :id, 'Tag' %></th>
+				<th><%= sort_link @search, :inventory_item_code, 'Item' %></th>
+				<th><%= sort_link @search, :inventory_location_code, 'Location' %></th>
 				<th>Cost</th>
 				<th>Action</th>
 			</tr>

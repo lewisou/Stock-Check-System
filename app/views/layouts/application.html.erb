@@ -46,6 +46,7 @@ jQuery(function($) {
 <%= csrf_meta_tag %>
 
 <style type="text/css"><%= yield :stylesheets %></style>
+<%= yield :head %>
 </head>
 <body>
 
@@ -58,7 +59,7 @@ jQuery(function($) {
 		</div>
 		<% if admin_signed_in? %>
 		<div id="userinfo" class="grid_6">
-			Welcome, <a href="#">Rich</a>
+			Welcome, <a href="<%= edit_admin_registration_path(current_admin) %>"><%= current_admin.email %></a>
 		</div>
 		<% end %>
 	</div>

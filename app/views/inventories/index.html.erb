@@ -6,9 +6,15 @@
 			<dl class="inline">
 				<dt><%= f.label :item_code_like, 'Item Number contains' %></dt>
 				<dd>
-				<%= f.text_field :item_code_like, :class => "small required", :tabindex => 1 %>
-				<%= f.submit 'Search', :class => 'button' %>
+				<%= f.text_field :item_code_like, :class => "small", :tabindex => 1 %>
 				</dd>
+				
+				<dt><%= f.label :location_id_eq, 'Location' %></dt>
+				<dd>
+					<%= f.collection_select(:location_id_eq, curr_check.locations, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => 2})  %>
+					<%= f.submit 'Search', :class => 'button' %>
+				</dd>
+
 			</dl>
 
 		</fieldset>

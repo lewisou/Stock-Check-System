@@ -3,7 +3,7 @@
 <article>
 	<%= render :partial => 'shared/flash' %>
 			
-	<h1>Count <%= @c_i %> Data Entry</h1>
+	<h1 <%= "style='background-color: ##{curr_check.send("color_#{@c_i}".to_sym)}'" if curr_check.send("color_#{@c_i}".to_sym) %>>Count <%= @c_i %> Data Entry</h1>
 
 	<%= form_for @tag, :url => count_path(@tag) do |f| %>
 		<fieldset>

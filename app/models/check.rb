@@ -14,7 +14,7 @@ class Check < ActiveRecord::Base
   attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
 
-  before_create :refresh_location, :refresh_item_and_group
+  before_create :refresh_location, :refresh_item_and_group, :init_colors
   def refresh_item_and_group
     self.item_groups = []
     @book = Spreadsheet.open @item_groups_xls.path
@@ -46,6 +46,12 @@ class Check < ActiveRecord::Base
       :from_al => true
       )
     end
+  end
+
+  def init_colors
+    self.color_1 = 'B4E2D4'
+    self.color_2 = 'F3C4C8'
+    self.color_3 = 'EADFD2'
   end
 
   def refresh_location

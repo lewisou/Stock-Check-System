@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110419021116) do
+ActiveRecord::Schema.define(:version => 20110422014827) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -58,6 +58,9 @@ ActiveRecord::Schema.define(:version => 20110419021116) do
     t.integer  "location_xls_id"
     t.integer  "inv_adj_xls_id"
     t.integer  "item_xls_id"
+    t.string   "color_1"
+    t.string   "color_2"
+    t.string   "color_3"
   end
 
   create_table "counters", :force => true do |t|

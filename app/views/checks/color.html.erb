@@ -1,0 +1,30 @@
+<% @sub_menu = :color %>
+
+<% content_for :head do %>
+<%= javascript_include_tag 'jscolor/jscolor.js' %>
+<% end %>
+
+<article>
+	<h1>Change Colors</h1>
+	
+	<%= form_for @check, :url => color_update_checks_path do |f| %>
+		<fieldset>
+			<dl>
+
+				<dt><%= f.label :color_1 %></dt>
+				<dd><%= f.text_field :color_1, :tabindex => 1, :class => 'color' %></dd>
+
+				<dt><%= f.label :color_2 %></dt>
+				<dd><%= f.text_field :color_2, :tabindex => 2, :class => 'color' %></dd>
+
+				<dt><%= f.label :color_3 %></dt>
+				<dd>
+					<%= f.text_field :color_3, :tabindex => 3, :class => 'color' %>
+					<%= f.submit :class => 'button' %>
+				</dd>
+
+			</dl>
+
+		</fieldset>
+	<% end %>
+</article>

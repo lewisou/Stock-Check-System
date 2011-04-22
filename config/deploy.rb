@@ -1,8 +1,13 @@
 set :application, "scs"
 set :repository,  "git@notforget.net:scs"
 
+
+set :deploy_to, "/var/www/apps/#{application}"
+set :user, "www-data"
+
 set :scm, :git
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
+
 
 role :web, "192.168.1.199"                          # Your HTTP server, Apache/etc
 role :app, "192.168.1.199"                          # This may be the same as your `Web` server

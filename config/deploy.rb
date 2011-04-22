@@ -1,11 +1,13 @@
 set :application, "scs"
 set :repository,  "git@notforget.net:scs"
-
+set :scm, :git
 
 set :deploy_to, "/var/www/apps/#{application}"
-set :user, "www-data"
 
-set :scm, :git
+set :user, "www-data"
+set :use_sudo, false
+ssh_options[:forward_agent] = true
+
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
 

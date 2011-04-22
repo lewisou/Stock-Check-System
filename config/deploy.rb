@@ -1,3 +1,5 @@
+require 'bundler/capistrano'
+
 set :application, "scs"
 set :repository,  "git@notforget.net:scs"
 set :scm, :git

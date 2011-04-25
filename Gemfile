@@ -19,3 +19,7 @@ group :development, :test do
 	# gem 'cucumber-rails', '~> 0.3.2'
 	# gem 'rspec-rails', '~> 2.5.0'
 end
+
+group :production do
+	gem 'pg'
+end

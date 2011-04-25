@@ -1,7 +1,7 @@
 require 'bundler/capistrano'
 
 set :application, "scs"
-set :repository,  "git@notforget.net:scs"
+set :repository,  "git@amz.notforget.net:scs"
 set :scm, :git
 
 set :deploy_to, "/var/www/apps/#{application}"

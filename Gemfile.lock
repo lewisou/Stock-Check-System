@@ -77,6 +77,7 @@ GEM
       activesupport (>= 2.3.2)
     pdf-reader (0.9.1)
       Ascii85 (>= 0.9)
+    pg (0.11.0)
     polyglot (0.3.1)
     prawn (0.11.1)
       pdf-reader (>= 0.9.0)
@@ -127,6 +128,7 @@ DEPENDENCIES
   meta_search (~> 1.0.3)
   meta_where (~> 1.0.4)
   paperclip (= 2.3.11)
+  pg
   prawn (= 0.11.1)
   rails (= 3.0.6)
   spreadsheet (= 0.6.5.3)

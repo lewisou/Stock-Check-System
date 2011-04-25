@@ -13,6 +13,10 @@ gem 'prawn', '0.11.1'
 gem 'jquery-rails', '~> 0.2.6'
 gem 'paperclip', '2.3.11'
 
+group :production do
+	gem 'pg'
+end
+
 group :development, :test do
 	# gem 'webrat', '~> 0.7.3'
 	gem 'sqlite3-ruby', '~> 1.3.3', :require => 'sqlite3'
@@ -20,6 +24,3 @@ group :development, :test do
 	# gem 'rspec-rails', '~> 2.5.0'
 end
 
-group :production do
-	gem 'pg'
-end

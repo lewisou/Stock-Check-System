@@ -35,7 +35,7 @@ module ALL_ORDER
       end
       
       
-      self.xls(book, [{:list => check.items.need_adjustment, :symbols => [:code, :group_name, nil, nil, nil, :description, nil, nil, nil, nil, nil, nil, :cost, nil, nil, nil, :adj_max_quantity]}], :name => "ItemInventory")
+      self.xls(book, [{:list => check.items.need_adjustment, :symbols => [:code, :group_name, nil, nil, nil, :description, nil, nil, nil, nil, nil, nil, :cost, nil, nil, nil, :adj_max_quantity]}], :name => "Items")
     end
 
     private

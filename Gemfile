@@ -14,8 +14,8 @@ gem 'jquery-rails', '~> 0.2.6'
 gem 'paperclip', '2.3.11'
 
 group :development, :test do
-	gem 'webrat', '~> 0.7.3'
+	# gem 'webrat', '~> 0.7.3'
 	gem 'sqlite3-ruby', '~> 1.3.3', :require => 'sqlite3'
-	gem 'cucumber-rails', '~> 0.3.2'
-	gem 'rspec-rails', '~> 2.5.0'
+	# gem 'cucumber-rails', '~> 0.3.2'
+	# gem 'rspec-rails', '~> 2.5.0'
 end

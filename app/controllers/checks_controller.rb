@@ -47,7 +47,7 @@ class ChecksController < ApplicationController
     @check = Check.new(params[:check])
 
     @check.admin = current_admin
-    if @check.save
+    if @check.save && @check.make_current!
       redirect_to(checks_path, :notice => 'Check was successfully created.')
     else
       render :action => "new"

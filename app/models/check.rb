@@ -16,6 +16,8 @@ class Check < ActiveRecord::Base
 
   before_create :refresh_location, :refresh_item_and_group, :init_colors
   def refresh_item_and_group
+    return if @item_groups_xls.nil?
+
     self.item_groups = []
     @book = Spreadsheet.open @item_groups_xls.path
     @sheet0 = @book.worksheet 0
@@ -55,6 +57,8 @@ class Check < ActiveRecord::Base
   end
 
   def refresh_location
+    return if @locations_xls.nil?
+
     self.locations = []
     @book = Spreadsheet.open @locations_xls.path
     @sheet0 = @book.worksheet 0
@@ -74,13 +78,14 @@ class Check < ActiveRecord::Base
 
   after_create :refresh_inventories
   def refresh_inventories
+    return if @inventories_xls.nil?
+
     @book = Spreadsheet.open @inventories_xls.path
     @sheet0 = @book.worksheet 0
-    
+
     @sheet0.each_with_index do |row, index|
       next if (index == 0 || row[0].blank?)
 
-      
       self.locations.find_by_code(row[1])
       Inventory.create(
         :item => self.items.find_by_code(row[0]),
@@ -93,17 +98,14 @@ class Check < ActiveRecord::Base
 
   before_create :init_properties
   def init_properties
-    Check.curr_s.each {|c| c.current = false; c.save}
-    self.current = true
-
     self.state = 'open'
   end
-  
+
   def make_current!
-    Check.curr_s.each {|c| c.current = false; c.save}
+    Check.where(:id.not_eq => self.id).each {|c| c.current = false; c.save(:validate => false)}
+
     self.current = true
-    
-    return self.save
+    self.save(:validate => false)
   end
 
   def generate_xls

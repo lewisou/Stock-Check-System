@@ -27,7 +27,7 @@ class Inventory < ActiveRecord::Base
   end
   
   def item_full_name
-    self.item.try(:code)
+    self.item.nil? ? "" : self.item.try(:code)
   end
   
   def adj_count

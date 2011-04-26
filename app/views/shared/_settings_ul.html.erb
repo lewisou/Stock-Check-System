@@ -1,4 +1,6 @@
 <ul>
 	<li <%= "class='current'" if @sub_menu == :check %>><%= link_to 'Checks', checks_path %></li>
+	<% if has_curr_check? %>
 	<li <%= "class='current'" if @sub_menu == :color %>><%= link_to 'Colors', color_checks_path %></li>
+	<% end %>
 </ul>

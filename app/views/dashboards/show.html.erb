@@ -1,5 +1,6 @@
 <% @nav = :dashboard %>
 
+<% if has_curr_check? %>
 <article id="dashboard">
 	<%= render :partial => 'shared/flash' %>
 
@@ -51,7 +52,7 @@
 		</ul>
 	</section>
 </article>
-
+<% end %>
 
 <article>
 	<h2>Current State</h2>

@@ -7,9 +7,9 @@
 		<thead>
 			<tr>
 				<th width="30%"><%= sort_link @search, :code %></th>
-				<th>Description</th>
+				<th><%= sort_link @search, :description %></th>
 				<th>Tags</th>
-				<th>AL</th>
+				<th>Loc.</th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -22,7 +22,7 @@
 					<%= link_to location.tags.count, tags_path(:search => {:inventory_location_id_eq => location.id}) if location.tags.count > 0 %>
 					<%= location.tags.count if location.tags.count == 0 %>
 				</td>
-				<td><%= location.from_al %></td>
+				<td><%= location.from_al ? 'AO' : 'SCS' %></td>
 				<td>
 					<% if curr_check.state == 'open' %>
 						<%= link_to image_tag('icons/edit.png'), edit_location_path(location) %>

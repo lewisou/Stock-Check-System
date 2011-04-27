@@ -1,4 +1,23 @@
 <% @sub_menu = :entry %>
+
+
+<article>
+	<%= form_for @search, :url => counts_path, :method => :get do |f| %>
+		<fieldset>
+			<legend>Search</legend>
+			<dl class="inline">
+				<dt><label for="name">Tag Number</label></dt>
+				<dd>
+					<%= f.text_field :id_eq, :class => "small required", :size => "50", :tabindex => 3 %>
+					<%= hidden_field_tag :count, @c_i %>
+					<%= f.submit 'Search', :class => "button" %>
+				</dd>
+			</dl>
+
+		</fieldset>
+	<% end %>
+</article>
+
 <% if @tag %>
 <article>
 	<%= render :partial => 'shared/flash' %>
@@ -27,6 +46,11 @@
 					<%= f.text_field @c_s, :class => "small required", :size => "50", :tabindex => 1 %>
 					<%= hidden_field_tag :count, @c_i %>
 				</dd>
+				
+				<% if @c_i == 1 %>
+				<dt><%= f.label :sloc, 'Shelf Location' %></dt>
+				<dd><%= f.text_field :sloc, :class => 'small', :tabindex => 2 %></dd>
+				<% end %>
 			</dl>
 
 			<div class="buttons">
@@ -37,20 +61,4 @@
 </article>
 <% end %>
 
-<article>
-	<%= form_for @search, :url => counts_path, :method => :get do |f| %>
-		<fieldset>
-			<legend>Search</legend>
-			<dl class="inline">
-				<dt><label for="name">Tag Number</label></dt>
-				<dd>
-					<%= f.text_field :id_eq, :class => "small required", :size => "50", :tabindex => 2 %>
-					<%= hidden_field_tag :count, @c_i %>
-					<%= f.submit 'Search', :class => "button" %>
-				</dd>
-			</dl>
-
-		</fieldset>
-	<% end %>
-</article>
 

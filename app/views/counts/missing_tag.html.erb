@@ -18,13 +18,14 @@
 </article>
 
 <article>
-	<h1>Missing Tags</h1>
+	<h1><%= @search.count %> Missing Tags</h1>
 	<table id="table1" class="gtable">
 		<thead>
 			<tr>
 				<th>Tag Number</th>
 				<th>Item Number</th>
 				<th>Location</th>
+				<th>Shelf Loc</th>
 				<th>Count <%= @c_i %></th>
 				<th>Action</th>
 			</tr>
@@ -36,6 +37,7 @@
 				<td><%= tag.id %></td>
 				<td><%= tag.inventory.item.try(:code) %></td>
 				<td><%= tag.inventory.location.try(:code) %></td>
+				<td><%= tag.try(:sloc) %></td>
 				<td><%= tag.send(@c_s) %></td>
 				<td>
 					<%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf) %>

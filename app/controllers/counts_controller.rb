@@ -42,7 +42,13 @@ class CountsController < ApplicationController
 
   def update
     @tag = Tag.in_check(curr_check.id).find(params[:id])
-    @tag.update_attributes(@c_s => params[:tag][@c_s])
+    
+    vals = {
+      @c_s => params[:tag][@c_s]
+    }
+    vals = vals.merge({:sloc => params[:tag][:sloc]}) if @c_i == 1
+    
+    @tag.update_attributes(vals)
 
     if @tag.save
       redirect_to(counts_path(:search => {:id_eq => @tag.id}, :count => @c_i), :notice => "Count #{params[:count]} updated.")

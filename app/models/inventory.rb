@@ -11,7 +11,8 @@ class Inventory < ActiveRecord::Base
   end
 
   def create_default_tag!
-    self.tags.create
+    rs = self.tags.create if self.tags.count == 0
+    rs
   end
   
   def counted
@@ -19,11 +20,11 @@ class Inventory < ActiveRecord::Base
   end
   
   def frozen_value
-    (self.quantity || 0) * (self.item.al_cost || 0)
+    (self.quantity || 0) * (self.item.try(:al_cost) || 0)
   end
   
   def counted_value
-    self.counted * (self.item.cost || 0)
+    self.counted * (self.item.try(:cost) || 0)
   end
   
   def item_full_name
@@ -35,7 +36,7 @@ class Inventory < ActiveRecord::Base
   end
   
   def adj_item_cost
-    self.adj_count > 0 ? self.item.cost : ""
+    self.adj_count > 0 ? self.item.cost : nil
   end
 end
 

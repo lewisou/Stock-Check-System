@@ -27,6 +27,7 @@
 				<th><%= sort_link @search, :inventory_item_code, 'Item' %></th>
 				<th><%= sort_link @search, :inventory_location_code, 'Location' %></th>
 				<th>Cost</th>
+				<th><%= sort_link @search, :sloc, 'Shelf Loc' %></th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -39,6 +40,7 @@
 				<td><%= tag.inventory.item.try(:code) %> <a href="#" class="detail-link">more</a></td>
 				<td><%= tag.inventory.location.try(:code) %></td>
 				<td><%=number_to_currency (tag.inventory.item.try(:cost) || 0) %></td>
+				<td><%= tag.sloc %></td>
 				<td>
 					<% if curr_check.state == 'open' %>
 					<%= link_to image_tag('icons/edit.png'), edit_tag_path(tag), :title => 'Edit' %>

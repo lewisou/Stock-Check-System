@@ -20,4 +20,9 @@ class ActiveSupport::TestCase
       :items_xls => File.new("#{Rails.root.to_s}/test/files/items.xls")
     )
   end
+  
+  def new_blank_check
+    c = Check.new; c.save(:validate => false)
+    c
+  end
 end

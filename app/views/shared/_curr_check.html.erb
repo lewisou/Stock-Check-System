@@ -42,7 +42,7 @@
 		</tr>
 		<% if curr_check.state == 'archive' %>
 		<tr>
-			<th>ALL ORDER Import</th>
+			<th>Export to ALL ORDER</th>
 			<td>
 			<%= link_to('locations.xls', attachment_path(curr_check.location_xls)) unless curr_check.location_xls.nil? %>
 			<br />

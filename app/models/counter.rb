@@ -25,7 +25,7 @@ class Counter < ActiveRecord::Base
     rs = []
     2.times {|time| 
       Counter.all.each {|counter| 
-        rs << ["Count #{time + 1} - #{counter.name}", "#{counter.id}_#{time + 1}"]
+        rs << ["Count #{time + 1} by #{counter.name}", "#{counter.id}_#{time + 1}"]
       }
     }
     rs

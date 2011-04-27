@@ -73,7 +73,7 @@ module Prawn
         table.width = TAG_TABLE_WIDTH
         table.column_widths = [TAG_TABLE_WIDTH]
 
-        table.cells.style(:padding => PADDING, :borders => [])
+        table.cells.style(:padding => PADDING, :borders => [:top, :left, :right, :bottom])
         # :border_color => tag_color, :text_color => tag_color, 
       end
 

@@ -112,3 +112,23 @@ class CheckTest < ActiveSupport::TestCase
     assert !c.finish_count?
   end
 end
+
+# == Schema Information
+#
+# Table name: checks
+#
+#  id              :integer         not null, primary key
+#  state           :string(255)
+#  created_at      :datetime
+#  updated_at      :datetime
+#  current         :boolean         default(FALSE)
+#  description     :text
+#  admin_id        :integer
+#  location_xls_id :integer
+#  inv_adj_xls_id  :integer
+#  item_xls_id     :integer
+#  color_1         :string(255)
+#  color_2         :string(255)
+#  color_3         :string(255)
+#
+

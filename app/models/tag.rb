@@ -90,6 +90,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: tags
@@ -101,5 +102,6 @@ end
 #  created_at   :datetime
 #  updated_at   :datetime
 #  inventory_id :integer
+#  sloc         :string(255)
 #
 

@@ -129,6 +129,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: checks
@@ -143,5 +144,8 @@ end
 #  location_xls_id :integer
 #  inv_adj_xls_id  :integer
 #  item_xls_id     :integer
+#  color_1         :string(255)
+#  color_2         :string(255)
+#  color_3         :string(255)
 #
 

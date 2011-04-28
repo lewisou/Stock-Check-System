@@ -4,4 +4,9 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
+require 'metric_fu'
+MetricFu::Configuration.run do |config|
+ config.rcov[:rcov_opts] << "-Itest" # Needed to find test_helper
+end
+
 Scs::Application.load_tasks

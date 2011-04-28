@@ -53,11 +53,11 @@
 				<td><%= tag.inventory.location.try(:code) %></td>
 				<td><%= tag.inventory.item.try(:code) %></td>
 				<td><%= tag.inventory.item.try(:description).to_s[0, 30] %></td>
-				<td><%= tag.count_1 %></td>
-				<td><%= tag.count_2 %></td>
-				<td><%=number_to_currency (tag.count_1 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
-				<td><%=number_to_currency (tag.count_2 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
-				<td><%= tag.count_3 %></td>
+				<td class='number'><%= tag.count_1 %></td>
+				<td class='number'><%= tag.count_2 %></td>
+				<td class='number'><%=number_to_currency (tag.count_1 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
+				<td class='number'><%=number_to_currency (tag.count_2 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
+				<td class='number'><%= tag.count_3 %></td>
 				<td>
 					<% if curr_check.state == 'open' %>
 					<%= link_to 'Count 3', counts_path(:search => {:id_eq => tag.id}, :count => 3) %>

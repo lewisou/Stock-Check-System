@@ -44,12 +44,12 @@
 				<td><%= inventory.location.try(:code) %></td>
 				<td><%= inventory.item.try(:code) %></td>
 				<td><%= inventory.item.try(:description).to_s[0, 30] %></td>
-				<td><%=number_to_currency inventory.item.try(:al_cost) %></td>
-				<td><%=number_to_currency inventory.item.try(:cost) %></td>
-				<td><%= inventory.quantity %></td>
-				<td><%= inventory.counted %></td>
-				<td><%=number_to_currency inventory.frozen_value %></td>
-				<td><%=number_to_currency inventory.counted_value %></td>
+				<td class='number'><%=number_to_currency inventory.item.try(:al_cost) %></td>
+				<td class='number'><%=number_to_currency inventory.item.try(:cost) %></td>
+				<td class='number'><%= inventory.quantity %></td>
+				<td class='number'><%= inventory.counted %></td>
+				<td class='number'><%=number_to_currency inventory.frozen_value %></td>
+				<td class='number'><%=number_to_currency inventory.counted_value %></td>
 			</tr>
 			<% end %>
 

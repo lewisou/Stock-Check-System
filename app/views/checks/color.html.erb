@@ -5,6 +5,7 @@
 <% end %>
 
 <article>
+	<%= render :partial => 'shared/flash' %>
 	<h1>Change Colors</h1>
 	
 	<%= form_for @check, :url => color_update_checks_path do |f| %>

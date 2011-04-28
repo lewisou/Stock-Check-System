@@ -40,9 +40,9 @@
 				<td><%= tag.inventory.location.try(:code) %></td>
 				<td><%= tag.inventory.item.try(:code) %></td>
 				<td><%= tag.inventory.item.try(:description).to_s[0, 30] %></td>
-				<td><%= tag.final_count %></td>
-				<td><%=number_to_currency tag.inventory.item.try(:cost) %></td>
-				<td><%=number_to_currency tag.final_count * (tag.inventory.item.try(:cost) || 0) %></td>
+				<td class='number'><%= tag.final_count %></td>
+				<td class='number'><%=number_to_currency tag.inventory.item.try(:cost) %></td>
+				<td class='number'><%=number_to_currency tag.final_count * (tag.inventory.item.try(:cost) || 0) %></td>
 			</tr>
 			<% end %>
 

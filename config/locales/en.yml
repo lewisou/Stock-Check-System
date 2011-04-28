@@ -3,3 +3,9 @@
 
 en:
   hello: "Hello world"
+
+  number:
+    currency:
+      format:
+        precision: 3
+

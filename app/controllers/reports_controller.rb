@@ -18,17 +18,14 @@ class ReportsController < ApplicationController
     
     @search = @search.search(({"tolerance_v" => 25, "tolerance_q" => 5}).merge(params[:search] || {}))
 
-    
     respond_to do |format|
       format.html { @tags = @search.paginate(:page => params[:page]) }
-      
       format.xls {
         @tags = @search.all
         book = Spreadsheet::Workbook.new
         send_data book.render_tags(@tags, "Tags Need Count 3"), :filename => "Tags_need_Count_3.xls", :disposition => 'attachment'
       }
     end
-
   end
 
   def final_report

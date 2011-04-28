@@ -13,18 +13,15 @@ class CountsController < ApplicationController
 
     respond_to do |format|
       format.html { @tags = @search.paginate(:page => params[:page]) }
-
       format.pdf {
         @tags = @search.all
 
         pdf = Prawn::Document.generate_tags @tags
         send_data pdf.render, :filename => "tags.pdf", :disposition => 'attachment'
       }
-      
       format.xls {
         @tags = @search.all
         book = Spreadsheet::Workbook.new
-        # data = book.generate_xls("Final Report", @tags, %w{Tag Location Item Description Counted Cost Value}, [:id, [:inventory, :location, :code], [:inventory, :item, :code], [:inventory, :item, :description], :final_count, [:inventory, :item, :cost], :counted_value])
         send_data book.render_missing_tags(@tags), :filename => "Missing Tags Count #{@c_i}.xls", :disposition => 'attachment'
       }
     end

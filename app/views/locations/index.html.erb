@@ -18,7 +18,7 @@
 			<tr>
 				<td><%= location.code %></td>
 				<td><%= location.description %></td>
-				<td>
+				<td class='number'>
 					<%= link_to location.tags.count, tags_path(:search => {:inventory_location_id_eq => location.id}) if location.tags.count > 0 %>
 					<%= location.tags.count if location.tags.count == 0 %>
 				</td>

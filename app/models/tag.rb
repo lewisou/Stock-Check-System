@@ -3,10 +3,7 @@ class Tag < ActiveRecord::Base
   scope :not_finish, lambda{|count| where("count_#{count}".to_sym.eq % nil | "count_#{count}".to_sym.eq % 0)}
   scope :finish, lambda{|count| where("count_#{count}".to_sym.gt % 0)}
 
-
   belongs_to :inventory
-
-  attr_accessor :location_id, :item_id
 
   search_methods :counted_by
   scope :counted_by, lambda { |counter_count|
@@ -18,12 +15,14 @@ class Tag < ActiveRecord::Base
 
   search_methods :tolerance_q
   scope :tolerance_q, lambda { |quantity|
-    {:conditions => ["abs((tags.count_1 - tags.count_2) / cast(tags.count_2 as float)) * 100 >= ? and tags.count_2 > 0", quantity.to_f.abs]}
+    {:conditions => ["abs((tags.count_1 - tags.count_2) / cast(tags.count_1 as float)) * 100 >= ? and tags.count_1 > 0", quantity.to_f.abs]}
   }
 
   search_methods :tolerance_v
   scope :tolerance_v, lambda{|value| includes(:inventory => :item).where(["abs(tags.count_1 * items.cost - tags.count_2 * items.cost) >= ?", value.to_f.abs])}
 
+
+  attr_accessor :location_id, :item_id
   before_save :adj_inventory
   def adj_inventory
     if @location_id && @item_id
@@ -43,35 +42,9 @@ class Tag < ActiveRecord::Base
     end
   end
 
-  # before_create :adjust_inventory
-  # def adjust_inventory
-  #   return unless @location_id
-  # 
-  #   chk = self.inventory.item.item_group.check # get check
-  #   lca = chk.locations.find(@location_id) # get new location
-  # 
-  #   if(lca && lca != self.inventory.location) # new location exists && location changed
-  # 
-  #     # adjust location ###########
-  #     inv = self.inventory.item.inventories.joins(:location).where(:locations => {:id => lca.id}).first # if inventory exists
-  #     if inv
-  #       self.inventory = inv
-  #     elsif
-  #       # if new inventory does not exists, then create
-  #       self.inventory = Inventory.create(
-  #         :item => self.inventory.item,
-  #         :location => lca
-  #       )
-  #     end
-  #     # end ########################
-  # 
-  #   end
-  # 
-  # end
-
   def final_count
     if self.count_1.nil? || self.count_2.nil?
-      return 0
+      return nil
     end
     
     if self.count_1 == self.count_2
@@ -82,7 +55,8 @@ class Tag < ActiveRecord::Base
   end
   
   def counted_value
-    final_count * (self.inventory.item.try(:cost) || 0)
+    return nil if final_count.nil? || self.inventory.item.try(:cost).nil?
+    final_count * self.inventory.item.try(:cost)
   end
 
 end

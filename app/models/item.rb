@@ -11,15 +11,15 @@ class Item < ActiveRecord::Base
   end
   
   def group_name
-    self.item_group.name
+    self.item_group.try(:name)
   end
   
-  def totel_qty
+  def counted_total_qty
     self.inventories.map(&:counted).sum
   end
   
   def adj_max_quantity
-    (self.max_quantity && self.max_quantity > 0 && totel_qty > self.max_quantity) ? totel_qty : nil
+    (self.max_quantity && self.max_quantity > 0 && counted_total_qty > self.max_quantity) ? counted_total_qty : nil
   end
 end
 

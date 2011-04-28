@@ -1,1 +1,1 @@
-require 'ext/prawn/table/cell/image'
+# require 'ext/prawn/table/cell/image'

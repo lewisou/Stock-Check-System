@@ -1,16 +1,7 @@
 <article>
 	<h1>New check</h1>
 	
-	<% if @check.errors.any? %>
-		<div class="error msg">
-			<%= pluralize(@check.errors.count, "error") %> prohibited this tag from being saved:
-			<ul>
-			<% @check.errors.full_messages.each do |msg| %>
-			<li><%= msg %></li>
-			<% end %>
-			</ul>
-		</div>	
-	<% end %>
+	<%= render :partial => 'shared/errors', :locals => {:object => @check} %>
 	
 	<%= form_for @check, :method => :post, :html => {:class => 'uniform', :multipart => true} do |f| %>
 		<fieldset>
@@ -48,9 +39,12 @@
 		</fieldset>
 
 		<div class="buttons">
-			<%= f.submit :class => 'button', :disable_with => "Creating..." %>
+			<%= f.submit :disable_with => "Creating...", :class => 'button loading', :click => "this.disable=true" %>
+			<%= image_tag('loader.gif') %>
 		</div>
 		
 	<% end %>
+	
+	
 </article>
 

@@ -26,12 +26,15 @@
 <%= javascript_include_tag 'jquery.validate.min' %>
 <%= javascript_include_tag 'jquery.uniform.min' %>
 <%= javascript_include_tag 'jquery.wysiwyg' %>
+<%= javascript_include_tag 'rails' %>
+
 <%= javascript_include_tag 'superfish' %>
 <%= javascript_include_tag 'cufon-yui' %>
 <%= javascript_include_tag 'Delicious_500.font' %>
 <%= javascript_include_tag 'jquery.flot.min' %>
 <%= javascript_include_tag 'custom' %>
 <%= javascript_include_tag 'facebox' %>
+<%= javascript_include_tag 'application' %>
 
 <script type="text/javascript">
 jQuery(function($) {
@@ -42,7 +45,6 @@ jQuery(function($) {
 });
 </script>
 
-<%= javascript_include_tag 'rails' %>
 <%= csrf_meta_tag %>
 
 <style type="text/css"><%= yield :stylesheets %></style>

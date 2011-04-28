@@ -26,7 +26,8 @@ class Location < ActiveRecord::Base
   end
 
   def available_counters count
-    Counter.all - self.assigns.where(:count => 3 - count).map(&:counter)
+    rs = Counter.all - self.assigns.where(:count => 3 - count).map(&:counter)
+    rs - self.assigns.where(:count => count).map(&:counter)
   end
   
   def has_available_counters?

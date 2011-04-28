@@ -1,5 +1,5 @@
 require 'test_helper'
- 
+
 class AssignTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   test "in check" do

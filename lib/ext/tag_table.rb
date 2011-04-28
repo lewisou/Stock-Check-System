@@ -1,12 +1,12 @@
 require "prawn/measurement_extensions"
-require 'ext/prawn'
-require 'ext/barcode'
+# require 'ext/prawn'
+# require 'ext/barcode'
 # require "open-uri"
 
 module Prawn
 
   class Document
-    include Vivax::Barcode
+    # include Vivax::Barcode
     
     TAG_TABLE_WIDTH = 8.9.cm 
     PADDING = [0.84.cm, 0.5.cm, 0.14.cm, 0.5.cm] #top right buttom left

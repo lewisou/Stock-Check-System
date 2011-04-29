@@ -39,11 +39,12 @@ class Check < ActiveRecord::Base
     @sheet0.each_with_index do |row, index|
       next if (index == 0 || row[0].blank?)
 
+      is_active = row[34].nil? ? false : (row[34] == 1 || row[34] == '1' || row[34] == true)
       Item.create(:description => row[1],
       :item_group => (self.item_groups.select {|g| g.name == row[6]}).first,
       :cost => row[20],
       :al_cost => row[20],
-      :is_active => (row[34] == 1 || row[34] == '1' || row[34] == true),
+      :is_active => is_active,
       :inittags => row[41],
       :max_quantity => row[72],
       :code => row[74],
@@ -90,12 +91,13 @@ class Check < ActiveRecord::Base
       next if (index == 0 || row[0].blank?)
 
       self.locations.find_by_code(row[1])
-      Inventory.create(
+      inv = Inventory.create(
         :item => self.items.find_by_code(row[0]),
         :location => self.locations.find_by_code(row[1]),
         :quantity => row[7],
         :from_al => true
-      ).create_init_tags!
+      )
+      inv.create_default_tag! if inv.create_init_tags! == 0
     end
   end
 
@@ -128,7 +130,18 @@ class Check < ActiveRecord::Base
   def finish_count_in count
     Tag.in_check(self.id).not_finish(count).count == 0
   end
+
+  def total_count_value count
+    (Inventory.in_check(self.id).collect {|inv| inv.counted_value_in(count)}).sum
+  end
   
+  def total_count_final_value
+    (Inventory.in_check(self.id).collect {|inv| inv.counted_value}).sum
+  end
+  
+  def total_frozen_value
+    (Inventory.in_check(self.id).map(&:quantity).delete_if {|q| q.blank?}).sum
+  end
 end
 
 

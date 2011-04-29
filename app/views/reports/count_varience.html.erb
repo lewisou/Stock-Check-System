@@ -87,3 +87,21 @@
 		<%= will_paginate @tags %>
 	</div>
 </article>
+
+<article>
+	<h2>Summary</h2>
+	<table class="infos">
+		<tr>
+			<th>Counted 1 Value</th>
+			<td class="number"><%=number_to_currency curr_check.total_count_value(1) %></td>
+		</tr>
+		<tr>
+			<th>Counted 2 Value</th>
+			<td class="number"><%=number_to_currency curr_check.total_count_value(2) %></td>
+		</tr>
+		<tr>
+			<th>Difference</th>
+			<td class="number"><%=number_to_currency (curr_check.total_count_value(1) - curr_check.total_count_value(2)).abs %></td>
+		</tr>
+	</table>
+</article>

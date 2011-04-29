@@ -60,3 +60,17 @@
 		<%= will_paginate @inventories %>
 	</div>
 </article>
+
+<article>
+	<h2>Summary</h2>
+	<table class="infos">
+		<tr>
+			<th>Total Frozen Value</th>
+			<td class="number"><%=number_to_currency curr_check.total_frozen_value %></td>
+		</tr>
+		<tr>
+			<th>Total Counted Value</th>
+			<td class="number"><%=number_to_currency curr_check.total_count_final_value %></td>
+		</tr>
+	</table>
+</article>

@@ -118,11 +118,12 @@ class CheckTest < ActiveSupport::TestCase
   test "finish_count?" do
     c = new_check
     c.save(:validate => false)
-    
+    c.locations.first.inventories.create.tags.create
+
     Tag.update_all(:count_1 => 1)
     Tag.update_all(:count_2 => 2)
-    
-    assert c.finish_count? 
+
+    assert c.finish_count?
     
     Tag.update_all(:count_1 => nil)
     Tag.update_all(:count_2 => nil)
@@ -133,13 +134,39 @@ class CheckTest < ActiveSupport::TestCase
   test "finish_count_in" do
     c = new_check
     c.save(:validate => false)
-    
+    c.locations.first.inventories.create.tags.create
+
     Tag.update_all(:count_1 => 1)
     assert c.finish_count_in(1)
     assert !c.finish_count_in(2)
 
     Tag.update_all(:count_2 => 1)
     assert c.finish_count_in(2)
+  end
+  
+  test "total count 1 & 2 value" do
+    c = new_blank_check
+    inv = c.item_groups.create.items.create(:cost => 1).inventories.create(:location => c.locations.create)
+    3.times {|i| inv.tags.create(:count_1 => i, :count_2 => (i + 1))}
+
+    assert c.total_count_value(1) == 3
+    assert c.total_count_value(2) == 6
+  end
+  
+  test "total_count_final_value" do
+    c = new_blank_check
+    inv = c.item_groups.create.items.create(:cost => 1).inventories.create(:location => c.locations.create)
+    3.times {|i| inv.tags.create(:count_1 => 1, :count_2 => 1)}
+    
+    assert c.total_count_final_value == 3
+  end
+  
+  test "total frozen value" do
+    c = new_blank_check
+    c.item_groups.create.items.create(:cost => 1).inventories.create(:location => c.locations.create, :quantity => 1)
+    c.item_groups.create.items.create(:cost => 1).inventories.create(:location => c.locations.create, :quantity => 2)
+    
+    assert c.total_frozen_value == 3
   end
 end
 

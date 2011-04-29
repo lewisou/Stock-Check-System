@@ -1,0 +1,76 @@
+<% @sub_menu = :report %>
+<article>
+	<%= form_for @search, :url => frozen_report_counts_path, :method => :get do |f| %>
+		<fieldset>
+			<legend>Filter</legend>
+			<dl class="inline">
+				<dt><%= f.label :item_code_like, 'Item' %></dt>
+				<dd><%= f.text_field :item_code_like, :class => "small", :tabindex => 1 %></dd>
+				<dt><%= f.label :location_id_eq, 'Location' %></dt>
+				<dd>
+					<%= hidden_field_tag :count, @c_i %>
+					<%= f.collection_select(:location_id_eq, curr_check.locations, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => 2})  %>
+				</dd>
+			</dl>
+
+			<div class="buttons">
+				<%= f.submit 'Search', :class => "button" %>
+				<% unless params[:search].nil? %>
+				<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
+				<% end %>
+			</div>
+		</fieldset>
+	<% end %>
+</article>
+
+
+<article>
+	<h1>Count <%= @c_i %> Report with Frozen QTY's</h1>
+	
+	<table id="table1" class="gtable detailtable">
+		<thead>
+			<tr>
+				<th><%= sort_link @search, :location_id_and_item_id, 'Location' %></th>
+				<th><%= sort_link @search, :item_id_and_location_id, 'Item' %></th>
+				<th>Frozen Cost</th>
+				<th>Changed Cost</th>
+				<th>Frozen QTY</th>
+				<th>Count <%= @c_i %></th>
+				<th>Frozen Value</th>
+				<th>Count <%= @c_i %></th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @inventories.each do |inventory| %>
+			<tr>
+				<td><%= inventory.location.try(:code) %></td>
+				<td><a href="#" class="detail-link"><%= inventory.item.try(:code) %></a></td>
+				<td class='number'><%=number_to_currency inventory.item.try(:al_cost) %></td>
+				<td class='number'><%=number_to_currency inventory.item.try(:cost) %></td>
+				<td class='number'><%= inventory.quantity %></td>
+				<td class='number'><%= inventory.counted_in(@c_i) %></td>
+				<td class='number'><%=number_to_currency inventory.frozen_value %></td>
+				<td class='number'><%=number_to_currency inventory.counted_value_in(@c_i) %></td>
+			</tr>
+
+			<tr class="detail">
+				<td colspan="8">
+					<table>
+						<tbody>
+							<tr>
+								<td><%= inventory.item.try(:description) %></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<% end %>
+
+		</tbody>
+	</table>
+
+	<div class="tablefooter clearfix">
+		<%= will_paginate @inventories %>
+	</div>
+</article>

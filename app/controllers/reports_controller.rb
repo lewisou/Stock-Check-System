@@ -6,17 +6,9 @@ class ReportsController < ApplicationController
   before_filter { @nav = :report }
   
   def count_varience
-    @count_3_finished = !params[:count_3_finished].blank?
 
-    @search = Tag.in_check(curr_check.id).where(:count_1.gte % 0 & :count_2.gte % 0)
-
-    if @count_3_finished
-      @search = @search.where(:count_3.not_eq % nil) 
-    else
-      @search = @search.where(:count_3.eq % nil)
-    end
-    
-    @search = @search.search(({"tolerance_v" => 25, "tolerance_q" => 5}).merge(params[:search] || {}))
+    @tole = {:tole_quantity => (params[:tole_quantity] || 5), :tole_value => (params[:tole_value] || 25)}
+    @search = Tag.in_check(curr_check.id).finish(1).finish(2).tole_q_or_v(@tole[:tole_quantity], @tole[:tole_value]).search(params[:search])
 
     respond_to do |format|
       format.html { @tags = @search.paginate(:page => params[:page]) }

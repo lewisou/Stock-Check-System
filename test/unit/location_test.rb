@@ -74,3 +74,21 @@ class LocationTest < ActiveSupport::TestCase
     assert l.counter_names(1) == "A, BC, DEF"
   end
 end
+# == Schema Information
+#
+# Table name: locations
+#
+#  id           :integer         not null, primary key
+#  code         :string(255)
+#  created_at   :datetime
+#  updated_at   :datetime
+#  is_available :boolean
+#  is_active    :boolean
+#  check_id     :integer
+#  from_al      :boolean         default(FALSE)
+#  data_changed :boolean         default(FALSE)
+#  desc1        :text
+#  desc2        :text
+#  desc3        :text
+#
+

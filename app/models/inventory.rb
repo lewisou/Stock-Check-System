@@ -19,6 +19,30 @@ class Inventory < ActiveRecord::Base
     self.tags.map(&:final_count).sum
   end
   
+  def counted_in_1
+    self.counted_in 1
+  end
+  
+  def counted_in_2
+    self.counted_in 2
+  end
+  
+  def counted_value_in_1
+    self.counted_value_in 1
+  end
+  
+  def counted_value_in_2
+    self.counted_value_in 2
+  end
+
+  def counted_value_in count
+    self.counted_in(count) * (self.item.try(:cost) || 0)
+  end  
+  
+  def counted_in count
+    (self.tags.collect {|t| t.send("count_#{count}") || 0}).sum
+  end
+  
   def frozen_value
     (self.quantity || 0) * (self.item.try(:al_cost) || 0)
   end
@@ -37,6 +61,18 @@ class Inventory < ActiveRecord::Base
   
   def adj_item_cost
     self.adj_count > 0 ? self.item.cost : nil
+  end
+  
+  def create_init_tags!
+    cod = self.location.try(:code).try(:upcase)
+    return 0 if cod.blank?
+    
+    rs = (self.item.try(:inittags) || '').split(/[, ]/).delete_if {|ing| ing.blank? || !ing.upcase.start_with?(cod)}
+    
+    (rs.collect {|el| el.upcase.delete(cod) }).each do |sloc|
+      self.tags.create(:sloc => sloc)
+    end
+    return rs.size
   end
 end
 

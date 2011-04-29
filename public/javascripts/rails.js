@@ -193,4 +193,17 @@
 	$('form').live('ajax:complete.rails', function(event) {
 		if (this == event.target) enableFormElements($(this));
 	});
+	
+
+	// add by lewis
+	var allowAction = (function() {
+		var original_allowAction = allowAction;
+		return function(element) {
+			var message = element.data('confirm');
+			rs = !message || (fire(element, 'confirm') && confirm(message));
+			element.attr("rails-confirm", (rs ? 'yes' : 'no'))
+			return rs
+		}
+	})();
+
 })( jQuery );

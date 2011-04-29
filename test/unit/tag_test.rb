@@ -59,6 +59,32 @@ class TagTest < ActiveSupport::TestCase
 
   end
 
+  test "tole_q_or_v scope" do
+    scope = Item.create(:cost => 1).inventories.create.tags
+    
+    scope.create(:count_1 => 100, :count_2 => 110)
+    scope.create(:count_1 => 100, :count_2 => 120)
+    scope.create(:count_1 => 100, :count_2 => 130)
+    scope.create(:count_1 => 100, :count_2 => 140)
+    scope.create(:count_1 => 100, :count_2 => 150)
+    scope.create(:count_1 => 100)
+    scope.create()
+    
+    assert Tag.tole_q_or_v(50, 51).count == 1
+    assert Tag.tole_q_or_v(50.1, 51).count == 0
+
+    assert Tag.tole_q_or_v(51, 50).count == 1
+    assert Tag.tole_q_or_v(50, 50).count == 1
+    
+    assert Tag.tole_q_or_v(51, 51).count == 0
+    
+    assert Tag.tole_q_or_v(40, 41).count == 2
+    assert Tag.tole_q_or_v(41, 40).count == 2
+    assert Tag.tole_q_or_v(40, 40).count == 2
+    
+    assert Tag.tole_q_or_v(41, 41).count == 1
+  end
+
   test "tolerance_q scope" do
     Tag.create(:count_1 => 100, :count_2 => 110)
     Tag.create(:count_1 => 100, :count_2 => 120)
@@ -68,7 +94,7 @@ class TagTest < ActiveSupport::TestCase
     Tag.create(:count_1 => 100)
     Tag.create()
 
-    assert Tag.tolerance_q(51).count == 0
+    assert Tag.tolerance_q(50.1).count == 0
     assert Tag.tolerance_q(50).count == 1
     assert Tag.tolerance_q(40).count == 2
 
@@ -90,7 +116,7 @@ class TagTest < ActiveSupport::TestCase
     scope.create(:count_1 => 100)
     scope.create()
 
-    assert Tag.tolerance_v(51).count == 0
+    assert Tag.tolerance_v(50.1).count == 0
     assert Tag.tolerance_v(50).count == 1
     assert Tag.tolerance_v(40).count == 2
 
@@ -143,4 +169,31 @@ class TagTest < ActiveSupport::TestCase
     assert nil_scope.create(:count_1 => 2, :count_2 => 2).counted_value == nil
   end
 
+  test "count & value differ" do
+    scope = Item.create(:cost => 1).inventories.create.tags
+    
+    assert scope.create(:count_1 => 1, :count_2 => 2).count_differ == 100
+    assert scope.create(:count_1 => 5, :count_2 => 2).count_differ == 60
+    assert scope.create.count_differ == nil
+
+    assert scope.create(:count_1 => 1, :count_2 => 2).value_differ == 1
+    assert scope.create(:count_1 => 5, :count_2 => 2).value_differ == 3
+    assert scope.create.count_differ == nil
+    
+  end
 end
+
+# == Schema Information
+#
+# Table name: tags
+#
+#  id           :integer         not null, primary key
+#  count_1      :integer
+#  count_2      :integer
+#  count_3      :integer
+#  created_at   :datetime
+#  updated_at   :datetime
+#  inventory_id :integer
+#  sloc         :string(255)
+#
+

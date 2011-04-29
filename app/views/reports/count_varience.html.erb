@@ -5,14 +5,14 @@
 			<dl class="inline">
 				<dt><label for="name">Tolerance</label></dt>
 				<dd>
-					<%= f.text_field :tolerance_v, :class => "small required", :tabindex => 1 %> (> $ in value)
-					<%= f.text_field :tolerance_q, :class => "small required", :tabindex => 2 %> (> % in quantity)
+					<%= text_field_tag "tole_value", @tole[:tole_value], :class => "small required", :tabindex => 1 %> ($ in value)
+					<%= text_field_tag "tole_quantity", @tole[:tole_quantity], :class => "small required", :tabindex => 2 %> (% in quantity)
 				</dd>
 				<dt>
-					<%= label_tag :count_3_finished %>
+					<%= f.label :count_3_is_null, 'Count 3 not finished' %>
 				</dt>
 				<dd>
-					<%= check_box_tag :count_3_finished, nil, @count_3_finished, :tabindex => 3 %>
+					<%= f.check_box :count_3_is_null, {}, true, false %>
 				</dd>
 				
 				<%= render :partial => 'tags/search_dl', :locals => {:f => f, :tab_index => 4} %>
@@ -31,17 +31,18 @@
 <article>
 	<h1>Count Varience Report</h1>
 	
-	<table id="table1" class="gtable">
+	<table id="table1" class="gtable detailtable">
 		<thead>
 			<tr>
 				<th>TAG #</th>
 				<th>Location</th>
 				<th>Item Number</th>
-				<th>Description</th>
 				<th>Count 1</th>
 				<th>Count 2</th>
+				<th>Differ</th>
 				<th>Value 1</th>
 				<th>Value 2</th>
+				<th>Differ</th>
 				<th>Count 3</th>
 				<th>Action</th>
 			</tr>
@@ -52,11 +53,12 @@
 				<td><%= tag.id %></td>
 				<td><%= tag.inventory.location.try(:code) %></td>
 				<td><%= tag.inventory.item.try(:code) %></td>
-				<td><%= tag.inventory.item.try(:description).to_s[0, 30] %></td>
 				<td class='number'><%= tag.count_1 %></td>
 				<td class='number'><%= tag.count_2 %></td>
+				<td class="number"><%= tag.count_differ %> %</td>
 				<td class='number'><%=number_to_currency (tag.count_1 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
 				<td class='number'><%=number_to_currency (tag.count_2 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
+				<td class='number'><%=number_to_currency tag.value_differ %></td>
 				<td class='number'><%= tag.count_3 %></td>
 				<td>
 					<% if curr_check.state == 'open' %>
@@ -64,6 +66,19 @@
 					<% end %>
 				</td>
 			</tr>
+			
+			<tr class="detail">
+				<td colspan="6">
+					<table>
+						<tbody>
+							<tr>
+								<td><%= tag.inventory.item.try(:description) %></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			
 			<% end %>
 		</tbody>
 	</table>

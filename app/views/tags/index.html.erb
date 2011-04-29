@@ -9,7 +9,9 @@
 			</dl>
 			<div class="buttons">
 				<%= f.submit 'Search', :class => "button" %>
-				<%= link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
+				<% unless params[:search].nil? %>
+				<%= loading_link 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
+				<% end %>
 			</div>
 		</fieldset>
 	<% end %>

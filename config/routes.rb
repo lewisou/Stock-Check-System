@@ -30,7 +30,7 @@ Scs::Application.routes.draw do
 
   resources :counts do
     collection do
-      get 'missing_tag', 'result'
+      get 'missing_tag', 'result', 'frozen_report'
     end
   end
 

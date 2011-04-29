@@ -95,4 +95,60 @@ class InventoryTest < ActiveSupport::TestCase
     assert inv.adj_item_cost == 1
     assert inv2.adj_item_cost == nil
   end
+  
+  test "counted_in" do
+    i = Inventory.create
+    3.times {i.tags.create(:count_1 => 1)}
+    2.times {i.tags.create(:count_2 => 1)}
+    1.times {i.tags.create}
+    
+    assert i.counted_in_1 == 3
+    assert i.counted_in_2 == 2
+  end
+  
+  test "counted_value_in" do
+    i = Inventory.create(:item => Item.create(:cost => 10))
+    3.times {i.tags.create(:count_1 => 1)}
+    2.times {i.tags.create(:count_2 => 1)}
+    1.times {i.tags.create}
+    
+    assert i.counted_value_in_1 == 30
+    assert i.counted_value_in_2 == 20
+  end
+  
+  
+  test "create init tags!" do
+    l = Location.create(:code => 'CA')
+    
+    i1 = Item.create(:inittags => 'CA75H, CA74H')
+    i2 = Item.create(:inittags => 'CZ75H, CZ74H')
+    i3 = Item.create
+    
+    in1 = Inventory.create(:location => l, :item => i1)
+    in2 = Inventory.create(:location => l, :item => i2)
+    in3 = Inventory.create(:location => l, :item => i3)
+    
+    assert in1.create_init_tags! == 2
+    assert in2.create_init_tags! == 0
+    assert in3.create_init_tags! == 0
+    assert in1.tags.count == 2
+    assert in2.tags.count == 0
+    assert in3.tags.count == 0
+    assert Tag.count == 2
+
+  end
 end
+# == Schema Information
+#
+# Table name: inventories
+#
+#  id             :integer         not null, primary key
+#  item_id        :integer
+#  location_id    :integer
+#  quantity       :integer
+#  created_at     :datetime
+#  updated_at     :datetime
+#  from_al        :boolean         default(FALSE)
+#  cached_counted :integer
+#
+

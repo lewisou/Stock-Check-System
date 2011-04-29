@@ -19,6 +19,10 @@
 		<td><%= @tag.inventory.location.try(:code) %></td>
 	</tr>
 	<tr>
+		<th>Shelf Location</th>
+		<td><%= @tag.try(:sloc) %></td>
+	</tr>
+	<tr>
 		<th>Date</th>
 		<td><%= @tag.created_at.to_date %></td>
 	</tr>

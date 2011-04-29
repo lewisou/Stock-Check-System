@@ -16,6 +16,6 @@ gem 'pg'
 
 group :development, :test do
 	gem 'sqlite3-ruby', '~> 1.3.3', :require => 'sqlite3'
-	# gem 'metric_fu'
+	gem 'metric_fu'
 end
 

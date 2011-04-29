@@ -13,7 +13,8 @@ class Check < ActiveRecord::Base
 
   attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
-
+  validates_uniqueness_of :description
+  
   before_create :refresh_location, :refresh_item_and_group, :init_colors
   def refresh_item_and_group
     return if @item_groups_xls.nil?
@@ -42,6 +43,8 @@ class Check < ActiveRecord::Base
       :item_group => (self.item_groups.select {|g| g.name == row[6]}).first,
       :cost => row[20],
       :al_cost => row[20],
+      :is_active => (row[34] == 1 || row[34] == '1' || row[34] == true),
+      :inittags => row[41],
       :max_quantity => row[72],
       :code => row[74],
       :al_id => row[75],
@@ -92,7 +95,7 @@ class Check < ActiveRecord::Base
         :location => self.locations.find_by_code(row[1]),
         :quantity => row[7],
         :from_al => true
-      ).create_default_tag!
+      ).create_init_tags!
     end
   end
 
@@ -121,6 +124,11 @@ class Check < ActiveRecord::Base
   def finish_count?
     Tag.in_check(self.id).not_finish(1).count == 0 && Tag.in_check(self.id).not_finish(2).count == 0
   end
+  
+  def finish_count_in count
+    Tag.in_check(self.id).not_finish(count).count == 0
+  end
+  
 end
 
 

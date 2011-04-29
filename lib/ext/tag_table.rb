@@ -62,10 +62,10 @@ module Prawn
       data = [
         # [make_tag_sub_table(["\n#{tag.id}", image_wrapper(tag.id.to_s)], tag_color)],
         [make_tag_sub_table(["#{tag.id}", " "], tag_color)],        
-        ["#{item}"],
-        [" "], #image_wrapper(item)
-        ["#{description}"],
-        [make_tag_sub_table(["#{tag.inventory.location.code}", "#{tag.created_at.to_date}", " "], tag_color)]
+        ["#{item} "],
+        ["#{description} "],
+        ["#{tag.sloc} "], #image_wrapper(item)
+        [make_tag_sub_table(["#{tag.inventory.location.code} ", "#{tag.created_at.to_date} ", " "], tag_color)]
       ]
 
 

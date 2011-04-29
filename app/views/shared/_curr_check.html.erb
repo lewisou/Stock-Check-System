@@ -60,14 +60,14 @@
 <div class="tablefooter clearfix">
 	<div class="actions">
 		<% if curr_check.state == 'open' %>
-		<%= link_to 'Archive', change_state_checks_path(:state => :archive), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button" %>
-		<%= link_to 'Cancel', change_state_checks_path(:state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button" %>
+		<%= loading_link 'Archive', change_state_checks_path(:state => :archive), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button" %>
+		<%= loading_link 'Cancel', change_state_checks_path(:state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button" %>
 		<% elsif curr_check.state == 'archive' %>
 		<%= link_to 'Start New One', new_check_path, :class => "button" %>
 		<% elsif curr_check.state == 'cancel' %>
 		<%= link_to 'Start New One', new_check_path, :class => "button" %>
 		<% end %>
-		<%= link_to 'Reopen', change_state_checks_path(:state => :open), :method => :put, :confirm => "Are you sure to reopen the check '#{curr_check.description}' ?", :class => "button" if curr_check.state != 'open' %>
+		<%= loading_link 'Reopen', change_state_checks_path(:state => :open), :method => :put, :confirm => "Are you sure to reopen the check '#{curr_check.description}' ?", :class => "button" if curr_check.state != 'open' %>
 	</div>
 </div>
 

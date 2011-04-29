@@ -31,6 +31,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: items
@@ -47,5 +48,6 @@ end
 #  from_al       :boolean         default(FALSE)
 #  al_cost       :float
 #  data_changed  :boolean         default(FALSE)
+#  is_active     :boolean
 #
 

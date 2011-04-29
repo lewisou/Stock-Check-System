@@ -9,8 +9,13 @@
 				<dt><%= f.label :code_like, 'Item Number contains' %></dt>
 				<dd>
 				<%= f.text_field :code_like, :class => "small required", :tabindex => 1 %>
-				<%= f.submit 'Search', :class => 'button' %>
 				</dd>
+
+				<dt><%= f.label :is_active_not_eq, 'inActive' %></dt>
+				<dd><%= f.check_box :is_active_not_eq, {}, true, false %></dd>
+
+				<dt>&nbsp;</dt>
+				<dd><%= f.submit 'Search', :class => 'button' %></dd>
 			</dl>
 		</fieldset>
 		<%= link_to "New Item", new_item_path, :class => 'button' %>
@@ -34,7 +39,7 @@
 			<tr>
 				<td><%= item.code %></td>
 				<td><%= item.description[0, 35] %> <%= "..." if item.description.size > 35 %></td>
-				<td><%= item.cost %></td>
+				<td class='number'><%=number_to_currency item.cost %></td>
 				<td><%= item.from_al %></td>
 				<td>
 					<% if curr_check.state == 'open' %>
@@ -61,7 +66,7 @@
 							<tr>
 								<td><%= inventory.location.try(:code) %></td>
 								<td><%= inventory.location.try(:description) %></td>
-								<td><%= inventory.quantity %></td>
+								<td class='number'><%= inventory.quantity %></td>
 							</tr>
 							<% end %>
 						</tbody>

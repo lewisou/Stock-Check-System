@@ -39,8 +39,7 @@
 		</fieldset>
 
 		<div class="buttons">
-			<%= f.submit :disable_with => "Creating...", :class => 'button loading', :click => "this.disable=true" %>
-			<%= image_tag('loader.gif') %>
+			<%= loading_submit f, nil, :class => 'button' %>
 		</div>
 		
 	<% end %>

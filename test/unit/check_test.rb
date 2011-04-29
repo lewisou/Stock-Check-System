@@ -37,7 +37,18 @@ class CheckTest < ActiveSupport::TestCase
     assert ItemGroup.count == 33
     assert c.items.count == 22
     assert Item.count == 22
+    assert !Item.all.map(&:is_active).include?(nil)
+    assert Item.all.map(&:is_active).include?(true)
   end
+  
+  test "refresh_item_and_group will load shelf locations" do
+    c = new_check
+    c.save(:validate => false)
+    
+
+    assert Item.where(:inittags.not_eq => nil).count > 0
+  end
+  
 
   test "init_colors" do
     c = Check.new()
@@ -70,6 +81,13 @@ class CheckTest < ActiveSupport::TestCase
     c.save(:validate => false)
 
     assert Inventory.in_check(c.id).count == 22
+  end
+  
+  test "refresh_inventories will create default tags" do
+    c = new_check
+    c.save(:validate => false)
+    
+    assert Tag.in_check(c.id).count == 22
   end
   
   test "init_properties before create" do
@@ -110,6 +128,18 @@ class CheckTest < ActiveSupport::TestCase
     Tag.update_all(:count_2 => nil)
     
     assert !c.finish_count?
+  end
+  
+  test "finish_count_in" do
+    c = new_check
+    c.save(:validate => false)
+    
+    Tag.update_all(:count_1 => 1)
+    assert c.finish_count_in(1)
+    assert !c.finish_count_in(2)
+
+    Tag.update_all(:count_2 => 1)
+    assert c.finish_count_in(2)
   end
 end
 

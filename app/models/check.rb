@@ -132,15 +132,15 @@ class Check < ActiveRecord::Base
   end
 
   def total_count_value count
-    (Inventory.in_check(self.id).collect {|inv| inv.counted_value_in(count)}).sum
+    Inventory.in_check(self.id).includes(:tags).includes(:item).sum("tags.count_#{count} * items.cost")
   end
   
   def total_count_final_value
-    (Inventory.in_check(self.id).collect {|inv| inv.counted_value}).sum
+    Inventory.in_check(self.id).includes(:tags).includes(:item).sum("tags.final_count * items.cost")
   end
   
   def total_frozen_value
-    (Inventory.in_check(self.id).map(&:quantity).delete_if {|q| q.blank?}).sum
+    Inventory.in_check(self.id).includes(:item).sum("quantity * items.cost")
   end
 end
 

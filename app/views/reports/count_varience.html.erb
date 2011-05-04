@@ -1,4 +1,24 @@
 <article>
+	<h1>Count Varience Report</h1>
+	<h2>Summary</h2>
+	<table class="infos">
+		<tr>
+			<th>Counted 1 Value</th>
+			<td class="number"><%=number_to_currency curr_check.total_count_value(1).to_f %></td>
+		</tr>
+		<tr>
+			<th>Counted 2 Value</th>
+			<td class="number"><%=number_to_currency curr_check.total_count_value(2).to_f %></td>
+		</tr>
+		<tr>
+			<th>Difference</th>
+			<td class="number"><%=number_to_currency (curr_check.total_count_value(1).to_f - curr_check.total_count_value(2).to_f).abs %></td>
+		</tr>
+	</table>
+</article>
+
+<article>
+	<h2>Details</h2>
 	<%= form_for @search, :url => count_varience_reports_path, :method => :get do |f| %>
 		<fieldset>
 			<legend>Filter</legend>
@@ -19,9 +39,7 @@
 			</dl>
 
 			<div class="buttons">
-				<%= f.submit 'Filter', :class => "button" %>
-				<!-- link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' -->
-				<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
+				<%= f.submit 'Search', :class => "button" %>
 			</div>
 		</fieldset>
 	<% end %>
@@ -29,8 +47,9 @@
 
 
 <article>
-	<h1>Count Varience Report</h1>
-	
+	<div class="buttons">
+	<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
+	</div>
 	<table id="table1" class="gtable detailtable">
 		<thead>
 			<tr>
@@ -86,22 +105,4 @@
 	<div class="tablefooter clearfix">
 		<%= will_paginate @tags %>
 	</div>
-</article>
-
-<article>
-	<h2>Summary</h2>
-	<table class="infos">
-		<tr>
-			<th>Counted 1 Value</th>
-			<td class="number"><%=number_to_currency curr_check.total_count_value(1) %></td>
-		</tr>
-		<tr>
-			<th>Counted 2 Value</th>
-			<td class="number"><%=number_to_currency curr_check.total_count_value(2) %></td>
-		</tr>
-		<tr>
-			<th>Difference</th>
-			<td class="number"><%=number_to_currency (curr_check.total_count_value(1) - curr_check.total_count_value(2)).abs %></td>
-		</tr>
-	</table>
 </article>

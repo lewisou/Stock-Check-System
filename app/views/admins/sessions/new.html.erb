@@ -19,8 +19,8 @@
 		<!-- <div class="error msg">Message if login failed</div> -->
 		<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
 			<dl>
-				<dt><%= f.label :email %></dt>
-				<dd><%= f.text_field :email, :tabindex => 1 %></dd>
+				<dt><%= f.label :username %></dt>
+				<dd><%= f.text_field :username, :tabindex => 1 %></dd>
 			
 				<dt><%= f.label :password %></dt>
 				<dd><%= f.password_field :password, :tabindex => 2 %></dd>

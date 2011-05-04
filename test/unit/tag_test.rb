@@ -60,7 +60,7 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "tole_q_or_v scope" do
-    scope = Item.create(:cost => 1).inventories.create.tags
+    scope = Item.create(:cost => 2).inventories.create.tags
     
     scope.create(:count_1 => 100, :count_2 => 110)
     scope.create(:count_1 => 100, :count_2 => 120)
@@ -70,19 +70,19 @@ class TagTest < ActiveSupport::TestCase
     scope.create(:count_1 => 100)
     scope.create()
     
-    assert Tag.tole_q_or_v(50, 51).count == 1
-    assert Tag.tole_q_or_v(50.1, 51).count == 0
+    assert Tag.tole_q_or_v(50, 101).count == 1
+    assert Tag.tole_q_or_v(50.1, 101).count == 0
 
-    assert Tag.tole_q_or_v(51, 50).count == 1
-    assert Tag.tole_q_or_v(50, 50).count == 1
+    assert Tag.tole_q_or_v(51, 100).count == 1
+    assert Tag.tole_q_or_v(50, 100).count == 1
     
-    assert Tag.tole_q_or_v(51, 51).count == 0
+    assert Tag.tole_q_or_v(51, 101).count == 0
     
-    assert Tag.tole_q_or_v(40, 41).count == 2
-    assert Tag.tole_q_or_v(41, 40).count == 2
-    assert Tag.tole_q_or_v(40, 40).count == 2
+    assert Tag.tole_q_or_v(40, 81).count == 2
+    assert Tag.tole_q_or_v(41, 80).count == 2
+    assert Tag.tole_q_or_v(40, 80).count == 2
     
-    assert Tag.tole_q_or_v(41, 41).count == 1
+    assert Tag.tole_q_or_v(41, 81).count == 1
   end
 
   test "tolerance_q scope" do
@@ -106,7 +106,7 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "tolerance_v" do
-    scope = Item.create(:cost => 1).inventories.create.tags
+    scope = Item.create(:cost => 2).inventories.create.tags
     
     scope.create(:count_1 => 100, :count_2 => 110)
     scope.create(:count_1 => 100, :count_2 => 120)
@@ -116,15 +116,15 @@ class TagTest < ActiveSupport::TestCase
     scope.create(:count_1 => 100)
     scope.create()
 
-    assert Tag.tolerance_v(50.1).count == 0
-    assert Tag.tolerance_v(50).count == 1
-    assert Tag.tolerance_v(40).count == 2
+    assert Tag.tolerance_v(100.1).count == 0
+    assert Tag.tolerance_v(100).count == 1
+    assert Tag.tolerance_v(80).count == 2
 
-    assert Tag.tolerance_v(30).count == 3
-    assert Tag.tolerance_v(25).count == 3
+    assert Tag.tolerance_v(60).count == 3
+    assert Tag.tolerance_v(50).count == 3
     
-    assert Tag.tolerance_v(20).count == 4
-    assert Tag.tolerance_v(15).count == 4
+    assert Tag.tolerance_v(40).count == 4
+    assert Tag.tolerance_v(30).count == 4
   end
 
   test "adj_inventory" do
@@ -160,9 +160,9 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "counted_value" do
-    scope = Item.create(:cost => 1).inventories.create.tags
+    scope = Item.create(:cost => 2).inventories.create.tags
     
-    assert scope.create(:count_1 => 2, :count_2 => 2).counted_value == 2
+    assert scope.create(:count_1 => 2, :count_2 => 2).counted_value == 4
     assert scope.create.final_count == nil
 
     nil_scope = Item.create(:cost => nil).inventories.create.tags
@@ -170,16 +170,16 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "count & value differ" do
-    scope = Item.create(:cost => 1).inventories.create.tags
-    
+    scope = Item.create(:cost => 2).inventories.create.tags
+
     assert scope.create(:count_1 => 1, :count_2 => 2).count_differ == 100
     assert scope.create(:count_1 => 5, :count_2 => 2).count_differ == 60
     assert scope.create.count_differ == nil
 
-    assert scope.create(:count_1 => 1, :count_2 => 2).value_differ == 1
-    assert scope.create(:count_1 => 5, :count_2 => 2).value_differ == 3
+    assert scope.create(:count_1 => 1, :count_2 => 2).value_differ == 2
+    assert scope.create(:count_1 => 5, :count_2 => 2).value_differ == 6
     assert scope.create.count_differ == nil
-    
+
   end
 end
 

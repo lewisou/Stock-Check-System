@@ -67,6 +67,7 @@ class ItemTest < ActiveSupport::TestCase
     assert i3.adj_max_quantity == nil
   end
 end
+
 # == Schema Information
 #
 # Table name: items
@@ -84,5 +85,6 @@ end
 #  al_cost       :float
 #  data_changed  :boolean         default(FALSE)
 #  is_active     :boolean
+#  inittags      :text
 #
 

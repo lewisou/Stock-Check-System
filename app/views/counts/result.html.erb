@@ -22,6 +22,7 @@
 				<th>Tag Number</th>
 				<th>Item Number</th>
 				<th>Location</th>
+				<th>Shelf</th>
 				<th>Count <%= @c_i %></th>
 			</tr>
 		</thead>
@@ -32,6 +33,7 @@
 				<td><%= tag.id %></td>
 				<td><%= tag.inventory.item.try(:code) %></td>
 				<td><%= tag.inventory.location.try(:code) %></td>
+				<td><%= tag.try(:sloc) %></td>
 				<td class='number'><%= tag.send(@c_s) %></td>
 			</tr>
 			<% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110429052026) do
+ActiveRecord::Schema.define(:version => 20110504022914) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20110429052026) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "username"
   end
 
   add_index "admins", ["email"], :name => "index_admins_on_email", :unique => true
@@ -38,6 +39,9 @@ ActiveRecord::Schema.define(:version => 20110429052026) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "assigns", ["counter_id"], :name => "index_assigns_on_counter_id"
+  add_index "assigns", ["location_id"], :name => "index_assigns_on_location_id"
 
   create_table "attachments", :force => true do |t|
     t.string   "data_file_name"
@@ -80,6 +84,9 @@ ActiveRecord::Schema.define(:version => 20110429052026) do
     t.integer  "cached_counted"
   end
 
+  add_index "inventories", ["item_id"], :name => "index_inventories_on_item_id"
+  add_index "inventories", ["location_id"], :name => "index_inventories_on_location_id"
+
   create_table "item_groups", :force => true do |t|
     t.text     "name"
     t.string   "item_type"
@@ -92,6 +99,8 @@ ActiveRecord::Schema.define(:version => 20110429052026) do
     t.datetime "updated_at"
     t.integer  "check_id"
   end
+
+  add_index "item_groups", ["check_id"], :name => "index_item_groups_on_check_id"
 
   create_table "items", :force => true do |t|
     t.string   "code"
@@ -109,6 +118,8 @@ ActiveRecord::Schema.define(:version => 20110429052026) do
     t.text     "inittags"
   end
 
+  add_index "items", ["item_group_id"], :name => "index_items_on_item_group_id"
+
   create_table "locations", :force => true do |t|
     t.string   "code"
     t.datetime "created_at"
@@ -123,6 +134,8 @@ ActiveRecord::Schema.define(:version => 20110429052026) do
     t.text     "desc3"
   end
 
+  add_index "locations", ["check_id"], :name => "index_locations_on_check_id"
+
   create_table "tags", :force => true do |t|
     t.integer  "count_1"
     t.integer  "count_2"
@@ -131,6 +144,9 @@ ActiveRecord::Schema.define(:version => 20110429052026) do
     t.datetime "updated_at"
     t.integer  "inventory_id"
     t.string   "sloc"
+    t.integer  "final_count"
   end
+
+  add_index "tags", ["inventory_id"], :name => "index_tags_on_inventory_id"
 
 end

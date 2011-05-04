@@ -44,16 +44,15 @@ class Tag < ActiveRecord::Base
     end
   end
 
-  def final_count
+  before_save :adj_final_count
+  def adj_final_count
     if self.count_1.nil? || self.count_2.nil?
-      return nil
+      self.final_count = nil
+    elsif self.count_1 == self.count_2
+      self.final_count = self.count_1
+    else
+      self.final_count = self.count_3.nil? ? [self.count_1, self.count_2].min : self.count_3
     end
-    
-    if self.count_1 == self.count_2
-      return self.count_1
-    end
-
-    self.count_3.nil? ? [self.count_1, self.count_2].min : self.count_3
   end
   
   def counted_value

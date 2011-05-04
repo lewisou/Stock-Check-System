@@ -62,7 +62,7 @@ jQuery(function($) {
 		</div>
 		<% if admin_signed_in? %>
 		<div id="userinfo" class="grid_6">
-			Welcome, <a href="<%= edit_admin_registration_path(current_admin) %>"><%= current_admin.email %></a>
+			Welcome, <a href="<%= edit_admin_registration_path(current_admin) %>"><%= current_admin.username %></a>
 		</div>
 		<% end %>
 	</div>

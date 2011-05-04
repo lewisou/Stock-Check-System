@@ -1,4 +1,20 @@
 <% @sub_menu = :report %>
+
+<article>
+	<h1>Count <%= @c_i %> Report with Frozen QTY's</h1>
+	<h2>Summary</h2>
+	<table class="infos">
+		<tr>
+			<th>Total Frozen Value</th>
+			<td class="number"><%=number_to_currency curr_check.total_frozen_value %></td>
+		</tr>
+		<tr>
+			<th>Counted <%= @c_i %> Value</th>
+			<td class="number"><%=number_to_currency curr_check.total_count_value(@c_i) %></td>
+		</tr>
+	</table>
+</article>
+
 <article>
 	<%= form_for @search, :url => frozen_report_counts_path, :method => :get do |f| %>
 		<fieldset>
@@ -25,8 +41,7 @@
 
 
 <article>
-	<h1>Count <%= @c_i %> Report with Frozen QTY's</h1>
-	
+	<h2>Details</h2>
 	<table id="table1" class="gtable detailtable">
 		<thead>
 			<tr>
@@ -73,18 +88,4 @@
 	<div class="tablefooter clearfix">
 		<%= will_paginate @inventories %>
 	</div>
-</article>
-
-<article>
-	<h2>Summary</h2>
-	<table class="infos">
-		<tr>
-			<th>Total Frozen Value</th>
-			<td class="number"><%=number_to_currency curr_check.total_frozen_value %></td>
-		</tr>
-		<tr>
-			<th>Counted <%= @c_i %> Value</th>
-			<td class="number"><%=number_to_currency curr_check.total_count_value(@c_i) %></td>
-		</tr>
-	</table>
 </article>

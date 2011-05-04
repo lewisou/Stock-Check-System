@@ -1,4 +1,17 @@
 <article>
+	<h1>Final Report</h1>
+	<h2>Summary</h2>
+	<table class="infos">
+		<tr>
+			<th>Total Counted Value</th>
+			<td class="number"><%=number_to_currency curr_check.total_count_final_value %></td>
+		</tr>
+	</table>
+</article>
+
+<article>
+	<h2>Details</h2>
+
 	<%= form_for @search, :url => final_report_reports_path, :method => :get do |f| %>
 		<fieldset>
 			<legend>Filter</legend>
@@ -8,19 +21,13 @@
 
 			<div class="buttons">
 				<%= f.submit 'Search', :class => "button" %>
-				<!-- link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' -->
-				<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 			</div>
-			
-			
 		</fieldset>
 	<% end %>
 </article>
 
-
 <article>
-	<h1>Final Report</h1>
-	
+	<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 	<table id="table1" class="gtable">
 		<thead>
 			<tr>
@@ -42,7 +49,7 @@
 				<td><%= tag.inventory.item.try(:description).to_s[0, 30] %></td>
 				<td class='number'><%= tag.final_count %></td>
 				<td class='number'><%=number_to_currency tag.inventory.item.try(:cost) %></td>
-				<td class='number'><%=number_to_currency tag.final_count * (tag.inventory.item.try(:cost) || 0) %></td>
+				<td class='number'><%=number_to_currency (tag.final_count || 0) * (tag.inventory.item.try(:cost) || 0) %></td>
 			</tr>
 			<% end %>
 
@@ -52,15 +59,4 @@
 	<div class="tablefooter clearfix">
 		<%= will_paginate @tags %>
 	</div>
-</article>
-
-
-<article>
-	<h2>Summary</h2>
-	<table class="infos">
-		<tr>
-			<th>Total Counted Value</th>
-			<td class="number"><%=number_to_currency curr_check.total_count_final_value %></td>
-		</tr>
-	</table>
 </article>

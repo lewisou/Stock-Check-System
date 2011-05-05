@@ -11,7 +11,8 @@ module Prawn
     TAG_TABLE_WIDTH = 8.9.cm 
     PADDING = [0.84.cm, 0.5.cm, 0.14.cm, 0.5.cm] #top right buttom left
     
-    def self.generate_tags tags, tag_colors = ['db4653', '009f6e', '418bb9', 'b89466']
+    def self.generate_tags tags
+      #, tag_colors = ['db4653', '009f6e', '418bb9', 'b89466']
       pdf = Prawn::Document.new(
         :page_layout => :portrait,
         :left_margin => 0, #1.3.cm,    # different
@@ -32,8 +33,9 @@ module Prawn
           start_new_page if index % 3 == 0 && index != 0
 
           tables = []
-          tag_colors.each_with_index do |tag_color, index_2|
-            tables << make_tag_table(tag, tag_color)
+          # tag_colors.each_with_index do |tag_color, index_2|
+          4.times do 
+            tables << make_tag_table(tag)
             # table.draw
             # ((index_2 + 1) % tag_colors.size) == 0
           end
@@ -46,8 +48,8 @@ module Prawn
       pdf
     end
 
-    def make_tag_sub_table data, tag_color
-      make_table([data], :width => TAG_TABLE_WIDTH, :column_widths => [TAG_TABLE_WIDTH / data.size] * data.size, :cell_style => {:borders => [], :padding => 0})
+    def make_tag_sub_table data, options={}
+      make_table([data], :width => TAG_TABLE_WIDTH, :column_widths => [TAG_TABLE_WIDTH / data.size] * data.size, :cell_style => {:borders => [], :padding => 0}.merge(options))
       # , :border_color => tag_color, :text_color => tag_color})
     end
     
@@ -55,19 +57,18 @@ module Prawn
       Prawn::ImageWrapper.new(barcode(val), [val.size * 0.5.cm, TAG_TABLE_WIDTH].min, 1.cm)
     end
     
-    def make_tag_table(tag, tag_color)
+    def make_tag_table(tag)
       # Prawn::ImageWrapper.new(barcode(tag.id.to_s), TAG_TABLE_WIDTH / 3, TAG_TABLE_WIDTH / 10
       item = tag.inventory.item.try(:code) || "No content"
       description = (tag.inventory.item.try(:description) || "No descrption")[0, 20]
       data = [
         # [make_tag_sub_table(["\n#{tag.id}", image_wrapper(tag.id.to_s)], tag_color)],
-        [make_tag_sub_table(["#{tag.id}", " "], tag_color)],        
+        [make_tag_sub_table(["#{tag.id}", " "], :font_style => :bold)],
         ["#{item} "],
         ["#{description} "],
         ["#{tag.sloc} "], #image_wrapper(item)
-        [make_tag_sub_table(["#{tag.inventory.location.code} ", "#{tag.created_at.to_date} ", " "], tag_color)]
+        [make_tag_sub_table(["#{tag.inventory.location.code} ", "#{tag.created_at.to_date} ", " "])]
       ]
-
 
       t = make_table(data) do |table|
         table.width = TAG_TABLE_WIDTH

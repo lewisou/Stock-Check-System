@@ -63,7 +63,7 @@ class Tag < ActiveRecord::Base
   def count_differ
     return nil if self.count_2.nil? || self.count_1.nil?
 
-    return (((count_2 - count_1) / count_1.to_f).abs * 100).to_i.abs if count_1 > 0
+    return (((count_2 - count_1).to_f / count_1.to_f).abs * 100).to_i.abs if count_1 > 0
   end
 
   def value_differ

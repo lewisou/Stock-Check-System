@@ -2,6 +2,8 @@ Scs::Application.routes.draw do
 
   devise_for :admins
 
+  resources :accounts
+
   resources :all_orders, :only => [] do
     collection do
       post 'generate'

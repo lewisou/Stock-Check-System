@@ -1,6 +1,7 @@
 <% @sub_menu = :tags %>
 
 <article>
+	<%= render :partial => 'shared/flash' %>
 	<%= form_for @search do |f| %>
 		<fieldset>
 			<legend>Search</legend>
@@ -9,9 +10,6 @@
 			</dl>
 			<div class="buttons">
 				<%= f.submit 'Search', :class => "button" %>
-				<% unless params[:search].nil? %>
-				<%= loading_link 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
-				<% end %>
 			</div>
 		</fieldset>
 	<% end %>
@@ -19,16 +17,18 @@
 
 <article>
 	<h1>All Tags</h1>
-	
-	<!-- <h2>Standard Table</h2> -->
-	
+
+	<% unless params[:search].nil? %>
+	<%= loading_link 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
+	<% end %>
+
 	<table class="gtable detailtable">
 		<thead>
 			<tr>
 				<th><%= sort_link @search, :id, 'Tag' %></th>
 				<th><%= sort_link @search, :inventory_item_code, 'Item' %></th>
 				<th><%= sort_link @search, :inventory_location_code, 'Location' %></th>
-				<th>Cost</th>
+				<th><%= sort_link @search, :inventory_item_cost, 'Cost' %></th>
 				<th><%= sort_link @search, :sloc, 'Shelf Loc' %></th>
 				<th>Action</th>
 			</tr>

@@ -30,7 +30,7 @@
 				<th>Item Number</th>
 				<th>Description</th>
 				<th>Cost</th>
-				<th>AL</th>
+				<th>Active</th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -40,7 +40,7 @@
 				<td><%= item.code %></td>
 				<td><%= item.description[0, 35] %> <%= "..." if item.description.size > 35 %></td>
 				<td class='number'><%=number_to_currency item.cost %></td>
-				<td><%= item.from_al %></td>
+				<td><%= item.is_active %></td>
 				<td>
 					<% if curr_check.state == 'open' %>
 					<%= link_to image_tag('icons/edit.png'), edit_item_path(item), :title => 'Edit' %>

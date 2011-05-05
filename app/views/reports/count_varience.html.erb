@@ -25,8 +25,8 @@
 			<dl class="inline">
 				<dt><label for="name">Tolerance</label></dt>
 				<dd>
-					<%= text_field_tag "tole_value", @tole[:tole_value], :class => "small required", :tabindex => 1 %> ($ in value)
-					<%= text_field_tag "tole_quantity", @tole[:tole_quantity], :class => "small required", :tabindex => 2 %> (% in quantity)
+					<%= f.text_field :tolerance_v, :class => "small", :tabindex => 1 %> ($ in value)
+					<%= f.text_field :tolerance_q, :class => "small", :tabindex => 2 %> (% in quantity)
 				</dd>
 				<dt>
 					<%= f.label :count_3_is_null, 'Count 3 not finished' %>

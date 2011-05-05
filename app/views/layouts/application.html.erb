@@ -62,11 +62,13 @@ jQuery(function($) {
 		</div>
 		<% if admin_signed_in? %>
 		<div id="userinfo" class="grid_6">
-			Welcome, <a href="<%= edit_admin_registration_path(current_admin) %>"><%= current_admin.username %></a>
+			Welcome, <%= link_to current_admin.username, edit_admin_registration_path(current_admin) %>
 		</div>
 		<% end %>
 	</div>
 </header>
+
+<% show_admin = true %>
 
 <% if admin_signed_in? %>
 <nav id="topmenu">
@@ -76,10 +78,14 @@ jQuery(function($) {
 				<li <%= "class='current'" if @nav == :dashboard %>><%= link_to 'Dashboard', root_path %></li>
 
 				<% if has_curr_check? %>
+				
+				<% if show_admin %>
 				<li <%= "class='current'" if @nav == :tag %>>
-					<%= link_to 'Inventory', items_path %>
+					<%= link_to 'Inventory Register', items_path %>
 					<%= render :partial => 'shared/inventory_ul' %>
 				</li>
+				<% end %>
+				
 				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>><%= link_to 'Count 1', counts_path(:count => 1) %>
 					<%= render :partial => 'shared/count_ul', :locals => {:count => 1} %>
 				</li>
@@ -95,10 +101,10 @@ jQuery(function($) {
 				</li>
 				<% end %>
 
-				<% if curr_check.finish_count? %>
+				<% if curr_check.finish_count? && show_admin %>
 				<li <%= "class='current'" if @nav == :report %>><%= link_to 'Reports', count_varience_reports_path %>
 					<ul>
-						<li><%= link_to 'Count Varience', count_varience_reports_path %></li>
+						<li><%= link_to 'Count Varience Count 1 VS 2', count_varience_reports_path %></li>
 						<li><%= link_to 'Final Valuation', final_report_reports_path %></li>
 						<li><%= link_to 'Final Valuation (Frozen QTYs)', final_frozen_reports_path %></li>
 					</ul>
@@ -106,9 +112,11 @@ jQuery(function($) {
 				<% end %>
 				<% end %>
 				
+				<% if show_admin %>
 				<li <%= "class='current'" if @nav == :setting %>><a href="#">Settings</a>
 					<%= render :partial => 'shared/settings_ul' %>
 				</li>
+				<% end %>
 			</ul>
 			<ul id="usermenu">
 				<!-- <li><a href="#" class="inbox">Inbox (3)</a></li> -->

@@ -8,9 +8,11 @@
 
 	<section class="icons">
 		<ul>
+			<% if true %>
 			<li>
 				<%= link_to raw("#{image_tag('eleganticons/Paper.png')} <span>Inventory</span>"), inventories_path %>
 			</li>
+			<% end %>
 			
 			<li>
 				<%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count One</span>"), curr_check.state == 'open' ? counts_path(:count => 1) : result_counts_path(:count => 1) %>
@@ -55,6 +57,6 @@
 <% end %>
 
 <article>
-	<h2>Current State</h2>
+	<h2>Status</h2>
 	<%= render :partial => 'shared/curr_check', :locals => {:curr_check => curr_check} %>
 </article>

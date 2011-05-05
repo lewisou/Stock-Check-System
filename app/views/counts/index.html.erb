@@ -41,7 +41,7 @@
 				<dt><label>Description</label></dt>
 				<dd><label><%= @tag.inventory.item.try(:description) %></label></dd>
 
-				<% if @c_i == 1 %>
+				<% if true %>
 				<dt><%= f.label :sloc, 'Shelf Location' %></dt>
 				<dd><label><%= @tag.sloc || '' %></label> <%= link_to image_tag('icons/edit.png'), edit_tag_path(@tag) %></dd>
 				<% end %>

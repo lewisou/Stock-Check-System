@@ -16,6 +16,8 @@
 </article>
 
 <article>
+	<h2>Details</h2>
+	
 	<%= form_for @search, :url => frozen_report_counts_path, :method => :get do |f| %>
 		<fieldset>
 			<legend>Filter</legend>
@@ -31,9 +33,6 @@
 
 			<div class="buttons">
 				<%= f.submit 'Search', :class => "button" %>
-				<% unless params[:search].nil? %>
-				<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
-				<% end %>
 			</div>
 		</fieldset>
 	<% end %>
@@ -41,7 +40,7 @@
 
 
 <article>
-	<h2>Details</h2>
+	<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 	<table id="table1" class="gtable detailtable">
 		<thead>
 			<tr>

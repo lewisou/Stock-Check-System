@@ -9,7 +9,6 @@
 				<dd>
 					<%= f.text_field :code_contains, :tabindex => 1 %>
 					<%= f.submit 'Search', :class => "button" %>
-					<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 				</dd>
 			</dl>
 		</fieldset>
@@ -21,6 +20,7 @@
 <article>
 <h1>Item Numbers Missing Cost</h2>
 
+<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 <table class="gtable">
 	<thead>
 		<tr>
@@ -37,7 +37,7 @@
 			<td><%= item.description[0, 40] if item.description %> <%= "..." if item.description && item.description.size > 40 %></td>
 			<td><%= item.cost %></td>
 			<td>
-				<%= link_to image_tag('icons/edit.png', :alt => 'Edit'), input_price_item_path(item), :title => "Input price" %>
+				<%= link_to image_tag('icons/edit.png', :alt => 'Edit'), input_price_item_path(item), :title => "Input cost" %>
 			</td>
 		</tr>
 		<% end %>

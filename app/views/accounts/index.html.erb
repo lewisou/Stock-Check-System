@@ -1,0 +1,26 @@
+<article>
+<h1>Accounts</h1>
+
+<table class="gtable">
+	<thead>
+		<tr>
+			<th>Username</th>
+			<th>Email</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	
+	<tbody>
+	<% @admins.each do |adm| %>
+		<tr>
+			<td><%= adm.username %></td>
+			<td><%= adm.email %></td>
+			<td>
+				<%= link_to image_tag('icons/edit.png'), edit_account_path(adm), :title => 'Edit' %>
+				<%= link_to image_tag('icons/cross.png'), account_path(adm), :method => :delete, :confirm => "Are you sure to delete Account #{adm.username}?", :title => 'Delete' %>
+			</td>
+		</tr>
+	<% end %>
+	</tbody>
+</table>
+</article>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110504022914) do
+ActiveRecord::Schema.define(:version => 20110505080540) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -132,6 +132,7 @@ ActiveRecord::Schema.define(:version => 20110504022914) do
     t.text     "desc1"
     t.text     "desc2"
     t.text     "desc3"
+    t.boolean  "is_remote"
   end
 
   add_index "locations", ["check_id"], :name => "index_locations_on_check_id"

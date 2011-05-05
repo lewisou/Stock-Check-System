@@ -29,8 +29,8 @@
 			<tr>
 				<th><%= sort_link @search, :item_code_and_location_code, 'Item Number' %></th>
 				<th><%= sort_link @search, :location_code_and_item_code, 'Location' %></th>
-				<th>Quantity</th>
-				<th>Cost</th>
+				<th><%= sort_link @search, :quantity %></th>
+				<th><%= sort_link @search, :item_cost, 'Cost' %></th>
 				<th>Value</th>
 				<th>Active</th>
 				<th>Action</th>

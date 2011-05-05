@@ -6,22 +6,19 @@
 			<td><%= curr_check.description %></td>
 		</tr>
 		<tr>
-			<th>State</th>
+			<th>Status</th>
 			<td><%= curr_check.state %></td>
 		</tr>
 		
 		<tr>
 			<th>Launched by</th>
-			<td><%= curr_check.admin.try(:email) %></td>
+			<td><%= curr_check.admin.try(:username) %></td>
 		</tr>
 		<tr>
 			<th>Started at</th>
 			<td><%= curr_check.created_at %></td>
 		</tr>
-		<tr>
-			<th>Inventory Size</td>
-			<td><%= Inventory.in_check(curr_check.id).count %></td>
-		</tr>
+
 		<tr>
 			<th>Tags</th>
 			<td><%= totel = Tag.in_check(curr_check.id).count %></td>

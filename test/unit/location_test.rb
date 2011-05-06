@@ -73,7 +73,14 @@ class LocationTest < ActiveSupport::TestCase
 
     assert l.counter_names(1) == "A, BC, DEF"
   end
+  
+  test "ensure_is_remote_has_a_value" do
+    l = Location.create
+    
+    assert l.is_remote
+  end
 end
+
 # == Schema Information
 #
 # Table name: locations
@@ -90,5 +97,6 @@ end
 #  desc1        :text
 #  desc2        :text
 #  desc3        :text
+#  is_remote    :boolean
 #
 

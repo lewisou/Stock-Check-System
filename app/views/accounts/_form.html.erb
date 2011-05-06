@@ -1,0 +1,36 @@
+<%= form_for @admin, :url => @admin.new_record? ? accounts_path : account_path(@admin), :html => {:class => 'uniform'} do |f| %>
+	<%= render :partial => 'shared/errors', :locals => {:object => @admin} %>
+
+	<fieldset>
+		<dl class='inline'>
+			<dt><%= f.label :username %></dt>
+			<dd><%= f.text_field :username, :tabindex => 1 %></dd>
+
+			<dt><%= f.label :email %></dt>
+			<dd><%= f.text_field :email, :tabindex => 2 %></dd>
+
+			<dt><%= f.label :password %></dt>
+			<dd>
+				<%= f.password_field :password, :tabindex => 3 %>
+				<small>leave blank if you don't want to change it</small>
+			</dd>
+
+			<dt><%= f.label :password_confirmation %></dt>
+			<dd><%= f.password_field :password_confirmation, :tabindex => 4 %></dd>
+
+			<dt><%= f.label :role_ids, 'Roles' %></dt>
+			<dd>
+				<% Role.all.each do |r| %>
+				<%= check_box_tag 'admin[role_ids][]', r.id, @admin.roles.include?(r), :id => "admin_role_ids_#{r.id}" %>
+				<label for="<%= "admin_role_ids_#{r.id}" %>"><%= r.code %></label>
+				<% end %>
+			</dd>
+
+		</dl>
+	</fieldset>
+	
+	<div class="buttons">
+		<%= f.submit :class => 'button' %>
+	</div>
+
+<% end %>

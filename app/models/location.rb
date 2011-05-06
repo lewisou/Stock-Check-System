@@ -5,6 +5,13 @@ class Location < ActiveRecord::Base
   belongs_to :check
   has_many :inventories
   has_many :tags, :through => :inventories
+  
+  before_save :ensure_is_remote_has_a_value
+  def ensure_is_remote_has_a_value
+    if self.is_remote.nil?
+      self.is_remote = true
+    end
+  end
 
   before_update :mark_flag
   def mark_flag
@@ -45,6 +52,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: locations
@@ -61,5 +69,6 @@ end
 #  desc1        :text
 #  desc2        :text
 #  desc3        :text
+#  is_remote    :boolean
 #
 

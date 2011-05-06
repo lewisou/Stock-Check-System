@@ -1,20 +1,47 @@
 class Inventory < ActiveRecord::Base
   scope :in_check, lambda {|check_id| includes(:location => :check).where(:checks => {:id => check_id}) }
-  scope :need_adjustment, where("quantity <> cached_counted")
+  scope :need_adjustment, where("quantity <> result_qty")
 
   belongs_to :item
   belongs_to :location
+  belongs_to :check
   has_many :tags
+  has_many :quantities
 
-  def self.cache_counted check
-    in_check(check.id).all.each {|inv| inv.cached_counted = inv.counted; inv.save(:validate => false)}
+  validates_presence_of :location
+
+  after_save :log_qty
+  def log_qty
+    unless self.quantities.where(:time => self.time).count > 0
+      self.quantities.create(:time => self.time, :value => self.quantity)
+    end
+  end
+
+  before_save :adj_check
+  def adj_check
+    self.check = self.location.check
+  end
+
+  before_save :adj_qtys
+  def adj_qtys
+    unless self.location.try(:is_remote)
+      self.inputed_qty = nil
+    end
+
+    if self.location.try(:is_remote)
+      self.counted_qty = nil
+    else
+      self.counted_qty = (self.tags.map(&:final_count).delete_if {|t| t.nil?}).sum
+    end
+
+    self.result_qty = self.location.try(:is_remote) ? self.inputed_qty : self.counted_qty
   end
 
   def create_default_tag!
     rs = self.tags.create if self.tags.count == 0
     rs
   end
-  
+
   def counted
     self.tags.map(&:final_count).sum
   end
@@ -37,7 +64,7 @@ class Inventory < ActiveRecord::Base
 
   def counted_value_in count
     self.counted_in(count) * (self.item.try(:cost) || 0)
-  end  
+  end
   
   def counted_in count
     (self.tags.collect {|t| t.send("count_#{count}") || 0}).sum
@@ -56,7 +83,7 @@ class Inventory < ActiveRecord::Base
   end
   
   def adj_count
-    self.cached_counted - self.quantity
+    self.result_qty - self.quantity
   end
   
   def adj_item_cost
@@ -78,17 +105,21 @@ end
 
 
 
+
+
 # == Schema Information
 #
 # Table name: inventories
 #
-#  id             :integer         not null, primary key
-#  item_id        :integer
-#  location_id    :integer
-#  quantity       :integer
-#  created_at     :datetime
-#  updated_at     :datetime
-#  from_al        :boolean         default(FALSE)
-#  cached_counted :integer
+#  id          :integer         not null, primary key
+#  item_id     :integer
+#  location_id :integer
+#  quantity    :integer
+#  created_at  :datetime
+#  updated_at  :datetime
+#  from_al     :boolean         default(FALSE)
+#  inputed_qty :integer
+#  counted_qty :integer
+#  result_qty  :integer
 #
 

@@ -60,7 +60,7 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "tole_q_or_v scope" do
-    scope = Item.create(:cost => 2).inventories.create.tags
+    scope = Item.create(:cost => 2).inventories.create(:location => Location.create).tags
     
     scope.create(:count_1 => 100, :count_2 => 110)
     scope.create(:count_1 => 100, :count_2 => 120)
@@ -106,7 +106,7 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "tolerance_v" do
-    scope = Item.create(:cost => 2).inventories.create.tags
+    scope = Item.create(:cost => 2).inventories.create(:location => Location.create).tags
     
     scope.create(:count_1 => 100, :count_2 => 110)
     scope.create(:count_1 => 100, :count_2 => 120)
@@ -160,17 +160,17 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "counted_value" do
-    scope = Item.create(:cost => 2).inventories.create.tags
+    scope = Item.create(:cost => 2).inventories.create(:location => Location.create).tags
     
     assert scope.create(:count_1 => 2, :count_2 => 2).counted_value == 4
     assert scope.create.final_count == nil
 
-    nil_scope = Item.create(:cost => nil).inventories.create.tags
+    nil_scope = Item.create(:cost => nil).inventories.create(:location => Location.create).tags
     assert nil_scope.create(:count_1 => 2, :count_2 => 2).counted_value == nil
   end
 
   test "count & value differ" do
-    scope = Item.create(:cost => 2).inventories.create.tags
+    scope = Item.create(:cost => 2).inventories.create(:location => Location.create).tags
 
     assert scope.create(:count_1 => 1, :count_2 => 2).count_differ == 100
     assert scope.create(:count_1 => 5, :count_2 => 2).count_differ == 60
@@ -181,7 +181,9 @@ class TagTest < ActiveSupport::TestCase
     assert scope.create.count_differ == nil
 
   end
+  
 end
+
 
 # == Schema Information
 #
@@ -195,5 +197,6 @@ end
 #  updated_at   :datetime
 #  inventory_id :integer
 #  sloc         :string(255)
+#  final_count  :integer
 #
 

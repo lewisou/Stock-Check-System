@@ -3,5 +3,6 @@
 	<% if has_curr_check? %>
 	<li <%= "class='current'" if @sub_menu == :color %>><%= link_to 'Colors', color_checks_path %></li>
 	<% end %>
-	
+	<li <%= "class='current'" if @sub_menu == :account %>><%= link_to 'Accounts', accounts_path %></li>
+
 </ul>

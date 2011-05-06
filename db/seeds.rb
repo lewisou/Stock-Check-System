@@ -5,3 +5,15 @@
 #
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
+
+unless Role.find_by_code("controller")
+  Role.create(:code => "controller")
+end
+
+unless Role.find_by_code("admin")
+  Role.create(:code => "admin")
+end
+
+unless Role.find_by_code("counter")
+  Role.create(:code => "counter")
+end

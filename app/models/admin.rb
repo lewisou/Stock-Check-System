@@ -7,7 +7,10 @@ class Admin < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me
+  
+  has_and_belongs_to_many :roles
 end
+
 
 # == Schema Information
 #
@@ -27,5 +30,6 @@ end
 #  last_sign_in_ip      :string(255)
 #  created_at           :datetime
 #  updated_at           :datetime
+#  username             :string(255)
 #
 

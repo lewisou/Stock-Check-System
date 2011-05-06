@@ -168,6 +168,7 @@ class CheckTest < ActiveSupport::TestCase
     
     assert c.total_frozen_value == 3
   end
+
 end
 
 # == Schema Information

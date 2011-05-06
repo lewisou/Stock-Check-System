@@ -5,6 +5,7 @@ class Check < ActiveRecord::Base
   has_many :item_groups
   has_many :items, :through => :item_groups
   has_many :locations
+  has_many :inventories
   has_many :assigns, :through => :locations
   belongs_to :admin
   belongs_to :location_xls, :class_name => "::Attachment"
@@ -14,7 +15,7 @@ class Check < ActiveRecord::Base
   attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
   validates_uniqueness_of :description
-  
+
   before_create :refresh_location, :refresh_item_and_group, :init_colors
   def refresh_item_and_group
     return if @item_groups_xls.nil?
@@ -117,10 +118,6 @@ class Check < ActiveRecord::Base
     self.location_xls = ::Attachment.new(:data => ALL_ORDER::Import.locations(self))
     self.item_xls = ::Attachment.new(:data => ALL_ORDER::Import.items(self))
     self.inv_adj_xls = ::Attachment.new(:data => ALL_ORDER::Import.inventory_adjustment(self))
-  end
-  
-  def cache_counted!
-    Inventory.cache_counted self
   end
 
   def finish_count?

@@ -24,6 +24,13 @@ class Tag < ActiveRecord::Base
   scope :tole_q_or_v, lambda {|quantity, value| includes(:inventory => :item) \
     .where(["(abs((tags.count_1 - tags.count_2) / cast(tags.count_1 as float)) * 100 >= ? and tags.count_1 > 0) or (abs(tags.count_1 * items.cost - tags.count_2 * items.cost) >= ?)", (quantity || 0).to_f.abs, (value || 0).to_f.abs])}
 
+
+  after_save :launch_inv_save
+  after_destroy :launch_inv_save
+  def launch_inv_save
+    self.inventory.try(:save)
+  end
+
   attr_accessor :location_id, :item_id
   before_save :adj_inventory
   def adj_inventory
@@ -77,6 +84,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: tags
@@ -89,5 +97,6 @@ end
 #  updated_at   :datetime
 #  inventory_id :integer
 #  sloc         :string(255)
+#  final_count  :integer
 #
 

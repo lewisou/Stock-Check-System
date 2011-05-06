@@ -13,38 +13,21 @@ class InventoryTest < ActiveSupport::TestCase
   end
 
   test "need_adjustment" do
-    Inventory.create(:quantity => 1, :cached_counted => 1)
-    i = Inventory.create(:quantity => 1, :cached_counted => 2)
-    Inventory.create(:quantity => 1, :cached_counted => nil)
-    Inventory.create(:quantity => nil, :cached_counted => nil)
+    scope = Location.create(:is_remote => true).inventories
+
+    scope.create(:quantity => 1, :inputed_qty => 1)
+    
+    i = scope.create(:quantity => 1, :inputed_qty => 2)
+    scope.create(:quantity => 1, :inputed_qty => nil)
+    scope.create(:quantity => nil, :inputed_qty => nil)
 
     assert Inventory.need_adjustment.count == 1
     assert Inventory.need_adjustment.first == i
   end
 
-  test "cache_counted" do
-    c = new_blank_check
-    l = c.locations.create
-
-    i1 = l.inventories.create
-    i1.tags.create(:count_1 => 2, :count_2 => 2)
-    i1.tags.create(:count_1 => 2, :count_2 => 2)
-
-    i2 = l.inventories.create
-    i2.tags.create(:count_1 => 2, :count_2 => 2)
-
-    i3 = l.inventories.create
-
-    Inventory.cache_counted c
-    assert Inventory.find(i1).cached_counted == 4
-    assert Inventory.find(i2).cached_counted == 2
-    assert Inventory.find(i3).cached_counted == 0
-
-  end
-  
   test "create_default_tag!" do
-    i = Inventory.create
-    i2 = Inventory.create
+    i = Inventory.create(:location => Location.create)
+    i2 = Inventory.create(:location => Location.create)
     i2.tags.create
     
     i.create_default_tag!
@@ -55,7 +38,7 @@ class InventoryTest < ActiveSupport::TestCase
   end
   
   test "counted" do
-    i = Inventory.create
+    i = Inventory.create(:location => Location.create)
     i.tags.create(:count_1 => 1, :count_2 => 1)
     i.tags.create(:count_1 => 2, :count_2 => 2)
     
@@ -71,7 +54,7 @@ class InventoryTest < ActiveSupport::TestCase
 
   test "counted_value" do
     i = Item.create(:cost => 10)
-    inv = i.inventories.create
+    inv = i.inventories.create(:location => Location.create)
     inv.tags.create(:count_1 => 2, :count_2 => 2)
     inv.tags.create(:count_1 => 1, :count_2 => 1)
     
@@ -84,20 +67,24 @@ class InventoryTest < ActiveSupport::TestCase
   end
 
   test "adj_count" do
-    assert Inventory.create(:cached_counted => 50, :quantity => 30).adj_count == 20
+    scope = Location.create(:is_remote => true).inventories
+    
+    assert scope.create(:quantity => 30, :inputed_qty => 50).adj_count == 20
   end
   
   test "adj_item_cost" do
-    i = Item.create(:cost => 1)
-    inv = i.inventories.create(:cached_counted => 50, :quantity => 30)
-    inv2 = i.inventories.create(:cached_counted => 50, :quantity => 60)
+    scope = Location.create(:is_remote => true).inventories
+    i = Item.create(:cost => 2)
+
+    inv = scope.create(:inputed_qty => 50, :quantity => 30, :item => i)
+    inv2 = scope.create(:inputed_qty => 30, :quantity => 50, :item => i)
     
-    assert inv.adj_item_cost == 1
+    assert inv.adj_item_cost == 2
     assert inv2.adj_item_cost == nil
   end
   
   test "counted_in" do
-    i = Inventory.create
+    i = Inventory.create(:location => Location.create)
     3.times {i.tags.create(:count_1 => 1)}
     2.times {i.tags.create(:count_2 => 1)}
     1.times {i.tags.create}
@@ -107,7 +94,7 @@ class InventoryTest < ActiveSupport::TestCase
   end
   
   test "counted_value_in" do
-    i = Inventory.create(:item => Item.create(:cost => 10))
+    i = Inventory.create(:item => Item.create(:cost => 10), :location => Location.create)
     3.times {i.tags.create(:count_1 => 1)}
     2.times {i.tags.create(:count_2 => 1)}
     1.times {i.tags.create}
@@ -137,18 +124,79 @@ class InventoryTest < ActiveSupport::TestCase
     assert Tag.count == 2
 
   end
+  
+  test "counted_qty" do
+    onsite_inv = Location.create(:is_remote => false).inventories.create
+    onsite_inv.tags.create(:count_1 => 2, :count_2 => 2)
+
+    remote_inv = Location.create(:is_remote => true).inventories.create
+    remote_inv.tags.create(:count_1 => 2, :count_2 => 2)
+    
+    assert onsite_inv.reload.counted_qty == 2
+    assert remote_inv.reload.counted_qty.nil?
+  end
+  
+  test "inputed_qty" do
+    onsite_inv = Location.create(:is_remote => false).inventories.create(:inputed_qty => 2)
+    remote_inv = Location.create(:is_remote => true).inventories.create(:inputed_qty => 2)
+    
+    assert onsite_inv.inputed_qty.nil?
+    assert remote_inv.reload.inputed_qty == 2
+  end
+  
+  test "result_qty" do
+    onsite_inv = Location.create(:is_remote => false).inventories.create(:inputed_qty => 2)
+    onsite_inv.tags.create(:count_1 => 3, :count_2 => 3)
+
+    remote_inv = Location.create(:is_remote => true).inventories.create(:inputed_qty => 4)
+    remote_inv.tags.create(:count_1 => 5, :count_2 => 5)
+
+    assert onsite_inv.reload.result_qty == 3
+    assert remote_inv.reload.result_qty == 4
+    
+    remote_inv.tags.first.destroy
+    onsite_inv.tags.first.destroy
+    
+    assert onsite_inv.reload.result_qty == 0
+    assert remote_inv.reload.result_qty == 4
+  end
+  
+  test "quantity log" do
+    inv = Inventory.create(:time => 2, :quantity => 3, :location => Location.create)
+
+    inv.update_attributes(:time => 3, :quantity => 4)
+    inv.attributes = {:time => 3, :quantity => 4}
+    inv.save
+
+    assert inv.quantities.where(:time => 2).count == 1
+    assert inv.quantities.where(:time => 2).first.value == 3    
+    assert inv.quantities.where(:time => 3).count == 1
+    assert inv.quantities.where(:time => 3).first.value == 4
+
+  end
+
+  test "adj_check" do
+    c = new_blank_check
+    inv = c.locations.create.inventories.create
+    
+    assert inv.check == c
+  end
 end
+
+
 # == Schema Information
 #
 # Table name: inventories
 #
-#  id             :integer         not null, primary key
-#  item_id        :integer
-#  location_id    :integer
-#  quantity       :integer
-#  created_at     :datetime
-#  updated_at     :datetime
-#  from_al        :boolean         default(FALSE)
-#  cached_counted :integer
+#  id          :integer         not null, primary key
+#  item_id     :integer
+#  location_id :integer
+#  quantity    :integer
+#  created_at  :datetime
+#  updated_at  :datetime
+#  from_al     :boolean         default(FALSE)
+#  inputed_qty :integer
+#  counted_qty :integer
+#  result_qty  :integer
 #
 

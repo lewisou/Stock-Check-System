@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110505080540) do
+ActiveRecord::Schema.define(:version => 20110506084605) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -31,6 +31,14 @@ ActiveRecord::Schema.define(:version => 20110505080540) do
 
   add_index "admins", ["email"], :name => "index_admins_on_email", :unique => true
   add_index "admins", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
+
+  create_table "admins_roles", :id => false, :force => true do |t|
+    t.integer "admin_id"
+    t.integer "role_id"
+  end
+
+  add_index "admins_roles", ["admin_id"], :name => "index_admins_roles_on_admin_id"
+  add_index "admins_roles", ["role_id"], :name => "index_admins_roles_on_role_id"
 
   create_table "assigns", :force => true do |t|
     t.integer  "count"
@@ -80,8 +88,12 @@ ActiveRecord::Schema.define(:version => 20110505080540) do
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "from_al",        :default => false
-    t.integer  "cached_counted"
+    t.boolean  "from_al",     :default => false
+    t.integer  "inputed_qty"
+    t.integer  "counted_qty"
+    t.integer  "result_qty"
+    t.integer  "time"
+    t.integer  "check_id"
   end
 
   add_index "inventories", ["item_id"], :name => "index_inventories_on_item_id"
@@ -136,6 +148,20 @@ ActiveRecord::Schema.define(:version => 20110505080540) do
   end
 
   add_index "locations", ["check_id"], :name => "index_locations_on_check_id"
+
+  create_table "quantities", :force => true do |t|
+    t.integer  "time"
+    t.integer  "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "inventory_id"
+  end
+
+  create_table "roles", :force => true do |t|
+    t.string   "code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "tags", :force => true do |t|
     t.integer  "count_1"

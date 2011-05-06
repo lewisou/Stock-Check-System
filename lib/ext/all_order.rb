@@ -4,8 +4,6 @@ require 'spreadsheet'
 module ALL_ORDER
   class Import
     def self.inventory_adjustment check
-      check.cache_counted!
-
       self.xls('InvAdjustment', [
         {:list => Inventory.in_check(check.id).need_adjustment.map(&:location).uniq, :symbols => [:id, "INVENTORY:INVENTORY ADJUSTMENTS", :code]},
         {:list => Inventory.in_check(check.id).need_adjustment, :symbols => [:location_id, :item_full_name, :adj_count, nil, nil, :adj_item_cost]}

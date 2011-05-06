@@ -2,17 +2,28 @@ require 'test_helper'
 
 class ItemTest < ActiveSupport::TestCase
   test "missing_cost" do
-    Item.create(:cost => 9).inventories.create(:quantity => 1, :cached_counted => 1)
-    i1 = Item.create(:cost => 0); i1.inventories.create(:quantity => 1, :cached_counted => 1)
-    i2 = Item.create; i2.inventories.create(:quantity => 1)
-    i3 = Item.create; i3.inventories.create(:cached_counted => 1)
-    Item.create.inventories.create()
-    Item.create
+    scope = Location.create(:is_remote => true).inventories
+    
+    scope.create(:quantity => 1, :item => Item.create(:cost => 9))
+    scope.create(:inputed_qty => 1, :item => Item.create(:cost => 9))
+    
+    
+    scope.create(:quantity => 1, :item => i1 = Item.create(:cost => 0))
+    scope.create(:quantity => 0, :item => Item.create(:cost => 0))
+    scope.create(:quantity => 1, :item => i2 = Item.create)
+    scope.create(:quantity => 0, :item => Item.create)
 
-    assert Item.missing_cost.count == 3
+    scope.create(:inputed_qty => 1, :item => i3 = Item.create(:cost => 0))
+    scope.create(:inputed_qty => 0, :item => Item.create(:cost => 0))
+    scope.create(:inputed_qty => 1, :item => i4 = Item.create)
+    scope.create(:inputed_qty => 0, :item => Item.create)
+
+
+    assert Item.missing_cost.count == 4
     assert Item.missing_cost.all.include?(i1)
     assert Item.missing_cost.all.include?(i2)
     assert Item.missing_cost.all.include?(i3)
+    assert Item.missing_cost.all.include?(i4)
 
   end
   
@@ -45,21 +56,21 @@ class ItemTest < ActiveSupport::TestCase
   test "counted_total_qty" do
     i = Item.create
     
-    i.inventories.create.tags.create(:count_1 => 2, :count_2 => 2)
-    i.inventories.create.tags.create(:count_1 => 2, :count_2 => 2)
+    i.inventories.create(:location => Location.create).tags.create(:count_1 => 2, :count_2 => 2)
+    i.inventories.create(:location => Location.create).tags.create(:count_1 => 2, :count_2 => 2)
     
     assert i.counted_total_qty == 4
   end
   
   test "adj_max_quantity" do
     i = Item.create(:max_quantity => 1)
-    i.inventories.create.tags.create(:count_1 => 2, :count_2 => 2)
+    i.inventories.create(:location => Location.create).tags.create(:count_1 => 2, :count_2 => 2)
     
     i2 = Item.create
-    i2.inventories.create.tags.create(:count_1 => 2, :count_2 => 2)
+    i2.inventories.create(:location => Location.create).tags.create(:count_1 => 2, :count_2 => 2)
 
     i3 = Item.create(:max_quantity => 100)
-    i3.inventories.create.tags.create(:count_1 => 2, :count_2 => 2)
+    i3.inventories.create(:location => Location.create).tags.create(:count_1 => 2, :count_2 => 2)
     
     
     assert i.adj_max_quantity == 2

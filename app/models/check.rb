@@ -139,6 +139,15 @@ class Check < ActiveRecord::Base
   def total_frozen_value
     Inventory.in_check(self.id).includes(:item).sum("quantity * items.cost")
   end
+  
+  def switch_to time
+    self.inventories.each do |inv|
+      inv.update_attributes(
+        :quantity => inv.quantities.where(:time => time).first.try(:value),
+        :time => time
+      )
+    end
+  end
 end
 
 

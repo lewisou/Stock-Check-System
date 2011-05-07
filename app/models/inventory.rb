@@ -12,7 +12,7 @@ class Inventory < ActiveRecord::Base
 
   after_save :log_qty
   def log_qty
-    unless self.quantities.where(:time => self.time).count > 0
+    unless self.quantities.where(:time => self.time).count > 0 || self.time.nil?
       self.quantities.create(:time => self.time, :value => self.quantity)
     end
   end

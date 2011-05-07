@@ -165,14 +165,19 @@ class InventoryTest < ActiveSupport::TestCase
     inv = Inventory.create(:time => 2, :quantity => 3, :location => Location.create)
 
     inv.update_attributes(:time => 3, :quantity => 4)
-    inv.attributes = {:time => 3, :quantity => 4}
+    inv.attributes = {:time => 3, :quantity => 8}
     inv.save
 
+    inv.update_attributes(:time => 4, :quantity => nil)
+    inv.update_attributes(:time => nil, :quantity => 5)
+
+    assert inv.quantities.count == 3
     assert inv.quantities.where(:time => 2).count == 1
     assert inv.quantities.where(:time => 2).first.value == 3    
     assert inv.quantities.where(:time => 3).count == 1
     assert inv.quantities.where(:time => 3).first.value == 4
-
+    assert inv.quantities.where(:time => 4).count == 1
+    assert inv.quantities.where(:time => 4).first.value == nil
   end
 
   test "adj_check" do

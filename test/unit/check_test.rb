@@ -169,6 +169,23 @@ class CheckTest < ActiveSupport::TestCase
     assert c.total_frozen_value == 3
   end
 
+  test "switch inventory time" do
+    c = new_blank_check
+    inv = c.locations.create.inventories.create(:quantity => 1, :time => 1)
+    inv.update_attributes(:quantity => 2, :time => 2)
+    inv.update_attributes(:quantity => 3, :time => 3)
+
+    inv2 = c.locations.create.inventories.create(:quantity => 1, :time => 1)
+    inv2.update_attributes(:quantity => 2, :time => 2)
+    inv2.update_attributes(:quantity => 3, :time => 3)
+
+    3.times do |t|
+      c.switch_to(t + 1)
+
+      assert inv.reload.quantity == t + 1
+      assert inv2.reload.quantity == t + 1
+    end
+  end
 end
 
 # == Schema Information

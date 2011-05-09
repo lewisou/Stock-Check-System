@@ -68,8 +68,6 @@ jQuery(function($) {
 	</div>
 </header>
 
-<% show_admin = true %>
-
 <% if admin_signed_in? %>
 <nav id="topmenu">
 	<div class="container_12 clearfix">
@@ -77,15 +75,18 @@ jQuery(function($) {
 			<ul id="mainmenu" class="sf-menu">
 				<li <%= "class='current'" if @nav == :dashboard %>><%= link_to 'Dashboard', root_path %></li>
 
+				<li <%= "class='current'" if @nav == :control %>>
+					<%= link_to 'Control', checks_path %>
+					<%= render :partial => 'shared/settings_ul' %>
+				</li>
+
 				<% if has_curr_check? %>
-				
-				<% if show_admin %>
+
 				<li <%= "class='current'" if @nav == :tag %>>
-					<%= link_to 'Inventory Register', items_path %>
+					<%= link_to 'Check', items_path %>
 					<%= render :partial => 'shared/inventory_ul' %>
 				</li>
-				<% end %>
-				
+
 				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>><%= link_to 'Count 1', counts_path(:count => 1) %>
 					<%= render :partial => 'shared/count_ul', :locals => {:count => 1} %>
 				</li>
@@ -101,7 +102,7 @@ jQuery(function($) {
 				</li>
 				<% end %>
 
-				<% if curr_check.finish_count? && show_admin %>
+				<% if curr_check.finish_count? %>
 				<li <%= "class='current'" if @nav == :report %>><%= link_to 'Reports', count_varience_reports_path %>
 					<ul>
 						<li><%= link_to 'Count Varience Count 1 VS 2', count_varience_reports_path %></li>
@@ -110,12 +111,6 @@ jQuery(function($) {
 					</ul>
 				</li>
 				<% end %>
-				<% end %>
-				
-				<% if show_admin %>
-				<li <%= "class='current'" if @nav == :setting %>><a href="#">Settings</a>
-					<%= render :partial => 'shared/settings_ul' %>
-				</li>
 				<% end %>
 			</ul>
 			<ul id="usermenu">

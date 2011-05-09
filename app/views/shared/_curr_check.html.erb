@@ -2,7 +2,7 @@
 <table class="infos">
 	<tbody>
 		<tr>
-			<th>Description</th>
+			<th>Inventory name</th>
 			<td><%= curr_check.description %></td>
 		</tr>
 		<tr>
@@ -18,60 +18,50 @@
 			<th>Started at</th>
 			<td><%= curr_check.created_at %></td>
 		</tr>
-
-		<tr>
-			<th>Tags</th>
-			<td><%= totel = Tag.in_check(curr_check.id).count %></td>
-		</tr>
-		<tr>
-			<th>Counted once tags</th>
-			<td><%= Tag.in_check(curr_check.id).where(:count_1.not_eq => nil).count %></td>
-		</tr>
-		<tr>
-			<th>Counted twice tags</th>
-			<td><%= Tag.in_check(curr_check.id).where(:count_1.not_eq % nil & :count_2.not_eq % nil).count %></td>
-		</tr>
-		<tr>
-			<th>Counted three times</th>
-			<td>
-			<%= third = Tag.in_check(curr_check.id).where(:count_1.not_eq % nil & :count_2.not_eq % nil & :count_3.not_eq % nil).count %>
-			</td>
-		</tr>
-		<% if curr_check.state == 'archive' %>
-		<tr>
-			<th>Export to ALL ORDER</th>
-			<td>
-			<%= link_to('locations.xls', attachment_path(curr_check.location_xls)) unless curr_check.location_xls.nil? %>
-			<br />
-			<%= link_to('items.xls', attachment_path(curr_check.item_xls)) unless curr_check.item_xls.nil? %>
-			<br />
-			<%= link_to('inventory_adjustment.xls', attachment_path(curr_check.inv_adj_xls)) unless curr_check.inv_adj_xls.nil? %>
-			</td>
-		</tr>
-		<% end %>
-		
 	</tbody>
 </table>
 
+<h2>Tags</h2>
+<table class="infos">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Issued</th>
+			<th>Deleted</th>
+			<th>Counted</th>
+			<th>Outstanding</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th>Count 1</th>
+			<td><%= Tag.in_check(curr_check.id).countable.count %></td>
+			<td><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
+			<td><%= Tag.in_check(curr_check.id).finish(1).count %></td>
+			<td><%= Tag.in_check(curr_check.id).not_finish(1).count %></td>
+		</tr>
+		<tr>
+			<th>Count 2</th>
+			<td><%= Tag.in_check(curr_check.id).countable.count %></td>
+			<td><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
+			<td><%= Tag.in_check(curr_check.id).finish(2).count %></td>
+			<td><%= Tag.in_check(curr_check.id).not_finish(2).count %></td>
+		</tr>
+		<tr>
+			<th>Count 3</th>
+			<td><%= Tag.in_check(curr_check.id).countable.count %></td>
+			<td><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
+			<td><%= Tag.in_check(curr_check.id).finish(3).count %></td>
+			<td></td>
+		</tr>
+		<tr>
+			<th>Audit check</th>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
 
-<div class="tablefooter clearfix">
-	<div class="actions">
-		<% if curr_check.state == 'open' %>
-		<%= loading_link 'Archive', change_state_checks_path(:state => :archive), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button" %>
-		<%= loading_link 'Cancel', change_state_checks_path(:state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button" %>
-		<% elsif curr_check.state == 'archive' %>
-		<%= link_to 'Start New One', new_check_path, :class => "button" %>
-		<% elsif curr_check.state == 'cancel' %>
-		<%= link_to 'Start New One', new_check_path, :class => "button" %>
-		<% end %>
-		<%= loading_link 'Reopen', change_state_checks_path(:state => :open), :method => :put, :confirm => "Are you sure to reopen the check '#{curr_check.description}' ?", :class => "button" if curr_check.state != 'open' %>
-	</div>
-</div>
-
-<% else %>
-<div class="tablefooter clearfix">
-	<div class="actions">
-		<%= link_to 'Begin a new check', new_check_path %>
-	</div>
-</div>
 <% end %>

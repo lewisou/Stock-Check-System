@@ -18,6 +18,24 @@ class CheckTest < ActiveSupport::TestCase
 
   end
 
+  test "reimport" do
+    c = new_blank_check
+    c.reimport_inv_xls = File.new("#{Rails.root.to_s}/test/files/reimport_inv.xls")
+    c.save
+    
+    whe = c.inventories.includes(:item).where(:items => (:code.eq % "04/CM002" | :code.eq % "04/CM003"))
+    assert whe.count == 0
+    
+    c = new_check
+    c.reimport_inv_xls = File.new("#{Rails.root.to_s}/test/files/reimport_inv.xls")
+    c.save
+    
+    where = c.inventories.includes(:item).where(:items => (:code.eq % "04/CM002" | :code.eq % "04/CM003"))
+    assert where.count == 2
+    where.where(:items => {:code => '04/CM002'}).first.quantity == 2
+    where.where(:items => {:code => '04/CM003'}).first.quantity == 14
+  end
+
   test "curr_s scope" do
     3.times { Check.new().save(:validate => false) }
 
@@ -185,6 +203,14 @@ class CheckTest < ActiveSupport::TestCase
       assert inv.reload.quantity == t + 1
       assert inv2.reload.quantity == t + 1
     end
+  end
+  
+  test "history scope" do
+    new_blank_check.update_attributes(:current => true)
+    new_blank_check.update_attributes(:current => false)
+    new_blank_check.update_attributes(:current => false)
+    
+    assert Check.history.count == 2
   end
 end
 

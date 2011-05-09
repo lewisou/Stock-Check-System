@@ -2,42 +2,7 @@
 	<%= render :partial => 'shared/flash' %>
 	<%= render :partial => 'shared/errors', :locals => {:object => curr_check} %>
 
-	<h2>Current</h2>
-	<%= render :partial => 'shared/curr_check', :locals => {:curr_check => curr_check} %>
 </div>
 	
 	
 </article>
-
-<article>
-	<h2>History</h2>
-
-	<table class="gtable">
-		<thead>
-		<tr>
-			<th>Description</th>
-			<th>Launched by</th>
-			<th>Started at</th>
-			<th>State</th>
-			<th>Aciton</th>
-		</tr>
-		</thead>
-		
-		<tbody>
-		<% Check.all(:order => "created_at DESC").each do |check| %>
-		<% next if check == curr_check %>
-		<tr>
-			<td><%= check.description %></td>
-			<td><%= check.admin.try(:email) %></td>
-			<td><%= check.created_at %></td>
-			<td><%= check.state %></td>
-			<td>
-				<%= link_to 'Make current', make_current_check_path(check), :method => :put, :confirm => "Are you sure to change the current check to #{check.description || check.id}?", :class => "button small" %>
-			</td>
-		</tr>
-		<% end %>
-		</tbody>
-	</table>
-
-</article>
-

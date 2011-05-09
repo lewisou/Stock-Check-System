@@ -1,7 +1,9 @@
 class Tag < ActiveRecord::Base
   scope :in_check, lambda {|check_id| includes(:inventory => {:location => :check}).where(:checks => {:id => check_id}) }
-  scope :not_finish, lambda{|count| where("count_#{count}".to_sym.eq % nil | "count_#{count}".to_sym.eq % 0)}
-  scope :finish, lambda{|count| where("count_#{count}".to_sym.gt % 0)}
+  scope :not_finish, lambda{|count| where("count_#{count}".to_sym.eq % nil & (:state.not_eq % "deleted" | :state.eq % nil))}
+  scope :finish, lambda{|count| where("count_#{count}".to_sym.not_eq % nil & (:state.not_eq % "deleted" | :state.eq % nil))}
+  scope :deleted_s, where(:state => "deleted")
+  scope :countable, where(:state.not_eq % "deleted" | :state.eq % nil)
 
   belongs_to :inventory
 

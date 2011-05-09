@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110506084605) do
+ActiveRecord::Schema.define(:version => 20110509014124) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -172,6 +172,7 @@ ActiveRecord::Schema.define(:version => 20110506084605) do
     t.integer  "inventory_id"
     t.string   "sloc"
     t.integer  "final_count"
+    t.string   "state"
   end
 
   add_index "tags", ["inventory_id"], :name => "index_tags_on_inventory_id"

@@ -2,6 +2,8 @@ require 'ext/all_order'
 
 class Check < ActiveRecord::Base
   scope :curr_s, where(:current.eq => true).limit(1)
+  scope :history, where(:current.eq => false).order("created_at DESC")
+
   has_many :item_groups
   has_many :items, :through => :item_groups
   has_many :locations
@@ -12,7 +14,7 @@ class Check < ActiveRecord::Base
   belongs_to :inv_adj_xls, :class_name => "::Attachment"
   belongs_to :item_xls, :class_name => "::Attachment"
 
-  attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls
+  attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :reimport_inv_xls
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
   validates_uniqueness_of :description
 
@@ -91,7 +93,6 @@ class Check < ActiveRecord::Base
     @sheet0.each_with_index do |row, index|
       next if (index == 0 || row[0].blank?)
 
-      self.locations.find_by_code(row[1])
       inv = Inventory.create(
         :item => self.items.find_by_code(row[0]),
         :location => self.locations.find_by_code(row[1]),
@@ -99,6 +100,22 @@ class Check < ActiveRecord::Base
         :from_al => true
       )
       inv.create_default_tag! if inv.create_init_tags! == 0
+    end
+  end
+  
+  before_update :reimport_inventories
+  def reimport_inventories
+    return if @reimport_inv_xls.nil?
+    
+    @book = Spreadsheet.open @reimport_inv_xls.path
+    @sheet0 = @book.worksheet 0
+
+    @sheet0.each_with_index do |row, index|
+      next if (index == 0 || row[0].blank?)
+
+      self.locations.find_by_code(row[1])
+      inv = self.inventories.where(:item_id => self.items.find_by_code(row[0]).try(:id), :location_id => self.locations.find_by_code(row[1]).try(:id)).first
+      inv.update_attributes(:quantity => row[7]) unless inv.nil?
     end
   end
 

@@ -1,3 +1,4 @@
+<% @sub_menu = :current %>
 <article>
 	<h1>New check</h1>
 	
@@ -8,7 +9,7 @@
 		<legend>Data</legend>
 		<dl class='inline'>
 
-			<dt><%= f.label :description %></dt>
+			<dt><%= f.label :description, 'Inventory Name' %></dt>
 			<dd><%= f.text_field :description %></dd>
 		
 			<dt><%= f.label :locations_xls %></dt>

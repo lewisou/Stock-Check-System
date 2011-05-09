@@ -1,8 +1,6 @@
 class ChecksController < ApplicationController
   layout 'settings'
   
-  before_filter { @sub_menu = :check }
-  
   # GET /checks
   # GET /checks.xml
   def index
@@ -14,6 +12,10 @@ class ChecksController < ApplicationController
     end
   end
 
+  def history
+    @checks = Check.history.paginate(:page => params[:page])
+  end
+
   # GET /checks/1
   # GET /checks/1.xml
   def show
@@ -23,6 +25,10 @@ class ChecksController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml => @check }
     end
+  end
+
+  def current
+    @check = Check.curr_s.first
   end
 
   # GET /checks/new
@@ -70,6 +76,9 @@ class ChecksController < ApplicationController
     end
   end
 
+  def reimport
+  end
+
   # DELETE /checks/1
   # DELETE /checks/1.xml
   def destroy
@@ -93,11 +102,11 @@ class ChecksController < ApplicationController
 
   def change_state
     curr_check.state = params[:state]
-    curr_check.generate_xls if curr_check.state == 'archive'
+    curr_check.generate_xls if curr_check.state == 'complete'
 
     if curr_check.save
 
-      redirect_to checks_path, :notice => "CURREN CHECK has been changed to #{params[:state]}."
+      redirect_to current_checks_path, :notice => "CURREN CHECK has been changed to #{params[:state]}."
     else
       render index
     end

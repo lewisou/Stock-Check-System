@@ -12,6 +12,37 @@ class TagTest < ActiveSupport::TestCase
     assert Tag.in_check(c.id).count == 3
   end
   
+  test "deleted scope" do
+    Tag.create(:state => "deleted")
+    Tag.create(:state => "notdeleted")
+    2.times {Tag.create}
+    
+    Tag.count == 4
+    Tag.deleted_s.count == 1
+  end
+  
+  test "deleted with finish & not finish" do
+    t1 = Tag.create(:count_1 => 1)
+    t2 = Tag.create(:count_2 => 2)
+    t3 = Tag.create(:count_1 => 1, :state => "deleted")
+    t4 = Tag.create(:count_2 => 2, :state => "deleted")
+
+    assert Tag.finish(1) == [t1]
+    assert Tag.finish(2) == [t2]
+    assert Tag.not_finish(1) == [t2]
+    assert Tag.not_finish(2) == [t1]
+  end
+
+  test "countable scope" do
+    t1 = Tag.create(:count_1 => 1)
+    t2 = Tag.create(:count_2 => 2, :state => "blabla")
+    t3 = Tag.create(:count_1 => 1, :state => "deleted")
+    t4 = Tag.create(:count_2 => 2, :state => "deleted")
+
+    assert Tag.countable.count == 2
+  end
+
+  
   test "not_finish" do
     t1 = Tag.create(:count_1 => 1)
     Tag.create(:count_2 => 1)
@@ -32,6 +63,22 @@ class TagTest < ActiveSupport::TestCase
     assert Tag.finish(2).count == 1
     assert Tag.count == 3
     assert Tag.finish(1).include?(t1)
+  end
+  
+  test "not finish scope with zero qty" do
+    t1 = Tag.create(:count_1 => 0)
+    t2 = Tag.create(:count_2 => 0)
+
+    assert Tag.not_finish(1) == [t2]
+    assert Tag.not_finish(2) == [t1]
+  end
+  
+  test "finish scope with zero qty" do
+    Tag.create(:count_1 => 0)
+    Tag.create(:count_2 => 0)
+
+    assert Tag.finish(1).count == 1
+    assert Tag.finish(2).count == 1
   end
 
   test "counted_by scope" do

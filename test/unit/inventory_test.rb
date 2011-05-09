@@ -26,8 +26,8 @@ class InventoryTest < ActiveSupport::TestCase
   end
 
   test "create_default_tag!" do
-    i = Inventory.create(:location => Location.create)
-    i2 = Inventory.create(:location => Location.create)
+    i = Inventory.create(:location => Location.create(:is_remote => false))
+    i2 = Inventory.create(:location => Location.create(:is_remote => false))
     i2.tags.create
     
     i.create_default_tag!
@@ -37,13 +37,13 @@ class InventoryTest < ActiveSupport::TestCase
     assert i2.tags.count == 1
   end
   
-  test "counted" do
-    i = Inventory.create(:location => Location.create)
-    i.tags.create(:count_1 => 1, :count_2 => 1)
-    i.tags.create(:count_1 => 2, :count_2 => 2)
-    
-    assert i.counted == 3
-  end
+  # test "counted" do
+  #   i = Inventory.create(:location => Location.create)
+  #   i.tags.create(:count_1 => 1, :count_2 => 1)
+  #   i.tags.create(:count_1 => 2, :count_2 => 2)
+  #   
+  #   assert i.counted == 3
+  # end
   
   test "frozen_value" do
     i = Item.create(:al_cost => 10)
@@ -54,11 +54,11 @@ class InventoryTest < ActiveSupport::TestCase
 
   test "counted_value" do
     i = Item.create(:cost => 10)
-    inv = i.inventories.create(:location => Location.create)
+    inv = i.inventories.create(:location => Location.create(:is_remote => false))
     inv.tags.create(:count_1 => 2, :count_2 => 2)
     inv.tags.create(:count_1 => 1, :count_2 => 1)
-    
-    assert inv.counted_value == 30
+
+    assert inv.reload.counted_value == 30
   end
 
   test "item_full_name" do
@@ -105,7 +105,7 @@ class InventoryTest < ActiveSupport::TestCase
   
   
   test "create init tags!" do
-    l = Location.create(:code => 'CA')
+    l = Location.create(:code => 'CA', :is_remote => false)
     
     i1 = Item.create(:inittags => 'CA75H, CA74H')
     i2 = Item.create(:inittags => 'CZ75H, CZ74H')
@@ -162,22 +162,27 @@ class InventoryTest < ActiveSupport::TestCase
   end
   
   test "quantity log" do
-    inv = Inventory.create(:time => 2, :quantity => 3, :location => Location.create)
+    c = new_blank_check
 
-    inv.update_attributes(:time => 3, :quantity => 4)
-    inv.attributes = {:time => 3, :quantity => 8}
+    inv = Inventory.create(:quantity => 3, :location => c.locations.create)
+
+    c.update_attributes(:import_time => 2)
+    inv.update_attributes(:quantity => 4)
+    inv.attributes = {:quantity => 8}
     inv.save
 
-    inv.update_attributes(:time => 4, :quantity => nil)
-    inv.update_attributes(:time => nil, :quantity => 5)
+    c.update_attributes(:import_time => 3)
+    inv.update_attributes(:quantity => 4)
+    inv.update_attributes(:quantity => nil)
+    inv.update_attributes(:quantity => 2)
 
     assert inv.quantities.count == 3
+    assert inv.quantities.where(:time => 1).count == 1
+    assert inv.quantities.where(:time => 1).first.value == 3
     assert inv.quantities.where(:time => 2).count == 1
-    assert inv.quantities.where(:time => 2).first.value == 3    
+    assert inv.quantities.where(:time => 2).first.value == 4
     assert inv.quantities.where(:time => 3).count == 1
     assert inv.quantities.where(:time => 3).first.value == 4
-    assert inv.quantities.where(:time => 4).count == 1
-    assert inv.quantities.where(:time => 4).first.value == nil
   end
 
   test "adj_check" do
@@ -186,7 +191,45 @@ class InventoryTest < ActiveSupport::TestCase
     
     assert inv.check == c
   end
+  
+  test "create_init_tags! only once" do
+    c = new_blank_check
+    inv = c.locations.create(:code => 'CA', :is_remote => false).inventories.create(:item => Item.create(:inittags => 'CA75H, CA74H'))
+    
+    inv.create_init_tags!
+    assert inv.tags.count == 2
+    
+    inv.create_init_tags!
+    inv.create_init_tags!
+    assert inv.tags.count == 2
+  end
+  
+  test "Tags in remote locations will not be generated" do
+    c = new_blank_check
+    i1 = c.locations.create(:code => 'CA', :is_remote => false).inventories.create(:item => Item.create(:inittags => 'CA75H, CA74H'))
+    i2 = c.locations.create(:code => 'RS', :is_remote => true).inventories.create(:item => Item.create(:inittags => 'CA75H, CA74H'))
+    
+    i1.create_default_tag!
+    i1.create_init_tags!
+
+    i2.create_default_tag!
+    i2.create_init_tags!
+
+    assert Tag.in_check(c.id).count == 3
+  end
+
+  test "init time to 0 when Inventory firstly created" do
+    c = new_blank_check
+    
+    inv = Inventory.create(:quantity => 1, :location => c.locations.create)
+    assert inv.quantities.count == 1
+    assert inv.quantities.first.time == 1
+  end
+  
 end
+
+
+
 
 
 # == Schema Information
@@ -203,5 +246,7 @@ end
 #  inputed_qty :integer
 #  counted_qty :integer
 #  result_qty  :integer
+#  check_id    :integer
+#  tag_inited  :boolean         default(FALSE)
 #
 

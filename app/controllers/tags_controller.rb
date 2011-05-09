@@ -1,6 +1,7 @@
 require 'ext/tag_table'
 
 class TagsController < ApplicationController
+  layout "settings"
 
   # GET /tags
   # GET /tags.xml

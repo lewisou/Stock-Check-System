@@ -3,13 +3,12 @@
 
 	<h1>Locations</h1>
 
-	<table id="table1" class="gtable detailtable">
+	<table id="table1" class="gtable">
 		<thead>
 			<tr>
 				<th width="30%"><%= sort_link @search, :code %></th>
 				<th><%= sort_link @search, :description %></th>
-				<th>Tags</th>
-				<th>Loc.</th>
+				<th><%= sort_link @search, :is_remote, 'Remote' %></th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -18,48 +17,13 @@
 			<tr>
 				<td><%= location.code %></td>
 				<td><%= location.description %></td>
-				<td class='number'>
-					<%= link_to location.tags.count, tags_path(:search => {:inventory_location_id_eq => location.id}) if location.tags.count > 0 %>
-					<%= location.tags.count if location.tags.count == 0 %>
-				</td>
-				<td><%= location.from_al ? 'AO' : 'SCS' %></td>
+				<td><%= location.is_remote == true ? "Remote" : "Onsite" %></td>
 				<td>
 					<% if curr_check.state == 'open' %>
 						<%= link_to image_tag('icons/edit.png'), edit_location_path(location) %>
 					<% end %>
-					<a href="#" class="detail-link", title="Counters">counters</a>
 				</td>
 			</tr>
-			
-			<tr class="detail">
-				<td colspan="5">
-					<table>
-						<thead>
-							<tr>
-								<th>Count 1</th>
-								<th>Count 2</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									<% location.assigns.in_check(curr_check.id).where(:count => 1).each_with_index do |ass, index| %>
-										<%= raw("<br />") unless index == 0 %>
-										<%= ass.counter.name %>
-									<% end %>
-								</td>
-								<td>
-									<% location.assigns.in_check(curr_check.id).where(:count => 2).each_with_index do |ass, index| %>
-										<%= raw("<br />") unless index == 0 %>
-										<%= ass.counter.name %>
-									<% end %>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-
 			<% end %>
 		</tbody>
 	</table>

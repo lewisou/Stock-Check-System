@@ -1,16 +1,16 @@
 require 'ext/spreadsheet'
 
 class LocationsController < ApplicationController
-  layout "tags"
+  layout "settings"
   
-  before_filter { @sub_menu = :locations }
+  before_filter { @sub_menu = :location }
 
   def new
     @location = Location.new
   end
 
   def index
-    @search = curr_check.locations.search(params[:search])
+    @search = curr_check.locations.order("code ASC").search(params[:search])
     
     respond_to do |format|
       format.html {

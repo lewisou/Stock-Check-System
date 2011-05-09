@@ -232,6 +232,7 @@ class TagTest < ActiveSupport::TestCase
 end
 
 
+
 # == Schema Information
 #
 # Table name: tags
@@ -245,5 +246,6 @@ end
 #  inventory_id :integer
 #  sloc         :string(255)
 #  final_count  :integer
+#  state        :string(255)
 #
 

@@ -15,7 +15,7 @@ class Item < ActiveRecord::Base
   end
   
   def counted_total_qty
-    self.inventories.map(&:counted).sum
+    self.inventories.map(&:result_qty).sum
   end
   
   def adj_max_quantity

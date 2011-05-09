@@ -1,7 +1,8 @@
 <% @sub_menu = :current %>
 <article>
-<h1>Status</h1>
+<%= render :partial => "shared/flash" %>
 
+<h1>Status</h1>
 <%= render :partial => 'shared/curr_check', :locals => {:curr_check => @check} %>
 
 </article>
@@ -13,8 +14,10 @@
 		<% if curr_check.state == 'open' %>
 			<%= loading_link 'Complete', change_state_checks_path(:state => :complete), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button" %>
 			<%= loading_link 'Cancel', change_state_checks_path(:state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button" %>
-			<%= loading_link 'Re-import', change_state_checks_path(:state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button" %>
-
+			<% unless curr_check.generated %>
+			<%= loading_link 'Generate Tags', generate_checks_path, :method => :put, :confirm => "Do you setup all remote warehouses with that tags will not be generated ?", :class => "button" %>
+			<% end %>
+			<%= link_to 'Re-import', reimport_checks_path, :class => "button" %>
 		<% else %>
 			<%= link_to 'Start New One', new_check_path, :class => "button" %>
 
@@ -25,12 +28,12 @@
 	</div>
 </article>
 
+<% if curr_check.state == 'complete' %>
 <article>
 	<h2>Download</h2>
 
 	<table class="infos">
 	<tbody>
-		<% if curr_check.state == 'complete' %>
 		<tr>
 			<th>Export to ALL ORDER</th>
 			<td>
@@ -41,7 +44,7 @@
 			<%= link_to('inventory_adjustment.xls', attachment_path(curr_check.inv_adj_xls)) unless curr_check.inv_adj_xls.nil? %>
 			</td>
 		</tr>
-		<% end %>
 	</tbody>
 	</table>
 </article>
+<% end %>

@@ -7,14 +7,16 @@ class QuantityTest < ActiveSupport::TestCase
   end
 end
 
+
 # == Schema Information
 #
 # Table name: quantities
 #
-#  id         :integer         not null, primary key
-#  time       :integer
-#  value      :integer
-#  created_at :datetime
-#  updated_at :datetime
+#  id           :integer         not null, primary key
+#  time         :integer
+#  value        :integer
+#  created_at   :datetime
+#  updated_at   :datetime
+#  inventory_id :integer
 #
 

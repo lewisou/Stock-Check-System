@@ -23,7 +23,8 @@ class ActiveSupport::TestCase
   end
   
   def new_blank_check
-    c = Check.new(:description => "new_blank_check#{Time.now.to_i}"); c.save(:validate => false)
+    c = Check.new(:description => "new_blank_check#{Time.now.to_i}"); 
+    c.save(:validate => false);
     c
   end
 end

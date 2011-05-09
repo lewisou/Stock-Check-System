@@ -1,4 +1,4 @@
-<% @sub_menu = :tags %>
+<% @sub_menu = :tag %>
 
 <article>
 	<%= render :partial => 'shared/flash' %>
@@ -17,10 +17,7 @@
 
 <article>
 	<h1>All Tags</h1>
-
-	<% unless params[:search].nil? %>
 	<%= loading_link 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
-	<% end %>
 
 	<table class="gtable detailtable">
 		<thead>

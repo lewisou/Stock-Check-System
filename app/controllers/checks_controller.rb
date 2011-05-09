@@ -54,7 +54,7 @@ class ChecksController < ApplicationController
 
     @check.admin = current_admin
     if @check.save && @check.make_current!
-      redirect_to(checks_path, :notice => 'Check was successfully created.')
+      redirect_to(current_checks_path, :notice => 'Check was successfully created.')
     else
       render :action => "new"
     end
@@ -62,21 +62,23 @@ class ChecksController < ApplicationController
 
   # PUT /checks/1
   # PUT /checks/1.xml
+  # reimport
   def update
     @check = Check.find(params[:id])
 
     respond_to do |format|
       if @check.update_attributes(params[:check])
-        format.html { redirect_to(@check, :notice => 'Check was successfully updated.') }
+        format.html { redirect_to(current_checks_path, :notice => 'Reimport finished.') }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { render :action => "reimport" }
         format.xml  { render :xml => @check.errors, :status => :unprocessable_entity }
       end
     end
   end
 
   def reimport
+    @check = curr_check
   end
 
   # DELETE /checks/1
@@ -94,7 +96,7 @@ class ChecksController < ApplicationController
   def make_current
     @check = Check.find(params[:id])
     if @check.make_current!
-      redirect_to checks_path, :notice => "CURREN CHECK has been changed to #{@check.description || @check.id}."
+      redirect_to current_checks_path, :notice => "CURREN CHECK has been changed to #{@check.description || @check.id}."
     else
       render index
     end
@@ -130,4 +132,8 @@ class ChecksController < ApplicationController
     end
   end
 
+  def generate
+    curr_check.generate!
+    redirect_to current_checks_path, :notice => "Initial tags have been generated."
+  end
 end

@@ -18,7 +18,104 @@ class Check < ActiveRecord::Base
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
   validates_uniqueness_of :description
 
-  before_create :refresh_location, :refresh_item_and_group, :init_colors
+  before_create :init_properties, :refresh_location, :refresh_item_and_group, :init_colors
+  after_create :refresh_inventories
+
+  before_update :reimport_inventories
+  after_update :reimport_inv
+  
+  after_save :switch_inv
+
+
+  def make_current!
+    Check.where(:id.not_eq => self.id).each {|c| c.current = false; c.save(:validate => false)}
+
+    self.current = true
+    self.save(:validate => false)
+  end
+
+  def generate_xls
+    self.location_xls = ::Attachment.new(:data => ALL_ORDER::Import.locations(self))
+    self.item_xls = ::Attachment.new(:data => ALL_ORDER::Import.items(self))
+    self.inv_adj_xls = ::Attachment.new(:data => ALL_ORDER::Import.inventory_adjustment(self))
+  end
+
+  def finish_count?
+    Tag.in_check(self.id).not_finish(1).count == 0 && Tag.in_check(self.id).not_finish(2).count == 0
+  end
+  
+  def finish_count_in count
+    Tag.in_check(self.id).not_finish(count).count == 0
+  end
+
+  def total_count_value count
+    Inventory.in_check(self.id).includes(:tags).includes(:item).sum("tags.count_#{count} * items.cost")
+  end
+  
+  def total_count_final_value
+    Inventory.in_check(self.id).includes(:tags).includes(:item).sum("tags.final_count * items.cost")
+  end
+  
+  def total_frozen_value
+    Inventory.in_check(self.id).includes(:item).sum("quantity * items.cost")
+  end
+  
+  def generate!
+    return if self.generated
+
+    self.inventories.each do |inv|
+      inv.create_default_tag! if inv.create_init_tags! == 0
+    end
+    self.generated = true
+    self.save
+  end
+  
+  private unless 'test' == Rails.env
+  def switch_inv
+    if self.import_time != self.import_time_was
+      time = self.import_time
+
+      self.inventories.each do |inv|
+        inv.update_attributes(
+          :quantity => inv.quantities.where(:time => time).first.try(:value)
+        )
+      end
+    end
+  end
+
+  def init_properties
+    self.state = 'open'
+  end
+  
+  def reimport_inv
+    return if @reimport_inv_xls.nil?
+
+    @book = Spreadsheet.open @reimport_inv_xls.path
+    @sheet0 = @book.worksheet 0
+
+    @sheet0.each_with_index do |row, index|
+      next if (index == 0 || row[0].blank?)
+      create_update_from_row row
+    end
+  end
+  
+  def reimport_inventories
+    return if @reimport_inv_xls.nil?
+    self.import_time = (self.import_time || 0) + 1
+  end
+  
+  def refresh_inventories
+    return if @inventories_xls.nil?
+
+    @book = Spreadsheet.open @inventories_xls.path
+    @sheet0 = @book.worksheet 0
+
+    @sheet0.each_with_index do |row, index|
+      next if (index == 0 || row[0].blank?)
+      create_update_from_row row
+    end
+  end
+
   def refresh_item_and_group
     return if @item_groups_xls.nil?
 
@@ -83,89 +180,24 @@ class Check < ActiveRecord::Base
     end
   end
 
-  after_create :refresh_inventories
-  def refresh_inventories
-    return if @inventories_xls.nil?
+  def create_update_from_row row
+    inv = self.inventories.where(:item_id => self.items.find_by_code(row[0]).try(:id), :location_id => self.locations.find_by_code(row[1]).try(:id)).first
 
-    @book = Spreadsheet.open @inventories_xls.path
-    @sheet0 = @book.worksheet 0
-
-    @sheet0.each_with_index do |row, index|
-      next if (index == 0 || row[0].blank?)
-
+    if inv.nil?
       inv = Inventory.create(
         :item => self.items.find_by_code(row[0]),
         :location => self.locations.find_by_code(row[1]),
         :quantity => row[7],
         :from_al => true
       )
-      inv.create_default_tag! if inv.create_init_tags! == 0
-    end
-  end
-  
-  before_update :reimport_inventories
-  def reimport_inventories
-    return if @reimport_inv_xls.nil?
-    
-    @book = Spreadsheet.open @reimport_inv_xls.path
-    @sheet0 = @book.worksheet 0
-
-    @sheet0.each_with_index do |row, index|
-      next if (index == 0 || row[0].blank?)
-
-      self.locations.find_by_code(row[1])
-      inv = self.inventories.where(:item_id => self.items.find_by_code(row[0]).try(:id), :location_id => self.locations.find_by_code(row[1]).try(:id)).first
-      inv.update_attributes(:quantity => row[7]) unless inv.nil?
+    else
+      inv.update_attributes(:quantity => row[7].try(:to_i))
     end
   end
 
-  before_create :init_properties
-  def init_properties
-    self.state = 'open'
-  end
-
-  def make_current!
-    Check.where(:id.not_eq => self.id).each {|c| c.current = false; c.save(:validate => false)}
-
-    self.current = true
-    self.save(:validate => false)
-  end
-
-  def generate_xls
-    self.location_xls = ::Attachment.new(:data => ALL_ORDER::Import.locations(self))
-    self.item_xls = ::Attachment.new(:data => ALL_ORDER::Import.items(self))
-    self.inv_adj_xls = ::Attachment.new(:data => ALL_ORDER::Import.inventory_adjustment(self))
-  end
-
-  def finish_count?
-    Tag.in_check(self.id).not_finish(1).count == 0 && Tag.in_check(self.id).not_finish(2).count == 0
-  end
-  
-  def finish_count_in count
-    Tag.in_check(self.id).not_finish(count).count == 0
-  end
-
-  def total_count_value count
-    Inventory.in_check(self.id).includes(:tags).includes(:item).sum("tags.count_#{count} * items.cost")
-  end
-  
-  def total_count_final_value
-    Inventory.in_check(self.id).includes(:tags).includes(:item).sum("tags.final_count * items.cost")
-  end
-  
-  def total_frozen_value
-    Inventory.in_check(self.id).includes(:item).sum("quantity * items.cost")
-  end
-  
-  def switch_to time
-    self.inventories.each do |inv|
-      inv.update_attributes(
-        :quantity => inv.quantities.where(:time => time).first.try(:value),
-        :time => time
-      )
-    end
-  end
 end
+
+
 
 
 
@@ -191,5 +223,7 @@ end
 #  color_1         :string(255)
 #  color_2         :string(255)
 #  color_3         :string(255)
+#  generated       :boolean         default(FALSE)
+#  import_time     :integer         default(1)
 #
 

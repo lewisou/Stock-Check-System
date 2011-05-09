@@ -11,40 +11,18 @@ class Inventory < ActiveRecord::Base
   validates_presence_of :location
 
   after_save :log_qty
-  def log_qty
-    unless self.quantities.where(:time => self.time).count > 0 || self.time.nil?
-      self.quantities.create(:time => self.time, :value => self.quantity)
-    end
-  end
-
-  before_save :adj_check
-  def adj_check
-    self.check = self.location.check
-  end
-
-  before_save :adj_qtys
-  def adj_qtys
-    unless self.location.try(:is_remote)
-      self.inputed_qty = nil
-    end
-
-    if self.location.try(:is_remote)
-      self.counted_qty = nil
-    else
-      self.counted_qty = (self.tags.map(&:final_count).delete_if {|t| t.nil?}).sum
-    end
-
-    self.result_qty = self.location.try(:is_remote) ? self.inputed_qty : self.counted_qty
-  end
+  before_save :adj_check, :adj_qtys
 
   def create_default_tag!
+    return 0 if self.location.is_remote
+    
     rs = self.tags.create if self.tags.count == 0
     rs
   end
 
-  def counted
-    self.tags.map(&:final_count).sum
-  end
+  # def counted
+  #   self.tags.map(&:final_count).sum
+  # end
   
   def counted_in_1
     self.counted_in 1
@@ -75,7 +53,7 @@ class Inventory < ActiveRecord::Base
   end
   
   def counted_value
-    self.counted * (self.item.try(:cost) || 0)
+    self.result_qty * (self.item.try(:cost) || 0)
   end
   
   def item_full_name
@@ -91,6 +69,8 @@ class Inventory < ActiveRecord::Base
   end
   
   def create_init_tags!
+    return 0 if self.location.is_remote || self.tag_inited
+    
     cod = self.location.try(:code).try(:upcase)
     return 0 if cod.blank?
     
@@ -99,9 +79,44 @@ class Inventory < ActiveRecord::Base
     (rs.collect {|el| el.upcase.delete(cod) }).each do |sloc|
       self.tags.create(:sloc => sloc)
     end
+    self.tag_inited = true
+    self.save
     return rs.size
   end
+
+  private unless 'test' == Rails.env
+  def adj_qtys
+    unless self.location.try(:is_remote)
+      self.inputed_qty = nil
+    end
+
+    if self.location.try(:is_remote)
+      self.counted_qty = nil
+    else
+      self.counted_qty = (self.tags.map(&:final_count).delete_if {|t| t.nil?}).sum
+    end
+
+    self.result_qty = self.location.try(:is_remote) ? self.inputed_qty : self.counted_qty
+  end
+
+  def adj_check
+    self.check = self.location.check
+  end
+
+  def log_qty
+    self.check.reload unless self.check.nil?
+
+    return if self.check.nil? || self.check.import_time.nil? || self.quantity.nil?
+    
+    unless self.quantities.where(:time => self.check.import_time).count > 0
+      self.quantities.create(:time => self.check.import_time, :value => self.quantity)
+    end
+  end
+
 end
+
+
+
 
 
 
@@ -121,5 +136,7 @@ end
 #  inputed_qty :integer
 #  counted_qty :integer
 #  result_qty  :integer
+#  check_id    :integer
+#  tag_inited  :boolean         default(FALSE)
 #
 

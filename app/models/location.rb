@@ -53,6 +53,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: locations
@@ -69,6 +70,6 @@ end
 #  desc1        :text
 #  desc2        :text
 #  desc3        :text
-#  is_remote    :boolean
+#  is_remote    :boolean         default(TRUE)
 #
 

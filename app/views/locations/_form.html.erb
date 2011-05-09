@@ -2,7 +2,6 @@
 	<%= render :partial => 'shared/errors', :locals => {:object => @location} %>
 	<ul class="tabs">
 		<li><a href="#general">General</a></li>
-		<li><a href="#count">Counter</a></li>
 	</ul>
 
 	<div class="tabcontent">
@@ -37,6 +36,13 @@
 				<%= f.text_field :desc3, :tabindex => 4, :class => "medium" %>
 				<small>Address 3</small>
 				</dd>
+				
+				<dt><%= f.label :is_remote %></dt>
+				<dd>
+				<%= f.check_box :is_remote, :tabindex => 5, :class => "medium" %>
+				<small>checked for Remote warehouse, unchecked for Onsite warehouse</small>
+				</dd>
+				
 
 			</dl>
 		</div>

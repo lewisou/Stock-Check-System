@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110509014124) do
+ActiveRecord::Schema.define(:version => 20110509070536) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -73,6 +73,8 @@ ActiveRecord::Schema.define(:version => 20110509014124) do
     t.string   "color_1"
     t.string   "color_2"
     t.string   "color_3"
+    t.boolean  "generated",       :default => false
+    t.integer  "import_time",     :default => 1
   end
 
   create_table "counters", :force => true do |t|
@@ -92,8 +94,8 @@ ActiveRecord::Schema.define(:version => 20110509014124) do
     t.integer  "inputed_qty"
     t.integer  "counted_qty"
     t.integer  "result_qty"
-    t.integer  "time"
     t.integer  "check_id"
+    t.boolean  "tag_inited",  :default => false
   end
 
   add_index "inventories", ["item_id"], :name => "index_inventories_on_item_id"
@@ -144,7 +146,7 @@ ActiveRecord::Schema.define(:version => 20110509014124) do
     t.text     "desc1"
     t.text     "desc2"
     t.text     "desc3"
-    t.boolean  "is_remote"
+    t.boolean  "is_remote",    :default => true
   end
 
   add_index "locations", ["check_id"], :name => "index_locations_on_check_id"

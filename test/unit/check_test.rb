@@ -17,6 +17,24 @@ class CheckTest < ActiveSupport::TestCase
     assert Check.where(:current => true).count == 1
 
   end
+  
+  test "generate!" do
+    c = new_check
+    c.save(:validate => false)
+    
+    assert Tag.in_check(c.id).count == 0
+    c.locations.update_all(:is_remote => false)
+
+    inv = c.inventories.first
+    inv.location.update_attributes(:code => 'CA')
+    inv.item.update_attributes(:inittags => 'CAH17, CAH18')
+    
+    c.generate!
+    assert Tag.in_check(c.id).count == c.inventories.count + 1
+
+    c.generate!
+    assert Tag.in_check(c.id).count == c.inventories.count + 1
+  end
 
   test "reimport" do
     c = new_blank_check
@@ -27,8 +45,15 @@ class CheckTest < ActiveSupport::TestCase
     assert whe.count == 0
     
     c = new_check
+    c.save(:validate => false)
+    c.locations.update_all(:is_remote => false)
+        
+    assert c.inventories.count == 22
+    
     c.reimport_inv_xls = File.new("#{Rails.root.to_s}/test/files/reimport_inv.xls")
     c.save
+    
+    assert c.inventories.count == 23
     
     where = c.inventories.includes(:item).where(:items => (:code.eq % "04/CM002" | :code.eq % "04/CM003"))
     assert where.count == 2
@@ -50,7 +75,8 @@ class CheckTest < ActiveSupport::TestCase
     # launch refresh_item_and_group in before filter
     c = new_check
     c.save(:validate => false)
-
+    c.locations.update_all(:is_remote => false)
+    
     assert c.item_groups.count == 33
     assert ItemGroup.count == 33
     assert c.items.count == 22
@@ -101,11 +127,12 @@ class CheckTest < ActiveSupport::TestCase
     assert Inventory.in_check(c.id).count == 22
   end
   
-  test "refresh_inventories will create default tags" do
+  test "refresh_inventories will not create default tags" do
     c = new_check
     c.save(:validate => false)
-    
-    assert Tag.in_check(c.id).count == 22
+    c.locations.update_all(:is_remote => false)
+        
+    assert Tag.in_check(c.id).count == 0
   end
   
   test "init_properties before create" do
@@ -187,21 +214,29 @@ class CheckTest < ActiveSupport::TestCase
     assert c.total_frozen_value == 3
   end
 
-  test "switch inventory time" do
+  test "switch inventory" do
     c = new_blank_check
-    inv = c.locations.create.inventories.create(:quantity => 1, :time => 1)
-    inv.update_attributes(:quantity => 2, :time => 2)
-    inv.update_attributes(:quantity => 3, :time => 3)
+    inv = c.locations.create.inventories.create(:quantity => 1)
+    
+    c.update_attributes(:import_time => 2)
+    inv.update_attributes(:quantity => 2)
+    
+    c.update_attributes(:import_time => 3)
+    inv.update_attributes(:quantity => 3)
 
-    inv2 = c.locations.create.inventories.create(:quantity => 1, :time => 1)
-    inv2.update_attributes(:quantity => 2, :time => 2)
-    inv2.update_attributes(:quantity => 3, :time => 3)
+    c.update_attributes(:import_time => 1)
+    inv2 = c.locations.create.inventories.create(:quantity => 1)
+    
+    c.update_attributes(:import_time => 2)
+    inv2.update_attributes(:quantity => 2)
+    
+    c.update_attributes(:import_time => 3)
+    inv2.update_attributes(:quantity => 3)
 
     3.times do |t|
-      c.switch_to(t + 1)
-
-      assert inv.reload.quantity == t + 1
-      assert inv2.reload.quantity == t + 1
+      c.reload.update_attributes(:import_time => t + 1)
+      assert inv.reload.quantity == (t + 1)
+      assert inv2.reload.quantity == (t + 1)
     end
   end
   
@@ -212,7 +247,37 @@ class CheckTest < ActiveSupport::TestCase
     
     assert Check.history.count == 2
   end
+  
+  test "create_update_from_row" do
+    c = new_blank_check
+    item = c.item_groups.create.items.create(:code => '1.300')
+    loc = c.locations.create(:code => 'CA')
+    c.locations.create(:code => 'CD')
+    
+    c.inventories.create(:item => item, :location => loc, :quantity => 30)
+    
+    c.create_update_from_row ["1.300", "CA"] + [""] * 5 + [60]
+    assert c.inventories.count == 1
+    
+    c.create_update_from_row ["1.300", "CD"] + [""] * 5 + [60]
+    assert c.inventories.count == 2
+  end
+  
+  test "after save switch_inv" do
+    c = new_blank_check
+    lo = c.locations.create
+    
+    inv = lo.inventories.create(:quantity => 20)
+    
+    c.update_attributes(:import_time => 2)
+    assert inv.reload.quantity.nil?
+
+    c.update_attributes(:import_time => 1)
+    assert inv.reload.quantity == 20
+  end
 end
+
+
 
 # == Schema Information
 #
@@ -231,5 +296,7 @@ end
 #  color_1         :string(255)
 #  color_2         :string(255)
 #  color_3         :string(255)
+#  generated       :boolean         default(FALSE)
+#  import_time     :integer         default(1)
 #
 

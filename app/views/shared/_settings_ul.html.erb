@@ -1,7 +1,12 @@
 <ul>
+	<% if has_curr_check? %>
 	<li <%= "class='current'" if @sub_menu == :current %>><%= link_to 'Status', current_checks_path %></li>
+	<% end %>
+	
 	<li <%= "class='current'" if @sub_menu == :history %>><%= link_to 'History', history_checks_path %></li>
 	<% if has_curr_check? %>
+	<li <%= "class='current'" if @sub_menu == :location %>><%= link_to 'Locations', locations_path %></li>
+	<li <%= "class='current'" if @sub_menu == :tag %>><%= link_to "Tags (#{Tag.in_check(curr_check.id).countable.count})", tags_path %></li>
 	<li <%= "class='current'" if @sub_menu == :color %>><%= link_to 'Colors', color_checks_path %></li>
 	<% end %>
 	<li <%= "class='current'" if @sub_menu == :account %>><%= link_to 'Accounts', accounts_path %></li>

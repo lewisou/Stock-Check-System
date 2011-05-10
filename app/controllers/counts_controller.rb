@@ -3,13 +3,19 @@ require 'ext/spreadsheet'
 
 class CountsController < ApplicationController
 
+  before_filter {check_role :counter}
+  
   before_filter do
     @c_i = (params[:count] || "1").to_i
     @c_s = "count_#{@c_i.to_s}".to_sym
+    
+    if @c_i > 2
+      check_role :admin
+    end
   end
 
   def index
-    @search = Tag.in_check(curr_check.id).search(params[:search])
+    @search = Tag.in_check(curr_check.id).countable.search(params[:search])
     
     if @search.count == 1
       @tag = @search.first
@@ -17,7 +23,7 @@ class CountsController < ApplicationController
   end
 
   def update
-    @tag = Tag.in_check(curr_check.id).find(params[:id])
+    @tag = Tag.in_check(curr_check.id).countable.find(params[:id])
     
     vals = {
       @c_s => params[:tag][@c_s]

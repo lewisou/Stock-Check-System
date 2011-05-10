@@ -4,6 +4,7 @@ require 'pp'
 
 class ReportsController < ApplicationController
   before_filter { @nav = :report }
+  before_filter {check_role :admin}
   
   def count_varience
 
@@ -21,7 +22,7 @@ class ReportsController < ApplicationController
     end
   end
 
-  def final_report
+  def final_result
     @search = Tag.in_check(curr_check.id).where(:count_1.gte % 0 & :count_2.gte % 0).search(params[:search])
     
     respond_to do |format|
@@ -53,7 +54,7 @@ class ReportsController < ApplicationController
   end
 
 
-  def count_frozen_report
+  def count_frozen
     @c_i = (params[:count] || "1").to_i
     @c_s = "count_#{@c_i.to_s}".to_sym
 

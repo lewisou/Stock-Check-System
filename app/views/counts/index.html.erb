@@ -3,6 +3,8 @@
 
 <article>
 	<%= render :partial => 'shared/flash' %>
+	<h1>Count <%= @c_i %> Data Entry</h1>
+		
 	<%= form_for @search, :url => counts_path, :method => :get do |f| %>
 		<fieldset>
 			<legend>Search</legend>
@@ -22,11 +24,10 @@
 <% if @tag %>
 <article <%= "style='background-color: ##{curr_check.send("color_#{@c_i}".to_sym)}'" if curr_check.send("color_#{@c_i}".to_sym) %>>
 	<%= render :partial => 'shared/flash' %>
-	<h1>Count <%= @c_i %> Data Entry</h1>
 
 	<%= form_for @tag, :url => count_path(@tag) do |f| %>
-		<fieldset>
-			<legend>Input</legend>
+		<fieldset style="background-color: white">
+			
 			<dl class="inline">
 				<dt><label>Tag Number</label></dt>
 				<dd><label><%= @tag.id %></label></dd>
@@ -43,7 +44,7 @@
 
 				<% if true %>
 				<dt><%= f.label :sloc, 'Shelf Location' %></dt>
-				<dd><label><%= @tag.sloc || '' %></label> <%= link_to image_tag('icons/edit.png'), edit_tag_path(@tag) %></dd>
+				<dd><label><%= @tag.sloc || '' %></label> <%= link_to image_tag('icons/edit.png'), edit_adm_tag_path(@tag) %></dd>
 				<% end %>
 				
 				<% if @c_i == 3 %>

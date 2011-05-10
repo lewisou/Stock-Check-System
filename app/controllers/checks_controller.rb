@@ -1,4 +1,4 @@
-class ChecksController < ApplicationController
+class ChecksController < BaseController
   layout 'settings'
   
   # GET /checks

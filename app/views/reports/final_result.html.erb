@@ -12,11 +12,11 @@
 <article>
 	<h2>Details</h2>
 
-	<%= form_for @search, :url => final_report_reports_path, :method => :get do |f| %>
+	<%= form_for @search, :url => final_result_reports_path, :method => :get do |f| %>
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
-				<%= render :partial => 'tags/search_dl', :locals => {:f => f} %>
+				<%= render :partial => 'adm/tags/search_dl', :locals => {:f => f} %>
 			</dl>
 
 			<div class="buttons">

@@ -47,7 +47,8 @@
 				<th>Frozen Cost</th>
 				<th>Changed Cost</th>
 				<th>Frozen QTY</th>
-				<th>Counted QTY</th>
+				<th>Final QTY</th>
+				<th>Adjust QTY</th>
 				<th>Frozen Value</th>
 				<th>Counted Value</th>
 			</tr>
@@ -61,7 +62,8 @@
 				<td class='number'><%=number_to_currency inventory.item.try(:al_cost) %></td>
 				<td class='number'><%=number_to_currency inventory.item.try(:cost) %></td>
 				<td class='number'><%= inventory.quantity %></td>
-				<td class='number'><%= inventory.counted %></td>
+				<td class='number'><%= inventory.result_qty %></td>
+				<td class='number'><%= (inventory.result_qty || 0) - (inventory.quantity || 0) %></td>
 				<td class='number'><%=number_to_currency inventory.frozen_value %></td>
 				<td class='number'><%=number_to_currency inventory.counted_value %></td>
 			</tr>

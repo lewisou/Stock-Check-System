@@ -75,43 +75,36 @@ jQuery(function($) {
 			<ul id="mainmenu" class="sf-menu">
 				<li <%= "class='current'" if @nav == :dashboard %>><%= link_to 'Dashboard', root_path %></li>
 
+				<% if has_role? :controller %>
 				<li <%= "class='current'" if @nav == :control %>>
-					<%= link_to 'Control', checks_path %>
+					<%= link_to 'Control', current_checks_path %>
 					<%= render :partial => 'shared/settings_ul' %>
 				</li>
+				<% end %>
 
 				<% if has_curr_check? %>
-
+				
+				<% if has_role? :admin %>
 				<li <%= "class='current'" if @nav == :tag %>>
 					<%= link_to 'Admin', adm_items_path %>
 					<%= render :partial => 'shared/inventory_ul' %>
 				</li>
 
-				<% if true #curr_check.finish_count? %>
-				<li <%= "class='current'" if @nav == :report %>><%= link_to 'Reports', count_varience_reports_path %>
-					<ul>
-						<li><%= link_to 'Count Varience Count 1 VS 2', count_varience_reports_path %></li>
-						<li><%= link_to 'Final Valuation', final_report_reports_path %></li>
-						<li><%= link_to 'Final Valuation (Frozen QTYs)', final_frozen_reports_path %></li>
-					</ul>
+				<li <%= "class='current'" if @nav == :report %>>
+					<%= link_to 'Reports', count_varience_reports_path %>
+					<%= render :partial => 'shared/report_ul' %>
 				</li>
 				<% end %>
 
-
-
-				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>><%= link_to 'Count 1', counts_path(:count => 1) %>
-					<%= render :partial => 'shared/count_ul', :locals => {:count => 1} %>
+				<% if has_role? :counter %>
+				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>>
+					<%= link_to 'Count 1', counts_path(:count => 1) %>
 				</li>
 				<% if Tag.in_check(curr_check.id).not_finish(1).count == 0 %>
-				<li <%= "class='current'" if @nav == :count && @c_i == 2 %>><a href="#">Count 2</a>
-					<%= render :partial => 'shared/count_ul', :locals => {:count => 2} %>
+				<li <%= "class='current'" if @nav == :count && @c_i == 2 %>>
+					<%= link_to 'Count 2', counts_path(:count => 2) %>
 				</li>
 				<% end %>
-
-				<% if curr_check.finish_count? %>
-				<li <%= "class='current'" if @nav == :count && @c_i == 3 %>><a href="#">Count 3</a>
-					<%= render :partial => 'shared/count_ul', :locals => {:count => 3} %>
-				</li>
 				<% end %>
 
 				<% end %>

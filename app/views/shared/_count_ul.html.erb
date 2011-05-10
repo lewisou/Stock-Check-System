@@ -1,9 +1,0 @@
-<ul>
-	<% if curr_check && curr_check.state == 'open' %>
-	<li <%= "class='current'" if @sub_menu == :entry && @c_i == count %>><%= link_to 'Data Entry', counts_path(:count => count) %></li>
-	<% end %>
-	<li <%= "class='current'" if @sub_menu == :result && @c_i == count %>><%= link_to "Count #{count} Result", result_adm_counts_path(:count => count) %></li>
-	<% if count <= 2 && curr_check.finish_count_in(count) %>
-	<li <%= "class='current'" if @sub_menu == :report && @c_i == count %>><%= link_to "Count #{count} Result VS Frozen", frozen_report_adm_counts_path(:count => count) %></li>
-	<% end %>
-</ul>

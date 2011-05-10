@@ -10,7 +10,7 @@ class Adm::CountsController < Adm::BaseController
   end
 
   def missing_tag
-    @search = Tag.in_check(curr_check.id).not_finish(@c_i).search(params[:search])
+    @search = Tag.in_check(curr_check.id).not_finish(@c_i).countable.search(params[:search])
 
     respond_to do |format|
       format.html { @tags = @search.paginate(:page => params[:page]) }

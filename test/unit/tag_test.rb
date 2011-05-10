@@ -109,12 +109,12 @@ class TagTest < ActiveSupport::TestCase
   test "tole_q_or_v scope" do
     scope = Item.create(:cost => 2).inventories.create(:location => Location.create).tags
     
-    scope.create(:count_1 => 100, :count_2 => 110)
-    scope.create(:count_1 => 100, :count_2 => 120)
-    scope.create(:count_1 => 100, :count_2 => 130)
-    scope.create(:count_1 => 100, :count_2 => 140)
-    scope.create(:count_1 => 100, :count_2 => 150)
-    scope.create(:count_1 => 100)
+    scope.create(:count_2 => 100, :count_1 => 110)
+    scope.create(:count_2 => 100, :count_1 => 120)
+    scope.create(:count_2 => 100, :count_1 => 130)
+    scope.create(:count_2 => 100, :count_1 => 140)
+    scope.create(:count_2 => 100, :count_1 => 150)
+    scope.create(:count_2 => 100)
     scope.create()
     
     assert Tag.tole_q_or_v(50, 101).count == 1
@@ -133,12 +133,12 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "tolerance_q scope" do
-    Tag.create(:count_1 => 100, :count_2 => 110)
-    Tag.create(:count_1 => 100, :count_2 => 120)
-    Tag.create(:count_1 => 100, :count_2 => 130)
-    Tag.create(:count_1 => 100, :count_2 => 140)
-    Tag.create(:count_1 => 100, :count_2 => 150)
-    Tag.create(:count_1 => 100)
+    Tag.create(:count_2 => 100, :count_1 => 110)
+    Tag.create(:count_2 => 100, :count_1 => 120)
+    Tag.create(:count_2 => 100, :count_1 => 130)
+    Tag.create(:count_2 => 100, :count_1 => 140)
+    Tag.create(:count_2 => 100, :count_1 => 150)
+    Tag.create(:count_2 => 100)
     Tag.create()
 
     assert Tag.tolerance_q(50.1).count == 0
@@ -220,7 +220,7 @@ class TagTest < ActiveSupport::TestCase
     scope = Item.create(:cost => 2).inventories.create(:location => Location.create).tags
 
     assert scope.create(:count_1 => 1, :count_2 => 2).count_differ == 100
-    assert scope.create(:count_1 => 5, :count_2 => 2).count_differ == 60
+    assert scope.create(:count_1 => 5, :count_2 => 2).count_differ == 150
     assert scope.create.count_differ == nil
 
     assert scope.create(:count_1 => 1, :count_2 => 2).value_differ == 2

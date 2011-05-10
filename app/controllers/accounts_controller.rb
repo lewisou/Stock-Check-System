@@ -1,6 +1,6 @@
 require 'pp'
 
-class AccountsController < ApplicationController
+class AccountsController < BaseController
   layout 'settings'
   
   before_filter do

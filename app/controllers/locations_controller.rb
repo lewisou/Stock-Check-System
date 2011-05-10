@@ -1,6 +1,6 @@
 require 'ext/spreadsheet'
 
-class LocationsController < ApplicationController
+class LocationsController < BaseController
   layout "settings"
   
   before_filter { @sub_menu = :location }

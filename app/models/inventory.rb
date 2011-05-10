@@ -55,7 +55,7 @@ class Inventory < ActiveRecord::Base
   end
   
   def counted_value
-    self.result_qty * (self.item.try(:cost) || 0)
+    (self.result_qty || 0) * (self.item.try(:cost) || 0)
   end
   
   def item_full_name

@@ -18,6 +18,17 @@ class ApplicationController < ActionController::Base
     @curr_check
   end
   
+  helper_method :has_role?
+  def has_role? role
+    return current_admin && current_admin.roles.map(&:code).include?(role.to_s)
+  end
+  
+  def check_role role
+    if current_admin && !has_role?(role)
+      render :text => "<h1>403 Forbidden</h1>", :status => 403
+    end
+  end
+  
   def get_count_assigns symbol
     assigns = []
     curr_check.send("#{symbol.to_s}s".to_sym).each do |obj|

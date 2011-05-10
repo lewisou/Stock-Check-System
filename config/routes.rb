@@ -20,10 +20,9 @@ Scs::Application.routes.draw do
 
   resources :reports, :only => [] do
     collection do
-      get 'count_varience', 'final_report', 'final_frozen'
+      get 'count_varience', 'final_result', 'final_frozen', 'count_frozen'
     end
   end
-  
 
   resources :counts
 
@@ -111,7 +110,7 @@ Scs::Application.routes.draw do
     
     resources :counts do
       collection do
-        get 'missing_tag', 'result', 'frozen_report'
+        get 'missing_tag', 'result'
       end
     end
   end

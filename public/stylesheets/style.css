@@ -318,9 +318,6 @@ input#adminpassword {
 table.infos {
 	width: 100%;
 }
-table.infos th {
-	width: 30%;
-}
 table.infos td, table.infos th {
 	border: 1px solid #eee;
 	padding: 5px 10px;

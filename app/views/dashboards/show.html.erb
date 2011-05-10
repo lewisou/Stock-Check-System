@@ -8,12 +8,6 @@
 
 	<section class="icons">
 		<ul>
-			<% if true %>
-			<li>
-				<%= link_to raw("#{image_tag('eleganticons/Paper.png')} <span>Inventory</span>"), inventories_path %>
-			</li>
-			<% end %>
-			
 			<li>
 				<%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count One</span>"), curr_check.state == 'open' ? counts_path(:count => 1) : result_counts_path(:count => 1) %>
 			</li>

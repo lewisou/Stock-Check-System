@@ -1,12 +1,12 @@
-<% @sub_menu = :tag %>
+<% @sub_menu = :tags %>
 
 <article>
 	<%= render :partial => 'shared/flash' %>
-	<%= form_for @search do |f| %>
+	<%= form_for @search, :url => adm_tags_path do |f| %>
 		<fieldset>
 			<legend>Search</legend>
 			<dl class="inline">
-				<%= render :partial => 'tags/search_dl', :locals => {:f => f} %>
+				<%= render :partial => 'adm/tags/search_dl', :locals => {:f => f} %>
 			</dl>
 			<div class="buttons">
 				<%= f.submit 'Search', :class => "button" %>
@@ -16,7 +16,7 @@
 </article>
 
 <article>
-	<h1>All Tags</h1>
+	<h1><%= @search.count %> Tags</h1>
 	<%= loading_link 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
 
 	<table class="gtable detailtable">
@@ -42,10 +42,10 @@
 				<td><%= tag.sloc %></td>
 				<td>
 					<% if curr_check.state == 'open' %>
-					<%= link_to image_tag('icons/edit.png'), edit_tag_path(tag), :title => 'Edit' %>
-					<%= link_to image_tag('icons/cross.png'), tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?", :title => 'Delete' %>
+					<%= link_to image_tag('icons/edit.png'), edit_adm_tag_path(tag), :title => 'Edit' %>
+					<%= link_to image_tag('icons/cross.png'), adm_tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?", :title => 'Delete' %>
 					<% end %>
-					<%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf), :title => 'Print' %>
+					<%= link_to image_tag('icons/printer.png'), adm_tags_path(:search => {:id_eq => tag.id}, :format => :pdf), :title => 'Print' %>
 				</td>
 			</tr>
 			<tr class="detail">

@@ -140,7 +140,7 @@ class InventoryTest < ActiveSupport::TestCase
     onsite_inv = Location.create(:is_remote => false).inventories.create(:inputed_qty => 2)
     remote_inv = Location.create(:is_remote => true).inventories.create(:inputed_qty => 2)
     
-    assert onsite_inv.inputed_qty.nil?
+    assert onsite_inv.inputed_qty == 2
     assert remote_inv.reload.inputed_qty == 2
   end
   
@@ -226,6 +226,25 @@ class InventoryTest < ActiveSupport::TestCase
     assert inv.quantities.first.time == 1
   end
   
+  test "adj_qtys with tags deleted" do
+    inv = Inventory.create(:location => Location.create(:is_remote => false))
+    inv.tags.create(:count_1 => 1, :count_2 => 1)
+    inv.tags.create(:count_1 => 1, :count_2 => 1)
+    inv.tags.create(:count_1 => 1, :count_2 => 1)
+    
+    assert inv.reload.result_qty == 3
+    inv.tags.first.update_attributes(:state => "deleted")
+
+    assert inv.reload.result_qty == 2
+    
+  end
+  
+  test "remote_s" do
+    inv1 = Location.create(:is_remote => false).inventories.create
+    inv2 = Location.create(:is_remote => true).inventories.create
+    
+    assert Inventory.remote_s == [inv2]
+  end
 end
 
 

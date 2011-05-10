@@ -1,0 +1,60 @@
+<% @sub_menu = :remote %>
+<article>
+	<%= render :partial => "shared/flash" %>
+	
+	<%= form_for @search, :url => adm_inventories_path, :method => :get do |f| %>
+		<fieldset>
+			<legend>Filter</legend>
+			<dl class="inline">
+				<dt><%= f.label :item_code_like, 'Item Number contains' %></dt>
+				<dd>
+				<%= f.text_field :item_code_like, :class => "small", :tabindex => 1 %>
+				</dd>
+				<dt><%= f.label :item_is_active_not_eq, 'inActive' %></dt>
+				<dd><%= f.check_box :item_is_active_not_eq, {}, true, false %></dd>
+				<dt><%= f.label :location_id_eq, 'Location' %></dt>
+				<dd>
+					<%= f.collection_select(:location_id_eq, curr_check.locations, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => 2})  %>
+					<%= f.submit 'Search', :class => 'button' %>
+				</dd>
+
+			</dl>
+
+		</fieldset>
+	<% end %>
+</article>
+
+<article>
+	<h1>Inventory List</h1>
+	<table id="table2" class="gtable detailtable">
+		<thead>
+			<tr>
+				<th><%= sort_link @search, :item_code_and_location_code, 'Item Number' %></th>
+				<th><%= sort_link @search, :location_code_and_item_code, 'Location' %></th>
+				<th>Active</th>
+				<th><%= sort_link @search, :quantity %></th>
+				<th><%= sort_link @search, :inputed_qty %></th>
+
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @inventories.each do |inventory| %>
+			<tr>
+				<td><%= inventory.item.try(:code) %></td>
+				<td><%= inventory.location.try(:code) %></td>
+				<td><%= inventory.item.try(:is_active) %></td>
+				<td class='number'><%= inventory.quantity %></td>
+				<td class='number'><%= inventory.inputed_qty %></td>
+				<td>
+					<%= link_to "Input", edit_adm_inventory_path(inventory) %>
+				</td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	
+	<div class="tablefooter clearfix">
+		<%= will_paginate @inventories %>
+	</div>
+</article>

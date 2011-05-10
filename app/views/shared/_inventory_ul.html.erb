@@ -1,9 +1,14 @@
 <ul>
-	<li <%= "class='current'" if @sub_menu == :items %>><%= link_to "Items (#{curr_check.items.count})", items_path %></li>
-	<li <%= "class='current'" if @sub_menu == :counters %>><%= link_to "Counters (#{Counter.count})", counters_path %></li>
-	<li <%= "class='current'" if @sub_menu == :list %>><%= link_to "Location by Item (#{Inventory.in_check(curr_check.id).count})", inventories_path %></li>
-	<li <%= "class='current'" if @sub_menu == :tags %>><%= link_to "Tags (#{Tag.in_check(curr_check.id).count})", tags_path %></li>
+	<li <%= "class='current'" if @sub_menu == :items %>><%= link_to "New Tag", adm_items_path %></li>
+	<li <%= "class='current'" if @sub_menu == :tags %>><%= link_to "Tags (Edit / Delete / Print)", adm_tags_path %></li>
 	<% if curr_check && curr_check.state == 'open' %>
-	<li <%= "class='current'" if @sub_menu == :missing_cost %>><%= link_to "Missing Cost (#{curr_check.items.missing_cost.count})", missing_cost_items_path %></li>
+	<li <%= "class='current'" if @sub_menu == :missing_cost %>><%= link_to "Missing Cost (#{curr_check.items.missing_cost.count})", missing_cost_adm_items_path %></li>
 	<% end %>
+	<li <%= "class='current'" if @sub_menu == :adj %>><%= link_to "Adjustment QTY", adj_list_adm_tags_path %></li>
+	<li <%= "class='current'" if @sub_menu == :remote %>><%= link_to "Remote Warehouse Input", adm_inventories_path %></li>
+	<li <%= "class='current'" if @sub_menu == :missing_count_1 %>><%= link_to "Count 1 Missing Tags (#{Tag.in_check(curr_check.id).not_finish(1).countable.count})", missing_tag_adm_counts_path(:count => 1) %></li>
+	<li <%= "class='current'" if @sub_menu == :result_count_1 %>><%= link_to "Count 1 Result (#{Tag.in_check(curr_check.id).finish(1).countable.count})", result_adm_counts_path(:count => 1) %></li>
+	<li <%= "class='current'" if @sub_menu == :missing_count_2 %>><%= link_to "Count 2 Missing Tags (#{Tag.in_check(curr_check.id).not_finish(2).countable.count})", missing_tag_adm_counts_path(:count => 2) %></li>
+	<li <%= "class='current'" if @sub_menu == :result_count_2 %>><%= link_to "Count 2 Result (#{Tag.in_check(curr_check.id).finish(2).countable.count})", result_adm_counts_path(:count => 2) %></li>
+	<li <%= "class='current'" if @sub_menu == :counters %>><%= link_to "Counters (#{Counter.count})", adm_counters_path %></li>
 </ul>

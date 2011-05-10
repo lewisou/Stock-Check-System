@@ -1,0 +1,14 @@
+<% @sub_menu = :generate %>
+<article>
+
+	<h1>Generate initial Tags</h1>
+
+	<div class="actions">
+	<% unless curr_check.generated %>
+	<%= loading_link 'Generate Tags', generate_checks_path, :method => :put, :confirm => "Did you setup all remote warehouses with that tags will not be generated ?", :class => "button" %>
+	<% else %>
+	Initial Tags have been generated.
+	<% end %>
+	</div>
+
+</article>

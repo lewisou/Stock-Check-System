@@ -35,23 +35,23 @@
 	<tbody>
 		<tr>
 			<th>Count 1</th>
-			<td><%= Tag.in_check(curr_check.id).countable.count %></td>
+			<td><%= Tag.in_check(curr_check.id).count %></td>
 			<td><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
 			<td><%= Tag.in_check(curr_check.id).finish(1).count %></td>
-			<td><%= Tag.in_check(curr_check.id).not_finish(1).count %></td>
+			<td><%= Tag.in_check(curr_check.id).countable.not_finish(1).count %></td>
 		</tr>
 		<tr>
 			<th>Count 2</th>
-			<td><%= Tag.in_check(curr_check.id).countable.count %></td>
+			<td><%= Tag.in_check(curr_check.id).count %></td>
 			<td><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
 			<td><%= Tag.in_check(curr_check.id).finish(2).count %></td>
-			<td><%= Tag.in_check(curr_check.id).not_finish(2).count %></td>
+			<td><%= Tag.in_check(curr_check.id).countable.not_finish(2).count %></td>
 		</tr>
 		<tr>
 			<th>Count 3</th>
-			<td><%= Tag.in_check(curr_check.id).countable.count %></td>
+			<td><%= Tag.in_check(curr_check.id).count %></td>
 			<td><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
-			<td><%= Tag.in_check(curr_check.id).finish(3).count %></td>
+			<td><%= Tag.in_check(curr_check.id).countable.finish(3).count %></td>
 			<td></td>
 		</tr>
 		<tr>

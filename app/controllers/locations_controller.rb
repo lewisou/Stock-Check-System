@@ -10,7 +10,7 @@ class LocationsController < ApplicationController
   end
 
   def index
-    @search = curr_check.locations.order("code ASC").search(params[:search])
+    @search = curr_check.locations.search(params[:search])
     
     respond_to do |format|
       format.html {

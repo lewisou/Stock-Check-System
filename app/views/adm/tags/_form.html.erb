@@ -1,14 +1,5 @@
-<%= form_for @tag, :html => {:class => 'uniform'} do |f| %>
-	<% if @tag.errors.any? %>
-		<div class="error msg">
-			<h2><%= pluralize(@tag.errors.count, "error") %> prohibited this tag from being saved:</h2>
-			<ul>
-			<% @tag.errors.full_messages.each do |msg| %>
-			<li><%= msg %></li>
-			<% end %>
-			</ul>
-		</div>	
-	<% end %>
+<%= form_for @tag, :url => @tag.new_record? ? adm_tags_path : adm_tag_path(@tag), :html => {:class => 'uniform'} do |f| %>
+	<%= render :partial => "shared/errors", :locals => {:object => @tag} %>
 
 	<fieldset>
 		<legend>Choose Location</legend>

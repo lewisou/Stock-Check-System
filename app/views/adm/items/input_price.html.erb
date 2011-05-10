@@ -1,7 +1,7 @@
 <% @sub_menu = :missing_cost %>
 <article>
 	<h1>Input cost</h1>
-	<%= form_for @item, :url => update_price_item_path(@item), :html => {:class => 'uniform'} do |f| %>
+	<%= form_for @item, :url => update_price_adm_item_path(@item), :html => {:class => 'uniform'} do |f| %>
 		<% if @item.errors.any? %>
 			<div class="error msg">
 				<h2><%= pluralize(@item.errors.count, "error") %> prohibited this tag from being saved:</h2>

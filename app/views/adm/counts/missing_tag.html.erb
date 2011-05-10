@@ -1,10 +1,10 @@
-<% @sub_menu = :missing %>
+<% @sub_menu = "missing_#{@c_s}".to_sym %>
 <article>
-	<%= form_for @search, :url => missing_tag_counts_path, :html => {:class => 'uniform'} do |f| %>
+	<%= form_for @search, :url => missing_tag_adm_counts_path, :html => {:class => 'uniform'} do |f| %>
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
-				<%= render :partial => 'tags/search_dl', :locals => {:f => f} %>
+				<%= render :partial => 'adm/tags/search_dl', :locals => {:f => f} %>
 				<%= hidden_field_tag :count, @c_i %>
 			</dl>
 		</fieldset>
@@ -41,8 +41,8 @@
 				<td><%= tag.try(:sloc) %></td>
 				<td><%= tag.send(@c_s) %></td>
 				<td>
-					<%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => tag.id}, :format => :pdf) %>
-					<%= link_to image_tag('icons/cross.png'), tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?", :title => 'Delete' %>
+					<%= link_to image_tag('icons/printer.png'), adm_tags_path(:search => {:id_eq => tag.id}, :format => :pdf) %>
+					<%= link_to image_tag('icons/cross.png'), adm_tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?", :title => 'Delete' %>
 				</td>
 			</tr>
 			<% end %>

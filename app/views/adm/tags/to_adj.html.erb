@@ -1,0 +1,38 @@
+<article>
+	
+	<h1>Make adjustment</h1>
+	<%= form_for @tag, :url => update_adj_adm_tag_path(@tag), :html => {:class => 'uniform'} do |f| %>
+		<%= render :partial => "shared/errors", :locals => {:object => @tag} %>
+
+		<fieldset>
+			<legend>Choose Location</legend>
+			<dl class="inline">
+				<dt><%= f.label :item_id, 'Item Number' %></dt>
+				<dd>
+					<%= f.label :item_id, @tag.inventory.item.code %>
+				</dd>
+				<dt><%= f.label :item_description %></dt>
+				<dd>
+					<%= f.label :item_description, @tag.inventory.item.description %>
+				</dd>
+				
+				<dt><%= f.label :count_1 %></dt>
+				<dd><%= f.label :count_1, @tag.count_1 || 0 %></dd>
+				<dt><%= f.label :count_2 %></dt>
+				<dd><%= f.label :count_2, @tag.count_2 || 0 %></dd>
+				<dt><%= f.label :count_3 %></dt>
+				<dd><%= f.label :count_3, @tag.count_3 || 0 %></dd>
+				
+				<dt><%= f.label :adjustment %></dt>
+				<dd><%= f.text_field :adjustment, :class => "small" %></dd>
+
+
+			</dl>
+		</fieldset>
+		<div class="buttons">
+			<%= f.submit "Adjustment", :class => 'button' %>
+		</div>
+
+	<% end %>
+	
+</article>

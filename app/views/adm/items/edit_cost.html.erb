@@ -1,7 +1,7 @@
 <article>
 	<h1>Enter Cost</h1>
 
-	<%= form_for @item do |f| %>
+	<%= form_for @item, :url => adm_item_path(@item) do |f| %>
 		<fieldset>
 			<legend>Input</legend>
 			<dl class="inline">

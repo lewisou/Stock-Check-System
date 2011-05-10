@@ -1,10 +1,11 @@
-<% @sub_menu = :result %>
+<% @sub_menu = "result_#{@c_s}".to_sym %>
+
 <article>
-	<%= form_for @search, :url => result_counts_path, :method => :get do |f| %>
+	<%= form_for @search, :url => result_adm_counts_path, :method => :get do |f| %>
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
-				<%= render :partial => 'tags/search_dl', :locals => {:f => f} %>
+				<%= render :partial => 'adm/tags/search_dl', :locals => {:f => f} %>
 				<%= hidden_field_tag :count, @c_i %>
 			</dl>
 			<div class="buttons">

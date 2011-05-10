@@ -83,9 +83,21 @@ jQuery(function($) {
 				<% if has_curr_check? %>
 
 				<li <%= "class='current'" if @nav == :tag %>>
-					<%= link_to 'Check', items_path %>
+					<%= link_to 'Admin', adm_items_path %>
 					<%= render :partial => 'shared/inventory_ul' %>
 				</li>
+
+				<% if true #curr_check.finish_count? %>
+				<li <%= "class='current'" if @nav == :report %>><%= link_to 'Reports', count_varience_reports_path %>
+					<ul>
+						<li><%= link_to 'Count Varience Count 1 VS 2', count_varience_reports_path %></li>
+						<li><%= link_to 'Final Valuation', final_report_reports_path %></li>
+						<li><%= link_to 'Final Valuation (Frozen QTYs)', final_frozen_reports_path %></li>
+					</ul>
+				</li>
+				<% end %>
+
+
 
 				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>><%= link_to 'Count 1', counts_path(:count => 1) %>
 					<%= render :partial => 'shared/count_ul', :locals => {:count => 1} %>
@@ -102,15 +114,6 @@ jQuery(function($) {
 				</li>
 				<% end %>
 
-				<% if curr_check.finish_count? %>
-				<li <%= "class='current'" if @nav == :report %>><%= link_to 'Reports', count_varience_reports_path %>
-					<ul>
-						<li><%= link_to 'Count Varience Count 1 VS 2', count_varience_reports_path %></li>
-						<li><%= link_to 'Final Valuation', final_report_reports_path %></li>
-						<li><%= link_to 'Final Valuation (Frozen QTYs)', final_frozen_reports_path %></li>
-					</ul>
-				</li>
-				<% end %>
 				<% end %>
 			</ul>
 			<ul id="usermenu">

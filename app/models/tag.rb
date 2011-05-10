@@ -55,7 +55,9 @@ class Tag < ActiveRecord::Base
 
   before_save :adj_final_count
   def adj_final_count
-    if self.count_1.nil? || self.count_2.nil?
+    if !self.adjustment.nil?
+      self.final_count = self.adjustment
+    elsif self.count_1.nil? || self.count_2.nil?
       self.final_count = nil
     elsif self.count_1 == self.count_2
       self.final_count = self.count_1

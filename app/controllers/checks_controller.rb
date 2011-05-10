@@ -136,4 +136,7 @@ class ChecksController < ApplicationController
     curr_check.generate!
     redirect_to current_checks_path, :notice => "Initial tags have been generated."
   end
+  
+  def to_generate
+  end
 end

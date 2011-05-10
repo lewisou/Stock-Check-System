@@ -1,0 +1,73 @@
+<% @sub_menu = :adj %>
+
+<article>
+	<%= render :partial => 'shared/flash' %>
+	<%= form_for @search, :url => adj_list_adm_tags_path do |f| %>
+		<fieldset>
+			<legend>Search</legend>
+			<dl class="inline">
+				<%= render :partial => 'adm/tags/search_dl', :locals => {:f => f} %>
+			</dl>
+			<div class="buttons">
+				<%= f.submit 'Search', :class => "button" %>
+			</div>
+		</fieldset>
+	<% end %>
+</article>
+
+<article>
+	<h1><%= @search.count %> Tags</h1>
+
+	<table class="gtable detailtable">
+		<thead>
+			<tr>
+				<th><%= sort_link @search, :id, 'Tag' %></th>
+				<th><%= sort_link @search, :count_1 %></th>
+				<th><%= sort_link @search, :count_2 %></th>
+				<th><%= sort_link @search, :count_3 %></th>
+				<th><%= sort_link @search, :final_count %></th>
+				<th><%= sort_link @search, :adjustment %></th>
+
+				<th>Action</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<% @tags.each do |tag| %>
+			<% next unless tag.inventory %>
+			<tr>
+				<td>
+				<a href="#" class="detail-link"><%= tag.id %></a>	
+				</td>
+				<td><%= tag.count_1 %></td>
+				<td><%= tag.count_2 %></td>
+				<td><%= tag.count_3 %></td>
+				<td><%= tag.final_count %></td>
+				<td><%= tag.adjustment %></td>
+
+				<td>
+					<%= link_to 'adjustment', to_adj_adm_tag_path(tag) %>
+				</td>
+			</tr>
+			<tr class="detail">
+				<td colspan="7">
+					<table>
+						<tbody>
+							<tr>
+								<td><%= tag.inventory.item.try(:code) %></td>
+								<td><%= tag.inventory.item.try(:description) %></td>
+								<td><%= tag.inventory.location.try(:code) %> <%= tag.sloc %></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<% end %>
+
+		</tbody>
+	</table>
+	
+	<div class="tablefooter clearfix">
+		<%= will_paginate @tags %>
+	</div>
+</article>

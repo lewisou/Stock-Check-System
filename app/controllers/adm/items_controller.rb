@@ -1,6 +1,4 @@
-require 'ext/spreadsheet'
-
-class ItemsController < ApplicationController
+class Adm::ItemsController < Adm::BaseController
   layout "tags"
 
   def new
@@ -15,7 +13,7 @@ class ItemsController < ApplicationController
     @item = Item.find(params[:id])
 
     if @item.update_attributes(params[:item])
-      redirect_to items_path, :notice => "Item #{@item.code} has been updated."
+      redirect_to adm_items_path, :notice => "Item #{@item.code} has been updated."
     else
       render :edit
     end
@@ -26,7 +24,7 @@ class ItemsController < ApplicationController
     @item.from_al = false
     
     if @item.save
-      redirect_to items_path, :notice => "Item #{@item.code} has been created."
+      redirect_to adm_items_path, :notice => "Item #{@item.code} has been created."
     else
       render :new
     end
@@ -72,5 +70,4 @@ class ItemsController < ApplicationController
       }
     end
   end
-
 end

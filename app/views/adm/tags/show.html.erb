@@ -1,6 +1,6 @@
 <% @sub_menu = :tags %>
 <article>
-
+<%= render :partial => "shared/flash" %>
 <table class="infos">
 	<tr>
 		<th>Tag Number</th>
@@ -30,7 +30,7 @@
 
 <div class="tablefooter clearfix">
 	<div class="actions">
-	<%= link_to image_tag('icons/printer.png'), tags_path(:search => {:id_eq => @tag.id}, :format => :pdf) %>
+	<%= link_to image_tag('icons/printer.png'), adm_tags_path(:search => {:id_eq => @tag.id}, :format => :pdf) %>
 	</div>
 </div>
 </article>

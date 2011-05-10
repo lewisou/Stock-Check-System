@@ -229,6 +229,15 @@ class TagTest < ActiveSupport::TestCase
 
   end
   
+  test "adj_final_count with adjustment" do
+    tag = Tag.create(:count_1 => 2, :count_2 => 2)
+    
+    assert tag.adj_final_count == 2 
+    tag.update_attributes(:adjustment => 1)
+    
+    assert tag.reload.adj_final_count == 1
+  end
+  
 end
 
 

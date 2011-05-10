@@ -1,22 +1,12 @@
 <% @sub_menu = :current %>
-<article>
-<%= render :partial => "shared/flash" %>
-
-<h1>Status</h1>
-<%= render :partial => 'shared/curr_check', :locals => {:curr_check => @check} %>
-
-</article>
 
 <article>
-	<h2>Control</h2>
+	<h1>Control</h1>
 
 	<div class="actions">
 		<% if curr_check.state == 'open' %>
 			<%= loading_link 'Complete', change_state_checks_path(:state => :complete), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button" %>
 			<%= loading_link 'Cancel', change_state_checks_path(:state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button" %>
-			<% unless curr_check.generated %>
-			<%= loading_link 'Generate Tags', generate_checks_path, :method => :put, :confirm => "Do you setup all remote warehouses with that tags will not be generated ?", :class => "button" %>
-			<% end %>
 			<%= link_to 'Re-import', reimport_checks_path, :class => "button" %>
 		<% else %>
 			<%= link_to 'Start New One', new_check_path, :class => "button" %>
@@ -26,6 +16,12 @@
 			<% end %>
 		<% end %>
 	</div>
+</article>
+
+<article>
+<%= render :partial => "shared/flash" %>
+<h2>Status</h2>
+<%= render :partial => 'shared/curr_check', :locals => {:curr_check => @check} %>
 </article>
 
 <% if curr_check.state == 'complete' %>

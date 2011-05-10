@@ -1,6 +1,8 @@
 class Inventory < ActiveRecord::Base
   scope :in_check, lambda {|check_id| includes(:location => :check).where(:checks => {:id => check_id}) }
   scope :need_adjustment, where("quantity <> result_qty")
+  scope :remote_s, includes(:location).where(:locations => {:is_remote => true})
+
 
   belongs_to :item
   belongs_to :location
@@ -86,14 +88,18 @@ class Inventory < ActiveRecord::Base
 
   private unless 'test' == Rails.env
   def adj_qtys
-    unless self.location.try(:is_remote)
-      self.inputed_qty = nil
-    end
-
-    if self.location.try(:is_remote)
-      self.counted_qty = nil
-    else
-      self.counted_qty = (self.tags.map(&:final_count).delete_if {|t| t.nil?}).sum
+    # unless self.location.try(:is_remote)
+    #   self.inputed_qty = nil
+    # end
+    # 
+    # if self.location.try(:is_remote)
+    #   self.counted_qty = nil
+    # else
+    #   self.counted_qty = (self.tags.countable.map(&:final_count).delete_if {|t| t.nil?}).sum
+    # end
+    # 
+    if !self.location.try(:is_remote)
+      self.counted_qty = (self.tags.countable.map(&:final_count).delete_if {|t| t.nil?}).sum
     end
 
     self.result_qty = self.location.try(:is_remote) ? self.inputed_qty : self.counted_qty

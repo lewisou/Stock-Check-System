@@ -52,4 +52,24 @@ class ReportsController < ApplicationController
 
   end
 
+
+  def count_frozen_report
+    @c_i = (params[:count] || "1").to_i
+    @c_s = "count_#{@c_i.to_s}".to_sym
+
+    @search = Inventory.in_check(curr_check.id).search(params[:search])
+
+    respond_to do |format|
+      format.html { @inventories = @search.paginate(:page => params[:page]) }
+      format.xls {
+        @inventories = @search.all
+        book = Spreadsheet::Workbook.new
+        data = book.generate_xls("Count #{@c_i} Report", @inventories, %w{Location Item Description FrozenCost Cost FrozenQTY Counted FrozenValue CountedValue}, 
+        [[:location, :code], [:item, :code], [:item, :description], [:item, :al_cost], [:item, :cost], :quantity, "counted_in_#{@c_i}".to_sym,
+        :frozen_value, "counted_value_in_#{@c_i}".to_sym])
+        send_data data, :filename => "Count #{@c_i} Report with Frozen QTY.xls", :disposition => 'attachment'
+      }
+    end
+  end
+  
 end

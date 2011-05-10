@@ -1,12 +1,12 @@
 require 'ext/tag_table'
 
-class TagsController < ApplicationController
-  layout "settings"
+class Adm::TagsController < Adm::BaseController
+  layout "tags"
 
   # GET /tags
   # GET /tags.xml
   def index    
-    @search = Tag.in_check(curr_check.id).includes(:inventory => :item, :inventory => :location).search(params[:search])
+    @search = Tag.in_check(curr_check.id).countable.includes(:inventory => :item, :inventory => :location).search(params[:search])
 
     respond_to do |format|
       format.html { @tags = @search.paginate(:page => params[:page]) }
@@ -60,7 +60,7 @@ class TagsController < ApplicationController
 
     respond_to do |format|
       if @tag.save
-        format.html { redirect_to(@tag, :notice => 'Tag was successfully created.') }
+        format.html { redirect_to adm_tag_path(@tag), :notice => 'Tag was successfully created.' }
         format.xml  { render :xml => @tag, :status => :created, :location => @tag }
       else
         format.html { render :action => "new" }
@@ -76,7 +76,7 @@ class TagsController < ApplicationController
     
     respond_to do |format|
       if @tag.update_attributes(params[:tag])
-        format.html { redirect_to(@tag, :notice => 'Tag was successfully updated.') }
+        format.html { redirect_to( adm_tag_path(@tag), :notice => 'Tag was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -89,11 +89,30 @@ class TagsController < ApplicationController
   # DELETE /tags/1.xml
   def destroy
     @tag = Tag.in_check(curr_check.id).find(params[:id])
-    @tag.destroy
+    @tag.update_attributes(:state => "deleted")
 
     respond_to do |format|
-      format.html { redirect_to(tags_url) }
+      format.html { redirect_to(adm_tags_url, :notice => "Deleted successfully.") }
       format.xml  { head :ok }
+    end
+  end
+
+  def adj_list
+    @search = Tag.in_check(curr_check.id).countable.includes(:inventory => :item, :inventory => :location).search(params[:search])
+    @tags = @search.paginate(:page => params[:page])
+  end
+
+  def to_adj
+    @tag = Tag.in_check(curr_check.id).find(params[:id])
+  end
+
+  def update_adj
+    @tag = Tag.in_check(curr_check.id).find(params[:id])
+    
+    if @tag.update_attributes(:adjustment => (params[:tag] || {})[:adjustment])
+      redirect_to adj_list_adm_tags_path, :notice => "Adjustment updated."
+    else
+      render :adj_list
     end
   end
 

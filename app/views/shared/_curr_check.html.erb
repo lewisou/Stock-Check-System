@@ -18,6 +18,12 @@
 			<th>Started at</th>
 			<td><%= curr_check.created_at %></td>
 		</tr>
+		<% if curr_check.state == 'open' %>
+		<tr>
+			<th>Duration</th>
+			<td><%= distance_of_time_in_words(Time.now - curr_check.created_at) %></td>
+		</tr>
+		<% end %>
 	</tbody>
 </table>
 

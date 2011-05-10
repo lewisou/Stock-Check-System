@@ -23,7 +23,7 @@ class Check < ActiveRecord::Base
 
   before_update :reimport_inventories
   after_update :reimport_inv
-  
+
   after_save :switch_inv
 
 

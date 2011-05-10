@@ -79,6 +79,13 @@ class LocationTest < ActiveSupport::TestCase
     
     assert l.is_remote
   end
+  
+  test "tagable scope" do
+    l = Location.create(:is_remote => false)
+    Location.create(:is_remote => true)
+    
+    assert Location.tagable == [l]
+  end
 end
 
 

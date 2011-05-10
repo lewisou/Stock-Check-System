@@ -12,6 +12,11 @@ class CountsController < ApplicationController
     if @c_i > 2
       check_role :admin
     end
+    if @c_i <= 2
+      check_data_entry
+    end
+
+    @nav = :count
   end
 
   def index

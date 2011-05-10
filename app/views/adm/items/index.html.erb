@@ -46,31 +46,6 @@
 					<%= link_to image_tag('icons/edit.png'), edit_adm_item_path(item), :title => 'Edit' %>
 					<% end %>
 					<%= link_to 'New Tag', new_adm_item_tag_path(item) if curr_check.state == 'open' %>
-					<% if item.inventories.count > 0 %>
-					<a href="#" class="detail-link", title="Location"><%= image_tag('icons/box.png') %>(<%= item.inventories.where(:quantity.gt => 0).count %>)</a>
-					<% end %>
-				</td>
-			</tr>
-			<tr class="detail">
-				<td colspan="5">
-					<table>
-						<thead>
-							<tr>
-								<th>Location Code</th>
-								<th>Location Description</th>
-								<th>Quantity</th>
-							</tr>
-						</thead>
-						<tbody>
-							<% item.inventories.where(:quantity.gt => 0).each do |inventory| %>
-							<tr>
-								<td><%= inventory.location.try(:code) %></td>
-								<td><%= inventory.location.try(:description) %></td>
-								<td class='number'><%= inventory.quantity %></td>
-							</tr>
-							<% end %>
-						</tbody>
-					</table>
 				</td>
 			</tr>
 			<% end %>

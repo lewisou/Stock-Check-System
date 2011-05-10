@@ -12,6 +12,7 @@
 				<dt><label for="name">Tag Number</label></dt>
 				<dd>
 					<%= f.text_field :id_eq, :class => "small required", :size => "50", :tabindex => 2 %>
+					<small><%= Tag.countable.in_check(curr_check.id).not_finish(@c_i).count %> to go</small>
 					<%= hidden_field_tag :count, @c_i %>
 					<%= f.submit 'Search', :class => "button" %>
 				</dd>

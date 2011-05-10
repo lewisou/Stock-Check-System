@@ -15,7 +15,7 @@
 			</dd>
 			<dt><%= f.label :location_id, 'Location' %></dt>
 			<dd>
-				<%= f.collection_select(:location_id, curr_check.locations, :id, :code, {:include_blank => false}, {:class => "small", :tabindex => 1})  %>
+				<%= f.collection_select(:location_id, curr_check.locations.tagable, :id, :code, {:include_blank => false}, {:class => "small", :tabindex => 1})  %>
 			</dd>
 			<dt><%= f.label :sloc, 'Shelf Location' %></dt>
 			<dd><%= f.text_field :sloc, :tabindex => 2, :class => 'small' %></dd>

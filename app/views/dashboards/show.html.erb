@@ -8,51 +8,50 @@
 
 	<section class="icons">
 		<ul>
+			<% if has_role? :controller %>
 			<li>
-				<%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count One</span>"), curr_check.state == 'open' ? counts_path(:count => 1) : result_counts_path(:count => 1) %>
+				<%= link_to raw("#{image_tag('eleganticons/Config.png')} <span>Control</span>"), current_checks_path %>
 			</li>
+			<% end %>
 
-			<% if curr_check.state != 'open' || Tag.in_check(curr_check.id).not_finish(1).count == 0 %>
+			<% if has_role? :admin %>
 			<li>
-				<%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count Two</span>"), curr_check.state == 'open' ? counts_path(:count => 2) : result_counts_path(:count => 2) %>
+				<%= link_to raw("#{image_tag('eleganticons/Folder.png')} <span>Admin</span>"), adm_items_path %>
 			</li>
-			<% end %>
-			
-			<% if curr_check.finish_count? %>
-			<li>
-				<a href="<%= count_varience_reports_path %>">
-					<img src="images/eleganticons/Graph.png" />
-					<span>Reports</span>
-				</a>
-			</li>
-			<% end %>
 			
 			<li>
-				<a href="<%= checks_path %>">
-					<img src="images/eleganticons/Config.png" />
-					<span>Settings</span>
-				</a>
+				<%= link_to raw("#{image_tag('eleganticons/Graph.png')} <span>Reports</span>"), count_varience_reports_path %>
 			</li>
-			<!-- <li>
+			<% end %>
+
+			<% if has_role? :counter && allow_data_entry? %>
+			<li><%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count One</span>"), counts_path(:count => 1) %></li>
+
+			<% if Tag.in_check(curr_check.id).not_finish(1).count == 0 %>
+			<li><%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count Two</span>"), counts_path(:count => 2) %></li>
+			<% end %>
+
+			<% end %>
+			
+			<li>
 				<a href="#">
 					<img src="images/eleganticons/Info.png" />
 					<span>Help</span>
 				</a>
-			</li> -->
+			</li>
 			<li>
-				<a href="<%= destroy_admin_session_path %>">
-					<img src="images/eleganticons/X.png" />
-					<span>Logout</span>
-				</a>
+				<%= link_to raw("#{image_tag('eleganticons/X.png')} <span>Logout</span>"), destroy_admin_session_path %>
 			</li>
 		</ul>
 	</section>
 </article>
 
+<% if has_role?(:admin) || has_role?(:controller) %>
 <article>
 <h1>Status</h1>
 <%= render :partial => 'shared/curr_check', :locals => {:curr_check => curr_check} %>
 </article>
+<% end %>
 
 
 <% end %>

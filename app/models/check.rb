@@ -48,18 +48,6 @@ class Check < ActiveRecord::Base
     Tag.in_check(self.id).not_finish(count).count == 0
   end
 
-  def total_count_value count
-    Inventory.in_check(self.id).includes(:tags).includes(:item).sum("tags.count_#{count} * items.cost")
-  end
-  
-  def total_count_final_value
-    Inventory.in_check(self.id).includes(:tags).includes(:item).sum("tags.final_count * items.cost")
-  end
-  
-  def total_frozen_value
-    Inventory.in_check(self.id).includes(:item).sum("quantity * items.cost")
-  end
-  
   def generate!
     return if self.generated
 
@@ -69,6 +57,20 @@ class Check < ActiveRecord::Base
     self.generated = true
     self.save
   end
+  
+  # repeated code for speed
+  def total_count_value count
+    Inventory.in_check(self.id).includes(:tags).includes(:item).where(:tags => (:state.not_eq % "deleted" | :state.eq % nil)).sum("tags.count_#{count} * items.cost").to_f
+  end
+  
+  def total_count_final_value
+    Inventory.in_check(self.id).includes(:item).sum("inventories.result_qty * items.cost").to_f
+  end
+  
+  def total_frozen_value
+    Inventory.in_check(self.id).includes(:item).sum("quantity * items.cost").to_f
+  end
+  
   
   private unless 'test' == Rails.env
   def switch_inv

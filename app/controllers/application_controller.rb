@@ -28,7 +28,21 @@ class ApplicationController < ActionController::Base
       render :text => "<h1>403 Forbidden</h1>", :status => 403
     end
   end
-  
+
+  helper_method :allow_data_entry?
+  def allow_data_entry?
+    if curr_check && curr_check.state != "open"
+      return false
+    end
+    true
+  end
+
+  def check_data_entry
+    if !allow_data_entry?
+      render :text => "<h1>403 Forbidden</h1>", :status => 403
+    end
+  end
+
   def get_count_assigns symbol
     assigns = []
     curr_check.send("#{symbol.to_s}s".to_sym).each do |obj|

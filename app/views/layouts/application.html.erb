@@ -96,7 +96,8 @@ jQuery(function($) {
 				</li>
 				<% end %>
 
-				<% if has_role? :counter %>
+				<% if has_role? :counter && allow_data_entry? %>
+				
 				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>>
 					<%= link_to 'Count 1', counts_path(:count => 1) %>
 				</li>
@@ -105,6 +106,7 @@ jQuery(function($) {
 					<%= link_to 'Count 2', counts_path(:count => 2) %>
 				</li>
 				<% end %>
+				
 				<% end %>
 
 				<% end %>

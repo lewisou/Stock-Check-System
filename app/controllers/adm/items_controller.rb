@@ -48,7 +48,7 @@ class Adm::ItemsController < Adm::BaseController
     # @item = curr_check.items.find(params[:id])
 
     if @item.update_attributes(params[:item])
-      redirect_to(@item, :notice => 'Tag was successfully updated.')
+      redirect_to( missing_cost_adm_items_path, :notice => 'Cost was successfully updated.')
     else
       render :action => "input_price"
     end

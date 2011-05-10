@@ -1,6 +1,8 @@
 <% @sub_menu = :missing_cost %>
 
 <article>
+	<%= render :partial => "shared/flash" %>
+
 	<%= form_for @search, :url => missing_cost_adm_items_path do |f| %>
 		<fieldset>
 			<legend>Search</legend>

@@ -88,16 +88,6 @@ class Inventory < ActiveRecord::Base
 
   private unless 'test' == Rails.env
   def adj_qtys
-    # unless self.location.try(:is_remote)
-    #   self.inputed_qty = nil
-    # end
-    # 
-    # if self.location.try(:is_remote)
-    #   self.counted_qty = nil
-    # else
-    #   self.counted_qty = (self.tags.countable.map(&:final_count).delete_if {|t| t.nil?}).sum
-    # end
-    # 
     if !self.location.try(:is_remote)
       self.counted_qty = (self.tags.countable.map(&:final_count).delete_if {|t| t.nil?}).sum
     end

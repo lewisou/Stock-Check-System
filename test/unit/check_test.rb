@@ -191,19 +191,19 @@ class CheckTest < ActiveSupport::TestCase
   
   test "total count 1 & 2 value" do
     c = new_blank_check
-    inv = c.item_groups.create.items.create(:cost => 1).inventories.create(:location => c.locations.create)
+    inv = c.item_groups.create.items.create(:cost => 2).inventories.create(:location => c.locations.create(:is_remote => false))
     3.times {|i| inv.tags.create(:count_1 => i, :count_2 => (i + 1))}
 
-    assert c.total_count_value(1) == 3
-    assert c.total_count_value(2) == 6
+    assert c.total_count_value(1) == 6
+    assert c.total_count_value(2) == 12
   end
   
   test "total_count_final_value" do
     c = new_blank_check
-    inv = c.item_groups.create.items.create(:cost => 1).inventories.create(:location => c.locations.create)
+    inv = c.item_groups.create.items.create(:cost => 2).inventories.create(:location => c.locations.create(:is_remote => false))
     3.times {|i| inv.tags.create(:count_1 => 1, :count_2 => 1)}
-    
-    assert c.total_count_final_value == 3
+
+    assert c.total_count_final_value == 6
   end
   
   test "total frozen value" do
@@ -274,6 +274,20 @@ class CheckTest < ActiveSupport::TestCase
 
     c.update_attributes(:import_time => 1)
     assert inv.reload.quantity == 20
+  end
+  
+  test "total_count_value_with_deleted_tag" do
+    c = new_blank_check
+    c.locations.create(:is_remote => false).inventories.create(:item => Item.create(:cost => 2)).tags.create(:count_1 => 1, :count_2 => 1)
+    c.locations.create(:is_remote => false).inventories.create(:item => Item.create(:cost => 2)).tags.create(:count_1 => 1, :count_2 => 1)
+    tag = c.locations.create(:is_remote => false).inventories.create(:item => Item.create(:cost => 2)).tags.create(:count_1 => 1, :count_2 => 1)
+
+    assert c.total_count_value(1) == 6
+
+    tag.update_attributes(:state => 'deleted')
+
+    assert c.total_count_value(1)  == 4
+
   end
 end
 

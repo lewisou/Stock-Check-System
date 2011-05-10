@@ -1,4 +1,6 @@
 class Location < ActiveRecord::Base
+  scope :tagable, where(:is_remote => false)
+
   has_many :assigns
   has_many :counters, :through => :assigns
   

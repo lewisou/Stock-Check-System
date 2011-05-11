@@ -9,11 +9,17 @@ class ReportsController < ApplicationController
   def count_varience
 
     # @tole = {:tole_quantity => (params[:tole_quantity] || 5), :tole_value => (params[:tole_value] || 25)}
-    @search = Tag.in_check(curr_check.id).finish(1).finish(2).search({:tolerance_q => 5, :tolerance_v => 25}.merge(params[:search] || {}))
+
+    @search = Tag.in_check(curr_check.id).finish(1).finish(2).search(
+    ({"tolerance_q" => 0, "tolerance_v" => 0}).merge((params[:search] || {}).delete_if {|key, value| value.blank? })
+    )
     # tole_q_or_v(@tole[:tole_quantity], @tole[:tole_value]).search(params[:search])
 
     respond_to do |format|
-      format.html { @tags = @search.paginate(:page => params[:page]) }
+      format.html { 
+        @tags = @search.paginate(:page => params[:page])
+        render :layout => "tags"
+      }
       format.xls {
         @tags = @search.all
         book = Spreadsheet::Workbook.new

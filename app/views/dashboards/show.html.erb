@@ -16,15 +16,11 @@
 
 			<% if has_role? :admin %>
 			<li>
-				<%= link_to raw("#{image_tag('eleganticons/Folder.png')} <span>Admin</span>"), adm_items_path %>
-			</li>
-			
-			<li>
-				<%= link_to raw("#{image_tag('eleganticons/Graph.png')} <span>Reports</span>"), count_varience_reports_path %>
+				<%= link_to raw("#{image_tag('eleganticons/Graph.png')} <span>Admin</span>"), adm_items_path %>
 			</li>
 			<% end %>
 
-			<% if has_role? :counter && allow_data_entry? %>
+			<% if has_role?(:counter) && allow_data_entry? %>
 			<li><%= link_to raw("#{image_tag('eleganticons/Paper-pencil.png')} <span>Count One</span>"), counts_path(:count => 1) %></li>
 
 			<% if Tag.in_check(curr_check.id).not_finish(1).count == 0 %>

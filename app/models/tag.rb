@@ -17,11 +17,11 @@ class Tag < ActiveRecord::Base
 
   search_methods :tolerance_q
   scope :tolerance_q, lambda { |quantity|
-    {:conditions => ["abs((tags.count_1 - tags.count_2) / least(cast(tags.count_1 as float), cast(tags.count_2 as float))) * 100 >= ? and least(cast(tags.count_1 as float), cast(tags.count_2 as float)) <> 0", quantity.to_f.abs]}
+    {:conditions => ["abs((tags.count_1 - tags.count_2) / least(cast(tags.count_1 as float), cast(tags.count_2 as float))) * 100 > ? and least(cast(tags.count_1 as float), cast(tags.count_2 as float)) <> 0", quantity.to_f.abs]}
   }
 
   search_methods :tolerance_v
-  scope :tolerance_v, lambda {|value| includes(:inventory => :item).where(["abs(tags.count_1 * items.cost - tags.count_2 * items.cost) >= ?", value.to_f.abs])}
+  scope :tolerance_v, lambda {|value| includes(:inventory => :item).where(["abs(tags.count_1 * items.cost - tags.count_2 * items.cost) > ?", value.to_f.abs])}
 
   scope :tole_q_or_v, lambda {|quantity, value| includes(:inventory => :item) \
     .where(["(abs((tags.count_1 - tags.count_2) / least(cast(tags.count_1 as float), cast(tags.count_2 as float))) * 100 >= ? and least(cast(tags.count_1 as float), cast(tags.count_2 as float)) <> 0) or (abs(tags.count_1 * items.cost - tags.count_2 * items.cost) >= ?)", (quantity || 0).to_f.abs, (value || 0).to_f.abs])}

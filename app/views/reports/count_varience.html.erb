@@ -1,5 +1,6 @@
+<% @sub_menu = :variance %>
 <article>
-	<h1>Count Varience Report</h1>
+	<h1>Count Varience</h1>
 	<h2>Summary</h2>
 	<table class="infos">
 		<tr>
@@ -54,8 +55,6 @@
 		<thead>
 			<tr>
 				<th>TAG #</th>
-				<th>Location</th>
-				<th>Item Number</th>
 				<th>Count 1</th>
 				<th>Count 2</th>
 				<th>Differ</th>
@@ -70,8 +69,6 @@
 			<% @tags.each do |tag| %>
 			<tr>
 				<td><%= tag.id %></td>
-				<td><%= tag.inventory.location.try(:code) %></td>
-				<td><%= tag.inventory.item.try(:code) %></td>
 				<td class='number'><%= tag.count_1 %></td>
 				<td class='number'><%= tag.count_2 %></td>
 				<td class="number"><%= tag.count_differ %> %</td>
@@ -91,6 +88,8 @@
 					<table>
 						<tbody>
 							<tr>
+								<td><%= tag.inventory.item.try(:code) %></td>
+								<td><%= tag.inventory.location.try(:code) %></td>
 								<td><%= tag.inventory.item.try(:description) %></td>
 							</tr>
 						</tbody>

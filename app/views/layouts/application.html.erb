@@ -89,15 +89,9 @@ jQuery(function($) {
 					<%= link_to 'Admin', adm_items_path %>
 					<%= render :partial => 'shared/inventory_ul' %>
 				</li>
-
-				<li <%= "class='current'" if @nav == :report %>>
-					<%= link_to 'Reports', count_varience_reports_path %>
-					<%= render :partial => 'shared/report_ul' %>
-				</li>
 				<% end %>
 
-				<% if has_role? :counter && allow_data_entry? %>
-				
+				<% if has_role?(:counter) && allow_data_entry? %>
 				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>>
 					<%= link_to 'Count 1', counts_path(:count => 1) %>
 				</li>
@@ -106,9 +100,13 @@ jQuery(function($) {
 					<%= link_to 'Count 2', counts_path(:count => 2) %>
 				</li>
 				<% end %>
-				
 				<% end %>
 
+				<% if has_role?(:admin) && allow_data_entry? %>
+				<li <%= "class='current'" if @nav == :count && @c_i == 3 %>>
+					<%= link_to 'Count 3', counts_path(:count => 3) %>
+				</li>
+				<% end %>
 				<% end %>
 			</ul>
 			<ul id="usermenu">

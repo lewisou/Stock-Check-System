@@ -31,10 +31,7 @@ class ApplicationController < ActionController::Base
 
   helper_method :allow_data_entry?
   def allow_data_entry?
-    if curr_check && curr_check.state != "open"
-      return false
-    end
-    true
+    return curr_check && curr_check.state == "open"
   end
 
   def check_data_entry

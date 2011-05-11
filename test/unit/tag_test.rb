@@ -141,18 +141,18 @@ class TagTest < ActiveSupport::TestCase
     Tag.create(:count_2 => 100)
     Tag.create()
 
-    assert Tag.tolerance_q(50.1).count == 0
-    assert Tag.tolerance_q(50).count == 1
-    assert Tag.tolerance_q(40).count == 2
+    assert Tag.tolerance_q(50).count == 0
+    assert Tag.tolerance_q(49.9).count == 1
+    assert Tag.tolerance_q(39.9).count == 2
 
-    assert Tag.tolerance_q(30).count == 3
+    assert Tag.tolerance_q(29.9).count == 3
     assert Tag.tolerance_q(25).count == 3
     
-    assert Tag.tolerance_q(20).count == 4
+    assert Tag.tolerance_q(19.9).count == 4
     assert Tag.tolerance_q(15).count == 4
   end
 
-  test "tolerance_v" do
+  test "tolerance_v scope" do
     scope = Item.create(:cost => 2).inventories.create(:location => Location.create).tags
     
     scope.create(:count_1 => 100, :count_2 => 110)
@@ -163,14 +163,14 @@ class TagTest < ActiveSupport::TestCase
     scope.create(:count_1 => 100)
     scope.create()
 
-    assert Tag.tolerance_v(100.1).count == 0
-    assert Tag.tolerance_v(100).count == 1
-    assert Tag.tolerance_v(80).count == 2
+    assert Tag.tolerance_v(100).count == 0
+    assert Tag.tolerance_v(99.9).count == 1
+    assert Tag.tolerance_v(79.9).count == 2
 
-    assert Tag.tolerance_v(60).count == 3
+    assert Tag.tolerance_v(59.9).count == 3
     assert Tag.tolerance_v(50).count == 3
     
-    assert Tag.tolerance_v(40).count == 4
+    assert Tag.tolerance_v(39.9).count == 4
     assert Tag.tolerance_v(30).count == 4
   end
 

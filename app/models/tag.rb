@@ -91,6 +91,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: tags
@@ -105,5 +106,6 @@ end
 #  sloc         :string(255)
 #  final_count  :integer
 #  state        :string(255)
+#  adjustment   :integer
 #
 

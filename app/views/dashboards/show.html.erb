@@ -16,7 +16,7 @@
 
 			<% if has_role? :admin %>
 			<li>
-				<%= link_to raw("#{image_tag('eleganticons/Graph.png')} <span>Admin</span>"), adm_items_path %>
+				<%= link_to raw("#{image_tag('eleganticons/Graph.png')} <span>Admin</span>"), missing_cost_adm_items_path %>
 			</li>
 			<% end %>
 
@@ -44,7 +44,7 @@
 
 <% if has_role?(:admin) || has_role?(:controller) %>
 <article>
-<h1>Status</h1>
+<h2>Status</h2>
 <%= render :partial => 'shared/curr_check', :locals => {:curr_check => curr_check} %>
 </article>
 <% end %>

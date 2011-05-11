@@ -59,18 +59,46 @@ class Check < ActiveRecord::Base
   end
   
   # repeated code for speed
-  def total_count_value count
-    Inventory.in_check(self.id).includes(:tags).includes(:item).where(:tags => (:state.not_eq % "deleted" | :state.eq % nil)).sum("tags.count_#{count} * items.cost").to_f
+  def inputed_value
+    Inventory.in_check(self.id).remote_s.sum("result_value").to_f
+  end
+
+  def counted_value
+    Inventory.in_check(self.id).onsite_s.sum("result_value").to_f
+  end
+
+  def count_time_value time
+    Inventory.in_check(self.id).onsite_s.sum("counted_#{time}_value").to_f
+  end
+
+  def onsite_frozen_value
+    Inventory.in_check(self.id).onsite_s.sum("frozen_value").to_f
+  end
+
+  def remote_frozen_value
+    Inventory.in_check(self.id).remote_s.sum("frozen_value").to_f
+  end
+
+  def frozen_value
+    Inventory.in_check(self.id).sum("frozen_value").to_f
   end
   
-  def total_count_final_value
-    Inventory.in_check(self.id).includes(:item).sum("inventories.result_qty * items.cost").to_f
+  def final_value
+    Inventory.in_check(self.id).sum("result_value").to_f
   end
   
-  def total_frozen_value
-    Inventory.in_check(self.id).includes(:item).sum("quantity * items.cost").to_f
-  end
-  
+  # def total_count_value count
+  #   Inventory.in_check(self.id).includes(:tags).includes(:item).where(:tags => (:state.not_eq % "deleted" | :state.eq % nil)).sum("tags.count_#{count} * items.cost").to_f
+  #   Inventory.in_check(self.id)
+  # end
+  # 
+  # def total_count_final_value
+  #   Inventory.in_check(self.id).includes(:item).sum("inventories.result_qty * items.cost").to_f
+  # end
+  # 
+  # def total_frozen_value
+  #   Inventory.in_check(self.id).includes(:item).sum("quantity * items.cost").to_f
+  # end
   
   private unless 'test' == Rails.env
   def switch_inv

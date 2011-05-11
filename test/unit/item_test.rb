@@ -59,19 +59,21 @@ class ItemTest < ActiveSupport::TestCase
     i.inventories.create(:location => Location.create(:is_remote => false)).tags.create(:count_1 => 2, :count_2 => 2)
     i.inventories.create(:location => Location.create(:is_remote => false)).tags.create(:count_1 => 2, :count_2 => 2)
     
-    assert i.counted_total_qty == 4
+    assert i.reload.counted_total_qty == 4
   end
   
   test "adj_max_quantity" do
     i = Item.create(:max_quantity => 1)
     i.inventories.create(:location => Location.create(:is_remote => false)).tags.create(:count_1 => 2, :count_2 => 2)
+    i.reload
     
     i2 = Item.create
     i2.inventories.create(:location => Location.create(:is_remote => false)).tags.create(:count_1 => 2, :count_2 => 2)
+    i2.reload
 
     i3 = Item.create(:max_quantity => 100)
     i3.inventories.create(:location => Location.create(:is_remote => false)).tags.create(:count_1 => 2, :count_2 => 2)
-    
+    i3.reload
     
     assert i.adj_max_quantity == 2
     assert i2.adj_max_quantity == nil

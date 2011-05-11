@@ -4,11 +4,11 @@
 	<table class="infos">
 		<tr>
 			<th>Total Frozen Value</th>
-			<td class="number"><%=number_to_currency curr_check.total_frozen_value %></td>
+			<td class="number"><%=number_to_currency curr_check.frozen_value %></td>
 		</tr>
 		<tr>
-			<th>Total Counted Value</th>
-			<td class="number"><%=number_to_currency curr_check.total_count_final_value %></td>
+			<th>Total Final Value (Remote & Onsite)</th>
+			<td class="number"><%=number_to_currency curr_check.final_value %></td>
 		</tr>
 	</table>
 </article>
@@ -63,9 +63,18 @@
 				<td class='number'><%=number_to_currency inventory.item.try(:cost) %></td>
 				<td class='number'><%= inventory.quantity %></td>
 				<td class='number'><%= inventory.result_qty %></td>
-				<td class='number'><%= (inventory.result_qty || 0) - (inventory.quantity || 0) %></td>
+				<td class='number'>
+				
+				<% adj = (inventory.result_qty || 0) - (inventory.quantity || 0) %>
+				<% if adj != 0 %>
+				<strong><%= adj %></strong>
+				<% else %>
+				<%= adj %>
+				<% end %>
+				
+				</td>
 				<td class='number'><%=number_to_currency inventory.frozen_value %></td>
-				<td class='number'><%=number_to_currency inventory.counted_value %></td>
+				<td class='number'><%=number_to_currency inventory.result_value %></td>
 			</tr>
 			<% end %>
 

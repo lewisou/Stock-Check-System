@@ -10,6 +10,12 @@ class Item < ActiveRecord::Base
     self.data_changed = true
   end
   
+  after_save :launch_inv_save
+  def launch_inv_save
+    self.inventories.each {|inv| inv.try(:save)}
+  end
+  
+  
   def group_name
     self.item_group.try(:name)
   end

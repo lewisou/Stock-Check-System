@@ -64,7 +64,7 @@ class ReportsController < ApplicationController
     @c_i = (params[:count] || "1").to_i
     @c_s = "count_#{@c_i.to_s}".to_sym
 
-    @search = Inventory.in_check(curr_check.id).search(params[:search])
+    @search = Inventory.in_check(curr_check.id).onsite_s.search(params[:search])
 
     respond_to do |format|
       format.html { @inventories = @search.paginate(:page => params[:page]) }

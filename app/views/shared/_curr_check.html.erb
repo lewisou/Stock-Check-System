@@ -34,7 +34,7 @@
 			<th>&nbsp;</th>
 			<th>Issued</th>
 			<th>Deleted</th>
-			<th>Counted</th>
+			<th>Finished</th>
 			<th>Outstanding</th>
 		</tr>
 	</thead>
@@ -44,22 +44,43 @@
 			<td class="number"><%= Tag.in_check(curr_check.id).count %></td>
 			<td class="number"><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
 			<td class="number"><%= Tag.in_check(curr_check.id).finish(1).count %></td>
-			<td class="number"><%= Tag.in_check(curr_check.id).countable.not_finish(1).count %></td>
+			<td class="number">
+			<strong>
+			<%= Tag.in_check(curr_check.id).countable.not_finish(1).count %>
+			</strong>
+			</td>
 		</tr>
 		<tr>
 			<th>Count 2</th>
 			<td class="number"><%= Tag.in_check(curr_check.id).count %></td>
 			<td class="number"><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
 			<td class="number"><%= Tag.in_check(curr_check.id).finish(2).count %></td>
-			<td class="number"><%= Tag.in_check(curr_check.id).countable.not_finish(2).count %></td>
+			<td class="number">
+			<strong>
+			<%= Tag.in_check(curr_check.id).countable.not_finish(2).count %>
+			</strong>
+			</td>
 		</tr>
 		<tr>
 			<th>Count 3</th>
 			<td class="number"><%= Tag.in_check(curr_check.id).count %></td>
 			<td class="number"><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
 			<td class="number"><%= Tag.in_check(curr_check.id).countable.finish(3).count %></td>
-			<td>&nbsp;</td>
+			<td class="number">0</td>
 		</tr>
+		<tr>
+			<th>Remote Warehouse</th>
+			<td class="number"><%= all_wh = Inventory.in_check(curr_check.id).remote_s.count %></td>
+			<td class="number">0</td>
+			<td class="number"><%= fi_wh = Inventory.in_check(curr_check.id).remote_s.where(:inputed_qty.not_eq => nil).count %></td>
+			<td class="number">
+			<strong>
+			<%= all_wh - fi_wh %>
+			</strong>
+			</td>
+		</tr>
+
+
 		<tr>
 			<th>Audit check</th>
 			<td>&nbsp;</td>

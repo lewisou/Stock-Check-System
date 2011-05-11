@@ -47,9 +47,9 @@ class InventoryTest < ActiveSupport::TestCase
   
   test "frozen_value" do
     i = Item.create(:al_cost => 10)
-    inv = i.inventories.create(:quantity => 9)
+    inv = i.inventories.create(:quantity => 9, :location => Location.create(:is_remote => false))
     
-    assert inv.frozen_value == 90
+    assert inv.reload.frozen_value == 90
   end
 
   test "counted_value" do
@@ -58,7 +58,7 @@ class InventoryTest < ActiveSupport::TestCase
     inv.tags.create(:count_1 => 2, :count_2 => 2)
     inv.tags.create(:count_1 => 1, :count_2 => 1)
 
-    assert inv.reload.counted_value == 30
+    assert inv.reload.result_value == 30
   end
 
   test "item_full_name" do
@@ -82,28 +82,7 @@ class InventoryTest < ActiveSupport::TestCase
     assert inv.adj_item_cost == 2
     assert inv2.adj_item_cost == nil
   end
-  
-  test "counted_in" do
-    i = Inventory.create(:location => Location.create)
-    3.times {i.tags.create(:count_1 => 1)}
-    2.times {i.tags.create(:count_2 => 1)}
-    1.times {i.tags.create}
-    
-    assert i.counted_in_1 == 3
-    assert i.counted_in_2 == 2
-  end
-  
-  test "counted_value_in" do
-    i = Inventory.create(:item => Item.create(:cost => 10), :location => Location.create)
-    3.times {i.tags.create(:count_1 => 1)}
-    2.times {i.tags.create(:count_2 => 1)}
-    1.times {i.tags.create}
-    
-    assert i.counted_value_in_1 == 30
-    assert i.counted_value_in_2 == 20
-  end
-  
-  
+
   test "create init tags!" do
     l = Location.create(:code => 'CA', :is_remote => false)
     
@@ -239,13 +218,85 @@ class InventoryTest < ActiveSupport::TestCase
     
   end
   
+  test "adj_count_qtys with cost" do
+    item = Item.create(:cost => 30)
+    inv = Inventory.create(:location => Location.create(:is_remote => false), :item => item)
+
+    inv.tags.create(:count_1 => 1, :count_2 => 2)
+    inv.tags.create(:count_1 => 1, :count_2 => 2)
+    inv.tags.create(:count_1 => 1, :count_2 => 2)
+
+    inv.reload
+    assert inv.counted_1_value == 90
+    assert inv.counted_2_value == 180
+
+    item.reload.update_attributes(:cost => 20)
+    inv.reload
+    assert inv.counted_1_value == 60
+    assert inv.counted_2_value == 120
+
+    inv.tags.first.update_attributes(:state => "deleted")
+    inv.reload
+    assert inv.counted_1_value == 40
+    assert inv.counted_2_value == 80
+
+    inv.tags.countable.first.update_attributes(:count_2 => 3)
+    inv.reload
+    assert inv.counted_2_value == 100
+  end
+
+  test "adj_count_qtys" do
+    inv = Inventory.create(:location => Location.create(:is_remote => false))
+
+    inv.tags.create(:count_1 => 1, :count_2 => 2)
+    inv.tags.create(:count_1 => 1, :count_2 => 2)
+    inv.tags.create(:count_1 => 1, :count_2 => 2)
+    inv.reload
+    assert inv.counted_1_qty == 3
+    assert inv.counted_2_qty == 6
+
+    inv.tags.first.update_attributes(:state => "deleted")
+    inv.reload
+    assert inv.counted_2_qty == 4
+
+    inv.tags.countable.first.update_attributes(:count_2 => 3)
+    inv.reload
+    assert inv.counted_2_qty == 5
+  end
+
   test "remote_s" do
     inv1 = Location.create(:is_remote => false).inventories.create
     inv2 = Location.create(:is_remote => true).inventories.create
-    
+
     assert Inventory.remote_s == [inv2]
   end
+  
+  test "onsite_s" do
+    inv1 = Location.create(:is_remote => false).inventories.create
+    inv2 = Location.create(:is_remote => true).inventories.create
+
+    assert Inventory.onsite_s == [inv1]
+  end
+  
+  test "result_value and frozen_value" do
+    item = Item.create(:cost => 30, :al_cost => 20)
+    inv = item.inventories.create(:quantity => 2, :inputed_qty => 3, :location => Location.create(:is_remote => true))
+
+    inv.reload
+    assert inv.frozen_value == 40
+    assert inv.result_value == 90
+    
+    inv.update_attributes(:quantity => 4, :inputed_qty => 6)
+    item.reload.update_attributes(:cost => 40, :al_cost => 50)
+    
+    inv.reload
+    assert inv.frozen_value == 200
+    assert inv.result_value == 240
+  end
 end
+
+
+
 
 
 
@@ -255,17 +306,23 @@ end
 #
 # Table name: inventories
 #
-#  id          :integer         not null, primary key
-#  item_id     :integer
-#  location_id :integer
-#  quantity    :integer
-#  created_at  :datetime
-#  updated_at  :datetime
-#  from_al     :boolean         default(FALSE)
-#  inputed_qty :integer
-#  counted_qty :integer
-#  result_qty  :integer
-#  check_id    :integer
-#  tag_inited  :boolean         default(FALSE)
+#  id              :integer         not null, primary key
+#  item_id         :integer
+#  location_id     :integer
+#  quantity        :integer
+#  created_at      :datetime
+#  updated_at      :datetime
+#  from_al         :boolean         default(FALSE)
+#  inputed_qty     :integer
+#  counted_qty     :integer
+#  result_qty      :integer
+#  check_id        :integer
+#  tag_inited      :boolean         default(FALSE)
+#  counted_1_qty   :integer
+#  counted_2_qty   :integer
+#  counted_1_value :float
+#  counted_2_value :float
+#  result_value    :float
+#  frozen_value    :float
 #
 

@@ -3,15 +3,16 @@ require 'ext/spreadsheet'
 
 class CountsController < ApplicationController
 
-  before_filter {check_role :counter}
-  
   before_filter do
     @c_i = (params[:count] || "1").to_i
     @c_s = "count_#{@c_i.to_s}".to_sym
     
     if @c_i > 2
-      check_role :admin
+      check_role(:admin)
+    else
+      check_role(:counter)
     end
+    
     if @c_i <= 2
       check_data_entry
     end

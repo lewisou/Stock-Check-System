@@ -189,29 +189,35 @@ class CheckTest < ActiveSupport::TestCase
     assert c.finish_count_in(2)
   end
   
-  test "total count 1 & 2 value" do
+  test "count_time_value" do
     c = new_blank_check
     inv = c.item_groups.create.items.create(:cost => 2).inventories.create(:location => c.locations.create(:is_remote => false))
     3.times {|i| inv.tags.create(:count_1 => i, :count_2 => (i + 1))}
 
-    assert c.total_count_value(1) == 6
-    assert c.total_count_value(2) == 12
+    inv = c.item_groups.create.items.create(:cost => 2).inventories.create(:location => c.locations.create(:is_remote => true))
+    3.times {|i| inv.tags.create(:count_1 => i, :count_2 => (i + 1))}
+
+    assert c.count_time_value(1) == 6
+    assert c.count_time_value(2) == 12
   end
   
-  test "total_count_final_value" do
+  test "counted_value" do
     c = new_blank_check
     inv = c.item_groups.create.items.create(:cost => 2).inventories.create(:location => c.locations.create(:is_remote => false))
     3.times {|i| inv.tags.create(:count_1 => 1, :count_2 => 1)}
+    
+    inv = c.item_groups.create.items.create(:cost => 2).inventories.create(:location => c.locations.create(:is_remote => true))
+    3.times {|i| inv.tags.create(:count_1 => 1, :count_2 => 1)}
 
-    assert c.total_count_final_value == 6
+    assert c.counted_value == 6
   end
   
-  test "total frozen value" do
+  test "frozen_value" do
     c = new_blank_check
-    c.item_groups.create.items.create(:cost => 1).inventories.create(:location => c.locations.create, :quantity => 1)
-    c.item_groups.create.items.create(:cost => 1).inventories.create(:location => c.locations.create, :quantity => 2)
-    
-    assert c.total_frozen_value == 3
+    c.item_groups.create.items.create(:al_cost => 1).inventories.create(:location => c.locations.create, :quantity => 1)
+    c.item_groups.create.items.create(:al_cost => 1).inventories.create(:location => c.locations.create, :quantity => 2)
+
+    assert c.reload.frozen_value == 3
   end
 
   test "switch inventory" do
@@ -276,18 +282,51 @@ class CheckTest < ActiveSupport::TestCase
     assert inv.reload.quantity == 20
   end
   
-  test "total_count_value_with_deleted_tag" do
+  test "count_time_value with deleted_tag" do
     c = new_blank_check
     c.locations.create(:is_remote => false).inventories.create(:item => Item.create(:cost => 2)).tags.create(:count_1 => 1, :count_2 => 1)
     c.locations.create(:is_remote => false).inventories.create(:item => Item.create(:cost => 2)).tags.create(:count_1 => 1, :count_2 => 1)
     tag = c.locations.create(:is_remote => false).inventories.create(:item => Item.create(:cost => 2)).tags.create(:count_1 => 1, :count_2 => 1)
 
-    assert c.total_count_value(1) == 6
+    c.locations.create(:is_remote => true).inventories.create(:item => Item.create(:cost => 2)).tags.create(:count_1 => 1, :count_2 => 1)
 
-    tag.update_attributes(:state => 'deleted')
+    assert c.reload.count_time_value(1) == 6
 
-    assert c.total_count_value(1)  == 4
+    tag.reload.update_attributes(:state => 'deleted')
+    assert c.reload.count_time_value(1) == 4
+  end
+  
+  test "final_value" do
+    c = new_blank_check
+    c.locations.create(:is_remote => false).inventories.create(:item => Item.create(:cost => 2)).tags.create(:count_1 => 2, :count_2 => 2)
+    c.locations.create(:is_remote => true).inventories.create(:item => Item.create(:cost => 3), :inputed_qty => 10)
 
+    assert c.reload.final_value == 34
+  end
+  
+  test "inputed_value" do
+    c = new_blank_check
+    c.locations.create(:is_remote => false).inventories.create(:item => Item.create(:cost => 2)).tags.create(:count_1 => 2, :count_2 => 2)
+    c.locations.create(:is_remote => true).inventories.create(:item => Item.create(:cost => 3), :inputed_qty => 10)
+    c.locations.create(:is_remote => true).inventories.create(:item => Item.create(:cost => 3), :inputed_qty => 10)
+
+    assert c.reload.inputed_value == 60
+  end
+
+  test "remote_frozen_value" do
+    c = new_blank_check
+    c.item_groups.create.items.create(:al_cost => 2.1).inventories.create(:location => c.locations.create(:is_remote => false), :quantity => 2)
+    c.item_groups.create.items.create(:al_cost => 4.1).inventories.create(:location => c.locations.create(:is_remote => true), :quantity => 3)
+
+    assert c.reload.remote_frozen_value == 12.3
+  end
+  
+  test "onsite_frozen_value" do
+    c = new_blank_check
+    c.item_groups.create.items.create(:al_cost => 2.1).inventories.create(:location => c.locations.create(:is_remote => false), :quantity => 2)
+    c.item_groups.create.items.create(:al_cost => 4).inventories.create(:location => c.locations.create(:is_remote => true), :quantity => 3)
+
+    assert c.reload.onsite_frozen_value == 4.2
   end
 end
 

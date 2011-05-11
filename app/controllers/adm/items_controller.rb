@@ -37,6 +37,10 @@ class Adm::ItemsController < Adm::BaseController
   def index
     @search = curr_check.items.search(params[:search])
     @items = @search.paginate(:page => params[:page])
+    
+    if params[:search] && @search.count == 0
+      @error_m = "Nothing found. <br />1.) Fix it now! Re-check the part number / item (Recommended) <br />2.) Fix it later. Create ticket (list for resolution with All Order)"
+    end
   end
 
   def input_price

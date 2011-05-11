@@ -13,7 +13,7 @@
 			<dd>
 				<%= f.label :item_description, @item.description %>
 			</dd>
-			<dt><%= f.label :location_id, 'Location' %></dt>
+			<dt><%= f.label :location_id, 'Onsite Location' %></dt>
 			<dd>
 				<%= f.collection_select(:location_id, curr_check.locations.tagable, :id, :code, {:include_blank => false}, {:class => "small", :tabindex => 1})  %>
 			</dd>

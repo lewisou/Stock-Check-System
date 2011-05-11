@@ -5,12 +5,12 @@
 	<h2>Summary</h2>
 	<table class="infos">
 		<tr>
-			<th>Total Frozen Value</th>
-			<td class="number"><%=number_to_currency curr_check.total_frozen_value %></td>
+			<th>Total Onsite Frozen Value</th>
+			<td class="number"><%=number_to_currency curr_check.onsite_frozen_value %></td>
 		</tr>
 		<tr>
 			<th>Counted <%= @c_i %> Value</th>
-			<td class="number"><%=number_to_currency curr_check.total_count_value(@c_i) %></td>
+			<td class="number"><%=number_to_currency curr_check.count_time_value(@c_i) %></td>
 		</tr>
 	</table>
 </article>
@@ -24,10 +24,10 @@
 			<dl class="inline">
 				<dt><%= f.label :item_code_like, 'Item' %></dt>
 				<dd><%= f.text_field :item_code_like, :class => "small", :tabindex => 1 %></dd>
-				<dt><%= f.label :location_id_eq, 'Location' %></dt>
+				<dt><%= f.label :location_id_eq, 'Onsite Location' %></dt>
 				<dd>
 					<%= hidden_field_tag :count, @c_i %>
-					<%= f.collection_select(:location_id_eq, curr_check.locations, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => 2})  %>
+					<%= f.collection_select(:location_id_eq, curr_check.locations.tagable, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => 2})  %>
 				</dd>
 			</dl>
 
@@ -46,12 +46,12 @@
 			<tr>
 				<th><%= sort_link @search, :location_id_and_item_id, 'Location' %></th>
 				<th><%= sort_link @search, :item_id_and_location_id, 'Item' %></th>
-				<th>Frozen Cost</th>
-				<th>Changed Cost</th>
-				<th>Frozen QTY</th>
-				<th>Count <%= @c_i %></th>
-				<th>Frozen Value</th>
-				<th>Count <%= @c_i %></th>
+				<th><%= sort_link @search, :item_al_cost, 'Frozen Cost' %></th>
+				<th><%= sort_link @search, :item_cost, 'Changed Cost' %></th>
+				<th><%= sort_link @search, :quantity, 'Frozen QTY' %></th>
+				<th><%= sort_link @search, "#{@c_s.to_s}_qty".to_sym, "Count #{@c_i}" %></th>
+				<th><%= sort_link @search, :frozen_value, "Frozen Value" %></th>
+				<th><%= sort_link @search, "#{@c_s.to_s}_value".to_sym, "Counted #{@c_i} Value" %></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -62,9 +62,9 @@
 				<td class='number'><%=number_to_currency inventory.item.try(:al_cost) %></td>
 				<td class='number'><%=number_to_currency inventory.item.try(:cost) %></td>
 				<td class='number'><%= inventory.quantity %></td>
-				<td class='number'><%= inventory.counted_in(@c_i) %></td>
+				<td class='number'><%= inventory.send("counted_#{@c_i.to_s}_qty".to_sym) %></td>
 				<td class='number'><%=number_to_currency inventory.frozen_value %></td>
-				<td class='number'><%=number_to_currency inventory.counted_value_in(@c_i) %></td>
+				<td class='number'><%=number_to_currency inventory.send("counted_#{@c_i.to_s}_value".to_sym) %></td>
 			</tr>
 
 			<tr class="detail">

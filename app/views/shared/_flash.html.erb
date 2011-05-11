@@ -11,3 +11,10 @@
 </div>
 <div class="clear"></div>
 <% end %>
+
+<% if @error_m %>
+<div class="error msg">
+<%=raw @error_m %>
+</div>
+<div class="clear"></div>
+<% end %>

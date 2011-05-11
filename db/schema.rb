@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110510013055) do
+ActiveRecord::Schema.define(:version => 20110511074058) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -90,12 +90,18 @@ ActiveRecord::Schema.define(:version => 20110510013055) do
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "from_al",     :default => false
+    t.boolean  "from_al",         :default => false
     t.integer  "inputed_qty"
     t.integer  "counted_qty"
     t.integer  "result_qty"
     t.integer  "check_id"
-    t.boolean  "tag_inited",  :default => false
+    t.boolean  "tag_inited",      :default => false
+    t.integer  "counted_1_qty"
+    t.integer  "counted_2_qty"
+    t.float    "counted_1_value"
+    t.float    "counted_2_value"
+    t.float    "result_value"
+    t.float    "frozen_value"
   end
 
   add_index "inventories", ["item_id"], :name => "index_inventories_on_item_id"

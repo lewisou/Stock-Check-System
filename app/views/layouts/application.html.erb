@@ -86,7 +86,7 @@ jQuery(function($) {
 				
 				<% if has_role? :admin %>
 				<li <%= "class='current'" if @nav == :tag %>>
-					<%= link_to 'Admin', adm_items_path %>
+					<%= link_to 'Admin', missing_cost_adm_items_path %>
 					<%= render :partial => 'shared/inventory_ul' %>
 				</li>
 				<% end %>

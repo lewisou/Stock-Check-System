@@ -3,9 +3,19 @@
 
 	<h1>Generate initial Tags</h1>
 
+	<% unless curr_check.generated %>
+	<div class="information msg">
+	Create Tags for Onsite warehouses. 
+	<br />
+	Please ensure that you have set up all Onsite warehouses.
+	</div>
+	<div class="clear"></div>
+	<% end %>
+
+
 	<div class="actions">
 	<% unless curr_check.generated %>
-	<%= loading_link 'Generate Tags', generate_checks_path, :method => :put, :confirm => "Did you setup all remote warehouses with that tags will not be generated ?", :class => "button" %>
+	<%= loading_link 'Generate Tags', generate_checks_path, :method => :put, :confirm => "Did you setup all remote warehouses with which tags will not be generated ?", :class => "button" %>
 	<% else %>
 	Initial Tags have been generated.
 	<% end %>

@@ -149,7 +149,7 @@ class ChecksController < BaseController
     
     @check.update_attributes(:instruction_file => params[:check][:instruction_file]) unless params[:check].blank? || params[:check][:instruction_file].blank?
     
-    redirect_to instruction_checks_path, :notice => "OK"
+    redirect_to instruction_checks_path, :notice => "Uploaded successfully."
   end
 
 end

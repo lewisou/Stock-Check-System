@@ -10,11 +10,13 @@ Scs::Application.routes.draw do
     end
   end
 
-  resources :attachments
-
-  resources :locations do
-    resources :assigns
+  resources :attachments do
+    member do
+      get 'download'
+    end
   end
+
+  resources :locations
 
   resources :settings
 
@@ -28,8 +30,8 @@ Scs::Application.routes.draw do
 
   resources :checks do
     collection do
-      put 'change_state', 'refresh_count', 'color_update', 'generate'
-      get 'color', 'history', 'current', 'reimport', 'to_generate'
+      put 'change_state', 'refresh_count', 'color_update', 'generate', 'upload_ins'
+      get 'color', 'history', 'current', 'reimport', 'to_generate', 'instruction'
     end
 
     member do
@@ -112,6 +114,10 @@ Scs::Application.routes.draw do
       collection do
         get 'missing_tag', 'result'
       end
+    end
+    
+    resources :locations do
+      resources :assigns
     end
   end
 

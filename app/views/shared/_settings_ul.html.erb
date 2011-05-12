@@ -7,6 +7,7 @@
 	<li <%= "class='current'" if @sub_menu == :generate %>><%= link_to 'Generate initial Tags', to_generate_checks_path %></li>
 	<li <%= "class='current'" if @sub_menu == :color %>><%= link_to 'Colors', color_checks_path %></li>
 	<% end %>
+	<li <%= "class='current'" if @sub_menu == :instructions %>><%= link_to 'Instructions', instruction_checks_path %></li>
 	<li <%= "class='current'" if @sub_menu == :account %>><%= link_to 'Accounts', accounts_path %></li>
 	<li <%= "class='current'" if @sub_menu == :history %>><%= link_to 'History', history_checks_path %></li>
 </ul>

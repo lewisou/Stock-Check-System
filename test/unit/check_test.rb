@@ -328,6 +328,19 @@ class CheckTest < ActiveSupport::TestCase
 
     assert c.reload.onsite_frozen_value == 4.2
   end
+  
+  test "adj_instruction" do
+    c = new_blank_check
+    c.instruction_file = File.new("#{Rails.root.to_s}/test/files/reimport_inv.xls")
+    
+    c.save
+    
+    assert c.instruction != nil
+    
+    c = Check.find(c.id)
+    c.save
+    assert c.instruction != nil
+  end
 end
 
 

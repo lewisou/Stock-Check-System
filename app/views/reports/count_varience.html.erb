@@ -5,15 +5,15 @@
 	<table class="infos">
 		<tr>
 			<th>Counted 1 Value</th>
-			<td class="number"><%=number_to_currency curr_check.total_count_value(1).to_f %></td>
+			<td class="number"><%=number_to_currency curr_check.count_time_value(1) %></td>
 		</tr>
 		<tr>
 			<th>Counted 2 Value</th>
-			<td class="number"><%=number_to_currency curr_check.total_count_value(2).to_f %></td>
+			<td class="number"><%=number_to_currency curr_check.count_time_value(2) %></td>
 		</tr>
 		<tr>
 			<th>Difference</th>
-			<td class="number"><%=number_to_currency (curr_check.total_count_value(1).to_f - curr_check.total_count_value(2).to_f).abs %></td>
+			<td class="number"><%=number_to_currency (curr_check.count_time_value(1) - curr_check.count_time_value(2)).abs %></td>
 		</tr>
 	</table>
 </article>

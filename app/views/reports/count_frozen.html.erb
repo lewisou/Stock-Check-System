@@ -61,7 +61,7 @@
 				<td><a href="#" class="detail-link"><%= inventory.item.try(:code) %></a></td>
 				<td class='number'><%=number_to_currency inventory.item.try(:al_cost) %></td>
 				<td class='number'><%=number_to_currency inventory.item.try(:cost) %></td>
-				<td class='number'><%= inventory.quantity %></td>
+				<td class='number'><%= (inventory.quantity || 0) %></td>
 				<td class='number'><%= inventory.send("counted_#{@c_i.to_s}_qty".to_sym) %></td>
 				<td class='number'><%=number_to_currency inventory.frozen_value %></td>
 				<td class='number'><%=number_to_currency inventory.send("counted_#{@c_i.to_s}_value".to_sym) %></td>

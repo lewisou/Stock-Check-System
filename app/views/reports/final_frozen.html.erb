@@ -59,9 +59,9 @@
 				<td><%= inventory.location.try(:code) %></td>
 				<td><%= inventory.item.try(:code) %></td>
 				<td><%= inventory.item.try(:description).to_s[0, 30] %></td>
-				<td class='number'><%=number_to_currency inventory.item.try(:al_cost) %></td>
+				<td class='number'><%=number_to_currency (inventory.item.try(:al_cost) || 0) %></td>
 				<td class='number'><%=number_to_currency inventory.item.try(:cost) %></td>
-				<td class='number'><%= inventory.quantity %></td>
+				<td class='number'><%= (inventory.quantity || 0) %></td>
 				<td class='number'><%= inventory.result_qty %></td>
 				<td class='number'>
 				

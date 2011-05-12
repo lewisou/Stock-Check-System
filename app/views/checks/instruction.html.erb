@@ -1,0 +1,32 @@
+<% @sub_menu = :instructions %>
+
+<article>
+	<%= render :partial => 'shared/flash' %>
+	<h1>Upload Instruction</h1>
+	<%= render :partial => "shared/errors", :locals => {:object => @check} %>
+
+	<%= form_for @check, :url => upload_ins_checks_path, :html => {:class => 'uniform', :multipart => true} do |f| %>
+		<fieldset>
+		<legend>Instruction Excel</legend>
+
+		<dl class='inline'>
+
+			<dt><%= f.label :description, 'Inventory Name' %></dt>
+			<dd><%= f.label :description, @check.description %></dd>
+		
+			<dt><%= f.label :instruction %></dt>
+			<dd>
+				<%= f.file_field :instruction_file %>
+				<small>Instructions</small>
+			</dd>
+
+		</dl>
+		</fieldset>
+
+		<div class="buttons">
+			<%= loading_submit f, nil, :class => 'button' %>
+		</div>
+		
+	<% end %>
+
+</article>

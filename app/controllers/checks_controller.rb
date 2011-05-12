@@ -139,4 +139,17 @@ class ChecksController < BaseController
   
   def to_generate
   end
+  
+  def instruction
+    @check = curr_check
+  end
+  
+  def upload_ins
+    @check = curr_check
+    
+    @check.update_attributes(:instruction_file => params[:check][:instruction_file]) unless params[:check].blank? || params[:check][:instruction_file].blank?
+    
+    redirect_to instruction_checks_path, :notice => "OK"
+  end
+
 end

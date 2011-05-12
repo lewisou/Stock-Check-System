@@ -25,11 +25,11 @@ module Spreadsheet
       title_format = Spreadsheet::Format.new :pattern_fg_color => :builtin_black, :color => :yellow, :pattern => 1, :weight => :bold
       sheet1.row(0).default_format = title_format
       
-      sheet1.row(0).concat %w{Location Item Description Cost FrozenQTY Counted FrozenValue CountedValue}
+      sheet1.row(0).concat %w{Location Item Description FrozenCost Cost FrozenQTY FinalQTY Adjustment FrozenValue FinalValue}
       
       inventories.each_with_index do |inventory, index|
         sheet1.row(index + 1).concat [inventory.location.code, inventory.item.try(:code), inventory.item.description,
-          inventory.item.cost, inventory.quantity, inventory.counted, inventory.frozen_value, inventory.counted_value
+          inventory.item.al_cost, inventory.item.cost, inventory.quantity, inventory.result_qty, (inventory.result_qty || 0) - (inventory.quantity || 0), inventory.frozen_value, inventory.result_value
           ]
       end
       

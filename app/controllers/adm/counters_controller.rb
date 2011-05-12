@@ -1,4 +1,4 @@
-class CountersController < ApplicationController
+class Adm::CountersController < Adm::BaseController
   layout "tags"
 
   before_filter do
@@ -7,34 +7,19 @@ class CountersController < ApplicationController
   # GET /counters
   # GET /counters.xml
   def index
-    @counters = Counter.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @counters }
-    end
+    @counters = Counter.order("name ASC").all
   end
 
   # GET /counters/1
   # GET /counters/1.xml
   def show
     @counter = Counter.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @counter }
-    end
   end
 
   # GET /counters/new
   # GET /counters/new.xml
   def new
     @counter = Counter.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @counter }
-    end
   end
 
   # GET /counters/1/edit
@@ -50,11 +35,9 @@ class CountersController < ApplicationController
     @counter.new_assigns, @counter.curr_check = get_count_assigns(:location), curr_check
     respond_to do |format|
       if @counter.save
-        format.html { redirect_to(counters_path, :notice => 'Counter was successfully created.') }
-        format.xml  { render :xml => @counter, :status => :created, :location => @counter }
+        format.html { redirect_to(adm_counters_path, :notice => 'Counter was successfully created.') }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @counter.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -68,11 +51,9 @@ class CountersController < ApplicationController
 
     respond_to do |format|
       if @counter.update_attributes(params[:counter])
-        format.html { redirect_to(counters_path, :notice => 'Counter was successfully updated.') }
-        format.xml  { head :ok }
+        format.html { redirect_to(adm_counters_path, :notice => 'Counter was successfully updated.') }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @counter.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -84,8 +65,7 @@ class CountersController < ApplicationController
     @counter.destroy
 
     respond_to do |format|
-      format.html { redirect_to(counters_url) }
-      format.xml  { head :ok }
+      format.html { redirect_to(adm_counters_path) }
     end
   end
 end

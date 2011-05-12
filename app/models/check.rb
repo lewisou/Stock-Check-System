@@ -13,15 +13,17 @@ class Check < ActiveRecord::Base
   belongs_to :location_xls, :class_name => "::Attachment"
   belongs_to :inv_adj_xls, :class_name => "::Attachment"
   belongs_to :item_xls, :class_name => "::Attachment"
+  belongs_to :instruction, :class_name => "::Attachment"
 
-  attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :reimport_inv_xls
+
+  attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :reimport_inv_xls, :instruction_file
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
   validates_uniqueness_of :description
 
   before_create :init_properties, :refresh_location, :refresh_item_and_group, :init_colors
   after_create :refresh_inventories
 
-  before_update :reimport_inventories
+  before_update :reimport_inventories, :adj_instruction
   after_update :reimport_inv
 
   after_save :switch_inv
@@ -188,6 +190,12 @@ class Check < ActiveRecord::Base
     self.color_1 = 'B4E2D4'
     self.color_2 = 'F3C4C8'
     self.color_3 = 'EADFD2'
+  end
+
+  def adj_instruction
+    return if @instruction_file.nil?
+    
+    self.instruction = ::Attachment.create(:data => @instruction_file)
   end
 
   def refresh_location

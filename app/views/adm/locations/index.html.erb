@@ -29,6 +29,9 @@
 	</table>
 
 	<div class="tablefooter clearfix">
+		<div class="actions">
+			<%= link_to 'Add location', new_location_path, :class => "button" %>
+		</div>
 		<%= will_paginate @locations %>
 	</div>
 

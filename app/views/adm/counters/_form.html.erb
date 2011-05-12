@@ -1,4 +1,4 @@
-<%= form_for @counter, :html => {:class => 'uniform'} do |f| %>
+<%= form_for @counter, :url => @counter.new_record? ? adm_counters_path : adm_counter_path(@counter), :html => {:class => 'uniform'} do |f| %>
 	<%= render :partial => 'shared/errors', :locals => {:object => @counter} %>
 
 	<ul class="tabs">
@@ -26,7 +26,7 @@
 
 		<div id="count">
 			<dl class="inline">
-				<% curr_check.locations.each do |location| %>
+				<% curr_check.locations.tagable.each do |location| %>
 				<dt><%= label_tag :locations, location.code %></dt>
 				<dd>
 					<%= radio_button(:count, location.id, 1, :checked => @counter.check_location_by_count?(location, 1)) %> <%= label_tag "count_#{location.id}_1", 'Count 1' %>

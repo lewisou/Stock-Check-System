@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110511074058) do
+ActiveRecord::Schema.define(:version => 20110512021416) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(:version => 20110511074058) do
     t.string   "color_3"
     t.boolean  "generated",       :default => false
     t.integer  "import_time",     :default => 1
+    t.integer  "instruction_id"
   end
 
   create_table "counters", :force => true do |t|

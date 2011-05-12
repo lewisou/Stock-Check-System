@@ -1,4 +1,4 @@
-<%= form_for @location, :html => {:class => 'uniform'} do |f| %>
+<%= form_for @location, :url => adm_locations_path, :html => {:class => 'uniform'} do |f| %>
 	<%= render :partial => 'shared/errors', :locals => {:object => @location} %>
 	<ul class="tabs">
 		<li><a href="#general">General</a></li>
@@ -12,24 +12,30 @@
 				<dt><%= f.label :code %></dt>
 				<dd>
 				<% if @location.new_record? %>
-				<%= f.text_field :code, :tabindex => 1, :class => "medium" %>
+				<%= f.text_field :code, :tabindex => 1 %>
 				<% else %>
 				<%= f.label :code, @location.code %>
 				<% end %>
 				<small>Location Code</small>
 				</dd>
 
-				<dt><%= f.label :description %></dt>
+				<dt><%= f.label :desc1 %></dt>
 				<dd>
-					<%= f.label :description, @location.description %>
+				<%= f.text_field :desc1, :tabindex => 2 %>
+				<small>Desc 1</small>
 				</dd>
 
-				<dt><%= f.label :is_remote %></dt>
+				<dt><%= f.label :desc2 %></dt>
 				<dd>
-				<%= f.check_box :is_remote, :tabindex => 5, :class => "medium" %>
-				<small>Checked for Remote warehouse, unchecked for Onsite warehouse.</small>
+				<%= f.text_field :desc2, :tabindex => 3 %>
+				<small>Desc 2</small>
 				</dd>
-				
+
+				<dt><%= f.label :desc3 %></dt>
+				<dd>
+				<%= f.text_field :desc3, :tabindex => 4 %>
+				<small>Desc 3</small>
+				</dd>
 
 			</dl>
 		</div>

@@ -30,10 +30,14 @@
 			<% end %>
 			
 			<li>
+				<% if !curr_check.instruction.nil? %>
+				<%= link_to(raw("#{image_tag('eleganticons/Info.png')}<span>Instructions</span>"), attachment_path(curr_check.instruction.id)) %>
+				<% else %>
 				<a href="#">
 					<img src="images/eleganticons/Info.png" />
 					<span>Instructions</span>
 				</a>
+				<% end %>
 			</li>
 			<li>
 				<%= link_to raw("#{image_tag('eleganticons/X.png')} <span>Logout</span>"), destroy_admin_session_path %>

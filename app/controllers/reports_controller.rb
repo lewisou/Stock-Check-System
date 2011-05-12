@@ -3,7 +3,7 @@ require 'ext/spreadsheet'
 require 'pp'
 
 class ReportsController < ApplicationController
-  before_filter { @nav = :report }
+  before_filter { @nav = :tag }
   before_filter {check_role :admin}
   
   def count_varience
@@ -72,8 +72,8 @@ class ReportsController < ApplicationController
         @inventories = @search.all
         book = Spreadsheet::Workbook.new
         data = book.generate_xls("Count #{@c_i} Report", @inventories, %w{Location Item Description FrozenCost Cost FrozenQTY Counted FrozenValue CountedValue}, 
-        [[:location, :code], [:item, :code], [:item, :description], [:item, :al_cost], [:item, :cost], :quantity, "counted_in_#{@c_i}".to_sym,
-        :frozen_value, "counted_value_in_#{@c_i}".to_sym])
+        [[:location, :code], [:item, :code], [:item, :description], [:item, :al_cost], [:item, :cost], :quantity, "counted_#{@c_i}_qty".to_sym,
+        :frozen_value, "counted_#{@c_i}_value".to_sym])
         send_data data, :filename => "Count #{@c_i} Report with Frozen QTY.xls", :disposition => 'attachment'
       }
     end

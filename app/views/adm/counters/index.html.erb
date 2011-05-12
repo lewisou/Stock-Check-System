@@ -1,6 +1,6 @@
 <article>
-	<h2>Listing counters</h2>
-
+	<%= render :partial => "shared/flash" %>
+	<h2>List by Counter</h2>
 
 	<table id="table2" class="gtable">
 		<thead>
@@ -28,20 +28,20 @@
 					<% end %>
 				</td>
 				<td>
-					<%= link_to image_tag('icons/edit.png'), edit_counter_path(counter), :title => 'Edit' if curr_check.state == 'open' %>
+					<%= link_to image_tag('icons/edit.png'), edit_adm_counter_path(counter), :title => 'Edit' if curr_check.state == 'open' %>
 				</td>
 			</tr>
 			<% end %>
 		</tbody>
 	</table>
-	
+
 	<div class="tablefooter clearfix">
-		<%= link_to 'New Counter', new_counter_path, :class => "button" if curr_check.state == 'open' %>
+		<%= link_to 'New Counter', new_adm_counter_path, :class => "button" if curr_check.state == 'open' %>
 	</div>
 </article>
 
 <article>
-	<h2>Check Table</h2>
+	<h2>List by Onsite Location</h2>
 
 	<table class="gtable">
 		<thead>
@@ -49,12 +49,12 @@
 			<th width="30%">Location</th>
 			<th>Count 1</th>
 			<th>Count 2</th>
-			<th>Action</th>
+			<!--th>Action</th-->
 		</tr>
 		</thead>
 
 		<tbody>
-		<% curr_check.locations.all(:order => "code ASC").each do |location| %>
+		<% curr_check.locations.tagable.all(:order => "code ASC").each do |location| %>
 		<tr>
 			<td><%= location.code %></td>
 			<td>
@@ -69,17 +69,17 @@
 					<%= ass.counter.name %>
 				<% end %>
 			</td>
-			<td>
-				<%= link_to image_tag('icons/edit.png'), edit_location_path(location), :title => 'Edit' if curr_check.state == 'open' %>
-			</td>
+			<!--td>
+				< link_to image_tag('icons/edit.png'), edit_location_path(location), :title => 'Edit' if curr_check.state == 'open' >
+			</td-->
 		</tr>
 		<% end %>
 		</tbody>
 	</table>
 
 	<div class="tablefooter clearfix">
-		<%= link_to 'Add location', new_location_path, :class => "button" %>
-		<%= link_to 'Download Excel', locations_path(:format => :xls), :class => "button" %>
+		<%= link_to 'Add Onsite location', new_adm_location_path, :class => "button" %>
+		<%= link_to 'Download Excel', adm_locations_path(:format => :xls), :class => "button" %>
 	</div>
 
 </article>

@@ -4,8 +4,9 @@ require 'pp'
 
 class ReportsController < ApplicationController
   before_filter { @nav = :tag }
-  before_filter {check_role [:controller, :organizer]}
-  
+  before_filter {check_role :organizer}
+  layout 'tags'
+
   def count_varience
 
     # @tole = {:tole_quantity => (params[:tole_quantity] || 5), :tole_value => (params[:tole_value] || 25)}

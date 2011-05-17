@@ -34,10 +34,12 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "countable scope" do
-    t1 = Tag.create(:count_1 => 1)
-    t2 = Tag.create(:count_2 => 2, :state => "blabla")
-    t3 = Tag.create(:count_1 => 1, :state => "deleted")
-    t4 = Tag.create(:count_2 => 2, :state => "deleted")
+    t1 = Location.create(:is_remote => false).inventories.create.tags.create(:count_1 => 1)
+    tt1 = Location.create(:is_remote => true).inventories.create.tags.create(:count_2 => 1)
+
+    t2 = Location.create(:is_remote => false).inventories.create.tags.create(:count_2 => 2, :state => "blabla")
+    t3 = Location.create(:is_remote => false).inventories.create.tags.create(:count_1 => 1, :state => "deleted")
+    t4 = Location.create(:is_remote => false).inventories.create.tags.create(:count_2 => 2, :state => "deleted")
 
     assert Tag.countable.count == 2
   end

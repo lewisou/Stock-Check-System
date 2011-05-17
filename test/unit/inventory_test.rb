@@ -18,11 +18,12 @@ class InventoryTest < ActiveSupport::TestCase
     scope.create(:quantity => 1, :inputed_qty => 1)
     
     i = scope.create(:quantity => 1, :inputed_qty => 2)
-    scope.create(:quantity => 1, :inputed_qty => nil)
+    i2 = scope.create(:quantity => 1, :inputed_qty => nil)
     scope.create(:quantity => nil, :inputed_qty => nil)
 
-    assert Inventory.need_adjustment.count == 1
-    assert Inventory.need_adjustment.first == i
+    assert Inventory.need_adjustment.count == 2
+    assert Inventory.need_adjustment.include?(i)
+    assert Inventory.need_adjustment.include?(i2)
   end
 
   test "create_default_tag!" do
@@ -304,8 +305,8 @@ class InventoryTest < ActiveSupport::TestCase
     inv.update_attributes(:inputed_qty => 1)
     assert inv.ao_adj == -3
     assert inv.ao_adj_value == -90
-
   end
+
 end
 
 

@@ -75,12 +75,12 @@ jQuery(function($) {
 			<ul id="mainmenu" class="sf-menu">
 				<li <%= "class='current'" if @nav == :dashboard %>><%= link_to 'Dashboard', root_path %></li>
 
-				<% if has_role? :controller %>
+				<% if has_role? [:controller, :mgt] %>
 				<li <%= "class='current'" if @nav == :control %>>
 					<%= link_to 'Status', current_god_checks_path %>
 				</li>
 				
-				<% if has_curr_check? %>
+				<% if has_curr_check? && allow_data_entry? %>
 				<li <%= "class='current'" if @nav == :setting %>>
 					<%= link_to 'Setup', edit_god_check_path(curr_check) %>
 					<%= render :partial => 'shared/settings_ul' %>
@@ -93,30 +93,35 @@ jQuery(function($) {
 				<% end %>
 
 				<% if has_curr_check? %>
-				
-				<% if has_role? :organizer %>
-				<li <%= "class='current'" if @nav == :tag %>>
-					<%= link_to 'Organizer', missing_cost_adm_items_path %>
-					<%= render :partial => 'shared/inventory_ul' %>
-				</li>
-				<% end %>
+					<% if has_role? :organizer %>
+					<li <%= "class='current'" if @nav == :tag %>>
+						<%= link_to 'Organizer', missing_cost_adm_items_path %>
+						<%= render :partial => 'shared/inventory_ul' %>
+					</li>
+					<% end %>
 
-				<% if has_role?(:counter) && allow_data_entry? %>
-				<li <%= "class='current'" if @nav == :count && @c_i == 1 %>>
-					<%= link_to 'Count 1', counts_path(:count => 1) %>
-				</li>
-				<% if Tag.in_check(curr_check.id).not_finish(1).count == 0 %>
-				<li <%= "class='current'" if @nav == :count && @c_i == 2 %>>
-					<%= link_to 'Count 2', counts_path(:count => 2) %>
-				</li>
-				<% end %>
-				<% end %>
+					<% if has_role? :audit %>
+					<li <%= "class='current'" if @nav == :audit %>>
+						<%= link_to 'External Audit', audit_tags_path %>
+					</li>
+					<% end %>
 
-				<% if has_role?(:admin) && allow_data_entry? %>
-				<li <%= "class='current'" if @nav == :count && @c_i == 3 %>>
-					<%= link_to 'Count 3', counts_path(:count => 3) %>
-				</li>
-				<% end %>
+					<% if has_role?(:dataentry) && allow_data_entry? %>
+						<li <%= "class='current'" if @nav == :count && @c_i == 1 %>>
+							<%= link_to 'Count 1', counts_path(:count => 1) %>
+						</li>
+						<% if Tag.in_check(curr_check.id).not_finish(1).count == 0 %>
+						<li <%= "class='current'" if @nav == :count && @c_i == 2 %>>
+							<%= link_to 'Count 2', counts_path(:count => 2) %>
+						</li>
+						<% end %>
+					<% end %>
+
+					<% if has_role?(:dataentry) && allow_data_entry? && curr_check.finish_count?  %>
+					<li <%= "class='current'" if @nav == :count && @c_i == 3 %>>
+						<%= link_to 'Count 3', counts_path(:count => 3) %>
+					</li>
+					<% end %>
 				<% end %>
 			</ul>
 			<ul id="usermenu">

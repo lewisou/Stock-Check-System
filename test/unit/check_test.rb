@@ -408,6 +408,23 @@ class CheckTest < ActiveSupport::TestCase
 
     # Admin.includes(:roles).where(:roles => {:code.eq => "controller"}).count != 0
   end
+
+  test "can_complete?" do
+    c = new_blank_check
+    assert c.can_complete?
+    
+    t = c.locations.create(:is_remote => false).inventories.create.tags.create
+    assert !c.can_complete?
+    t.update_attributes(:count_1 => 2)
+    assert !c.can_complete?
+    t.update_attributes(:count_2 => 2)
+    assert c.can_complete?    
+    
+    inv = c.locations.create(:is_remote => true).inventories.create
+    assert !c.can_complete?
+    inv.update_attributes(:inputed_qty => 3)
+    assert c.can_complete?
+  end
 end
 
 

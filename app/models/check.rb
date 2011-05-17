@@ -53,11 +53,11 @@ class Check < ActiveRecord::Base
   end
 
   def finish_count?
-    Tag.in_check(self.id).not_finish(1).count == 0 && Tag.in_check(self.id).not_finish(2).count == 0
+    Tag.in_check(self.id).countable.not_finish(1).count == 0 && Tag.in_check(self.id).countable.not_finish(2).count == 0
   end
   
   def finish_count_in count
-    Tag.in_check(self.id).not_finish(count).count == 0
+    Tag.in_check(self.id).countable.not_finish(count).count == 0
   end
 
   def generate!
@@ -115,6 +115,10 @@ class Check < ActiveRecord::Base
       role.admins = []
       role.save
     end
+  end
+  
+  def can_complete?
+    return Inventory.in_check(self.id).remote_s.where(:inputed_qty.eq => nil).count == 0 && Tag.in_check(self.id).countable.not_finish(2).count == 0 && Tag.in_check(self.id).countable.not_finish(1).count == 0
   end
   
   private unless 'test' == Rails.env

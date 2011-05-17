@@ -41,7 +41,7 @@
 				<td class='number'><%=number_to_currency (tag.inventory.item.try(:cost) || 0) %></td>
 				<td><%= tag.sloc %></td>
 				<td>
-					<% if curr_check.state == 'open' %>
+					<% if allow_data_entry? %>
 					<%= link_to image_tag('icons/edit.png'), edit_adm_tag_path(tag), :title => 'Edit' %>
 					<%= link_to image_tag('icons/cross.png'), adm_tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?", :title => 'Delete' %>
 					<% end %>

@@ -84,6 +84,10 @@ Scs::Application.routes.draw do
   #     end
   #   end
 
+  namespace :audit do
+    resources :tags
+  end
+
   namespace :god do
     resources :checks do
       resources :tags

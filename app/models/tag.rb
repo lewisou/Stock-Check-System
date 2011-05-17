@@ -3,7 +3,7 @@ class Tag < ActiveRecord::Base
   scope :not_finish, lambda{|count| where("count_#{count}".to_sym.eq % nil & (:state.not_eq % "deleted" | :state.eq % nil))}
   scope :finish, lambda{|count| where("count_#{count}".to_sym.not_eq % nil & (:state.not_eq % "deleted" | :state.eq % nil))}
   scope :deleted_s, where(:state => "deleted")
-  scope :countable, where(:state.not_eq % "deleted" | :state.eq % nil)
+  scope :countable, includes(:inventory => :location).where(:locations => {:is_remote => false}).where(:state.not_eq % "deleted" | :state.eq % nil)
 
   belongs_to :inventory
 

@@ -94,7 +94,25 @@ class LocationTest < ActiveSupport::TestCase
     assert Location.not_tagable == [l]
   end
   
-  
+  test "launch_inv_save" do
+    loc = Location.create(:is_remote => false)
+    inv = loc.inventories.create
+    
+    inv.tags.create(:count_1 => 3, :count_2 => 3)
+    inv.tags.create(:count_1 => 4, :count_2 => 4)
+    
+    loc2 = Location.create(:is_remote => true)
+    inv2 = loc2.inventories.create(:inputed_qty => 5)
+
+    assert inv.reload.result_qty == 7
+    assert inv2.reload.result_qty == 5
+
+    loc.update_attributes(:is_remote => true)
+    loc2.update_attributes(:is_remote => false)
+
+    assert inv.reload.result_qty == 0
+    assert inv2.reload.result_qty == 0
+  end
 end
 
 

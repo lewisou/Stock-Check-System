@@ -1,0 +1,45 @@
+<article>
+	
+	<h1>Audit</h1>
+	<%= form_for @tag, :url => audit_tag_path(@tag), :html => {:class => 'uniform'} do |f| %>
+		<%= render :partial => "shared/errors", :locals => {:object => @tag} %>
+
+		<fieldset>
+			<dl class="inline">
+				<dt><%= f.label :item_id, 'Item Number' %></dt>
+				<dd>
+					<%= f.label :item_id, @tag.inventory.item.code %>
+				</dd>
+				<dt><%= f.label :item_description %></dt>
+				<dd>
+					<%= f.label :item_description, @tag.inventory.item.description %>
+				</dd>
+
+				<dt><%= f.label :location_code, "Warehouse" %></dt>
+				<dd>
+					<%= f.label :location_code, @tag.inventory.location.code %>
+				</dd>
+
+				<dt><%= f.label :sloc, "Shelf Location" %></dt>
+				<dd>
+					<%= f.label :sloc, (@tag.sloc || "Empty") %>
+				</dd>
+
+				<dt><%= f.label :count_1 %></dt>
+				<dd><%= f.label :count_1, @tag.count_1 || 0 %></dd>
+				<dt><%= f.label :count_2 %></dt>
+				<dd><%= f.label :count_2, @tag.count_2 || 0 %></dd>
+				<dt><%= f.label :count_3 %></dt>
+				<dd><%= f.label :count_3, @tag.count_3 || 0 %></dd>
+				
+				<dt><%= f.label :audit %></dt>
+				<dd><%= f.text_field :audit, :class => "small", :tabindex => 1 %></dd>
+			</dl>
+		</fieldset>
+		<div class="buttons">
+			<%= f.submit "Audit", :class => 'button' %>
+		</div>
+
+	<% end %>
+	
+</article>

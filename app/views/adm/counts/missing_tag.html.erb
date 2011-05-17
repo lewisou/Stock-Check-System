@@ -42,7 +42,7 @@
 				<td><%= tag.send(@c_s) %></td>
 				<td>
 					<%= link_to image_tag('icons/printer.png'), adm_tags_path(:search => {:id_eq => tag.id}, :format => :pdf) %>
-					<%= link_to image_tag('icons/cross.png'), adm_tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?", :title => 'Delete' %>
+					<%= link_to image_tag('icons/cross.png'), adm_tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Tag #{tag.id}?", :title => 'Delete' if allow_data_entry? %>
 				</td>
 			</tr>
 			<% end %>

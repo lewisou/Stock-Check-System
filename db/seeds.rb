@@ -17,6 +17,14 @@ unless Role.find_by_code("dataentry")
   Role.create(:code => "dataentry", :description => "Data Entry")
 end
 
+unless Role.find_by_code("audit")
+  Role.create(:code => "audit", :description => "External Audit")
+end
+
+unless Role.find_by_code("mgt")
+  Role.create(:code => "mgt", :description => "Mgt Overview")
+end
+
 unless Admin.find_by_username('controller')
   Role.find_by_code("controller").admins.create(
     :username => 'controller',

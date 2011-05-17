@@ -67,8 +67,8 @@ class Inventory < ActiveRecord::Base
       self.counted_qty = (self.tags.countable.map(&:final_count).delete_if {|t| t.nil?}).sum
     end
 
-    self.result_qty = self.location.try(:is_remote) ? self.inputed_qty : self.counted_qty
-    self.ao_adj = self.result_qty - self.quantity unless self.result_qty.nil? || self.quantity.nil?
+    self.result_qty = self.location.try(:is_remote) ? (self.inputed_qty || 0) : self.counted_qty
+    self.ao_adj = (self.result_qty || 0) - (self.quantity || 0)
 
     self.result_value = (self.result_qty || 0) * (self.item.try(:cost) || 0)
     self.frozen_value = (self.quantity || 0) * (self.item.try(:al_cost) || 0)

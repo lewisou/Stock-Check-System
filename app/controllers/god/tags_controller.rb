@@ -1,8 +1,13 @@
 require 'ext/spreadsheet'
 
 class God::TagsController < God::BaseController
-  def index
+
+  before_filter do
     @check = Check.find(params[:check_id])
+    @nav = @check.current ? :control : :archive
+  end
+
+  def index
     @search = Tag.in_check(@check.id).countable.search(params[:search])
 
     respond_to do |format|

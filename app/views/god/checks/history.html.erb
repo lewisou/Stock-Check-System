@@ -4,9 +4,9 @@
 	<table class="gtable">
 		<thead>
 		<tr>
-			<th>Description</th>
-			<th>Launched by</th>
+			<th>Inventory Name</th>
 			<th>Started at</th>
+			<th>Launched by</th>
 			<th>Final</th>
 		</tr>
 		</thead>
@@ -15,8 +15,8 @@
 		<% Check.history.each do |check| %>
 		<tr>
 			<td><%= check.description %></td>
-			<td><%= check.admin.try(:username) %></td>
 			<td><%=l check.created_at, :format => :long %></td>
+			<td><%= check.admin.try(:username) %></td>
 			<td>
 				<%= link_to "Counts by location", god_check_tags_path(check) %>
 				<br />

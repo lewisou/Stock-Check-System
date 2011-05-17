@@ -30,6 +30,11 @@ class Location < ActiveRecord::Base
       self.assigns << @new_assigns
     end
   end
+  
+  after_save :launch_inv_save
+  def launch_inv_save
+    self.inventories.each {|inv| inv.try(:save)}
+  end
 
   def description
     "#{desc1} #{desc2} #{desc3}"

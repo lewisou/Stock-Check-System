@@ -13,30 +13,30 @@
 
 			<dt><%= f.label :description, 'Inventory Name' %></dt>
 			<dd>
-			<%= f.text_field :description %>
+			<%= f.text_field :description, :tabindex => 1 %>
 			</dd>
 		
 			<dt><%= f.label :locations_xls %></dt>
 			<dd>
-				<%= f.file_field :locations_xls %>
+				<%= f.file_field :locations_xls, :tabindex => 2 %>
 				<small>ALL ORDER: Reports -> Lists -> Location list</small>
 			</dd>
 		
 			<dt><%= f.label :item_groups_xls %></dt>
 			<dd>
-				<%= f.file_field :item_groups_xls %>
+				<%= f.file_field :item_groups_xls, :tabindex => 3 %>
 				<small>ALL ORDER: Reports -> Lists -> Item Groups</small>
 			</dd>
 
 			<dt><%= f.label :items_xls %></dt>
 			<dd>
-				<%= f.file_field :items_xls %>
+				<%= f.file_field :items_xls, :tabindex => 4 %>
 				<small>ALL ORDER: Reports -> Items -> Items</small>
 			</dd>
 
 			<dt><%= f.label :inventories_xls %></dt>
 			<dd>
-				<%= f.file_field :inventories_xls %>
+				<%= f.file_field :inventories_xls, :tabindex => 5 %>
 				<small>ALL ORDER: Reports -> Inventory Tracking -> Location by Item Summary</small>
 			</dd>
 

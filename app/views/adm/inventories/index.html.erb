@@ -47,7 +47,7 @@
 				<td class='number'><%= inventory.quantity %></td>
 				<td class='number'><%= inventory.inputed_qty %></td>
 				<td>
-					<%= link_to "Input", edit_adm_inventory_path(inventory) %>
+					<%= link_to "Input", edit_adm_inventory_path(inventory) if allow_data_entry? %>
 				</td>
 			</tr>
 			<% end %>

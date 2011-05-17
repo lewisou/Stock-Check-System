@@ -293,7 +293,22 @@ class InventoryTest < ActiveSupport::TestCase
     assert inv.frozen_value == 200
     assert inv.result_value == 240
   end
+  
+  test "ao_adj" do
+    item = Item.create(:cost => 30, :al_cost => 2)
+    inv = item.inventories.create(:quantity => 4, :inputed_qty => 14, :location => Location.create(:is_remote => true))
+
+    assert inv.ao_adj == 10
+    assert inv.ao_adj_value == 300
+
+    inv.update_attributes(:inputed_qty => 1)
+    assert inv.ao_adj == -3
+    assert inv.ao_adj_value == -90
+
+  end
 end
+
+
 
 
 
@@ -324,5 +339,7 @@ end
 #  counted_2_value :float
 #  result_value    :float
 #  frozen_value    :float
+#  ao_adj          :integer
+#  ao_adj_value    :float
 #
 

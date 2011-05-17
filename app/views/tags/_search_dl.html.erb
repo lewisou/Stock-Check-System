@@ -1,0 +1,23 @@
+<% bg_ind = defined?(tab_index) ? tab_index : 1 %>
+
+<dt><%= f.label :id_eq, 'Ticket' %></dt>
+<dd><%= f.text_field :id_eq, :class => "small", :tabindex => bg_ind %></dd>
+
+<dt><%= f.label :id_gte, 'Ticket range' %></dt>
+<dd>
+	<%= f.text_field :id_gte, :class => "small", :tabindex => bg_ind + 1 %> -
+	<%= f.text_field :id_lte, :class => "small", :tabindex => bg_ind + 2 %>
+</dd>
+
+<dt><%= f.label :inventory_item_code_like, 'Part Number' %></dt>
+<dd><%= f.text_field :inventory_item_code_like, :class => "small", :tabindex => bg_ind + 3 %></dd>
+
+<dt><%= f.label :inventory_location_id_eq, 'Warehouse' %></dt>
+<dd>
+	<%= f.collection_select(:inventory_location_id_eq, check.locations, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => bg_ind + 4})  %>
+</dd>
+
+<!--dt><%= f.label :counted_by %></dt>
+<dd>
+	 f.select(:counted_by, Counter.counted_bys, { :include_blank => true }, {:class => "small", :tabindex => bg_ind + 5})
+</dd-->

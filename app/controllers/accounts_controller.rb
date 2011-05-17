@@ -1,6 +1,4 @@
-require 'pp'
-
-class AccountsController < BaseController
+class AccountsController < God::BaseController
   layout 'settings'
   
   before_filter do

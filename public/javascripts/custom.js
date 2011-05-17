@@ -88,6 +88,7 @@ jQuery(function($) {
 		changeYear: true
 	});
 	$('#newsdate').datepicker();
+	$('.need_date').datepicker({dateFormat: 'yy-mm-dd'});
 
 	/* accordion
 	------------------------------------------------------------------------- */

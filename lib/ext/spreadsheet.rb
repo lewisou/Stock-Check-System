@@ -59,13 +59,24 @@ module Spreadsheet
       data.string
     end
 
-    def generate_xls title, list, titles, symbols
+    def generate_xls title, list, titles, symbols, options={}
+      title_format = Spreadsheet::Format.new :pattern_fg_color => :builtin_black, :color => :yellow, :pattern => 1, :weight => :bold
+
       sheet1 = self.create_worksheet :name => title
 
-      title_format = Spreadsheet::Format.new :pattern_fg_color => :builtin_black, :color => :yellow, :pattern => 1, :weight => :bold
-      sheet1.row(0).default_format = title_format
+      if options[:summary]
+        sheet1.row(0).default_format = title_format
+        sheet1.row(0).concat ["Summary"]
+        
+        options[:summary].each_with_index do |sum, index|
+          sheet1[index + 1, 0] = sum[0]
+          sheet1[index + 1, 1] = sum[1]
+        end
+      end
 
-      sheet1.row(0).concat titles
+      start_row = options[:summary].nil? ? 0 : options[:summary].size + 2
+      sheet1.row(start_row).default_format = title_format
+      sheet1.row(start_row).concat titles
 
       list.each_with_index do |obj, index|
         rs = []
@@ -76,26 +87,19 @@ module Spreadsheet
           when Array
             tmp = obj
             sym.each do |ele| 
-              # if tmp.nil?
-              #   tmp = ""
-              #   return
-              # else
-                tmp = tmp.send(ele) unless tmp.nil?
-              # end
+              tmp = tmp.send(ele) unless tmp.nil?
             end
             rs << tmp
           else
             sym.to_s
           end
         end
-        
-        sheet1.row(index + 1).concat rs
+        sheet1.row(start_row + index + 1).concat rs
       end
-      
+
       data = StringIO.new
       self.write(data)
       data.string
-    
     end
 
   end

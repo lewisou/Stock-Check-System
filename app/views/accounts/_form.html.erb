@@ -20,9 +20,9 @@
 
 			<dt><%= f.label :role_ids, 'Roles' %></dt>
 			<dd>
-				<% Role.all.each do |r| %>
+				<% Role.order(:id).all.each do |r| %>
 				<%= check_box_tag 'admin[role_ids][]', r.id, @admin.roles.include?(r), :id => "admin_role_ids_#{r.id}" %>
-				<label for="<%= "admin_role_ids_#{r.id}" %>"><%= r.code %></label>
+				<label for="<%= "admin_role_ids_#{r.id}" %>"><%= r.description %></label>
 				<% end %>
 			</dd>
 

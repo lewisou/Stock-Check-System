@@ -6,7 +6,7 @@
 		<fieldset>
 			<legend>Search</legend>
 			<dl class="inline">
-				<%= render :partial => 'adm/tags/search_dl', :locals => {:f => f} %>
+				<%= render :partial => 'tags/search_dl', :locals => {:f => f, :check => curr_check} %>
 			</dl>
 			<div class="buttons">
 				<%= f.submit 'Search', :class => "button" %>
@@ -16,7 +16,7 @@
 </article>
 
 <article>
-	<h1><%= @search.count %> Tags</h1>
+	<h1><%= @search.count %> Tickets</h1>
 	<%= loading_link 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
 
 	<table class="gtable detailtable">

@@ -1,0 +1,32 @@
+<% @sub_menu = :current %>
+<article>
+	<h1>New check step 2</h1>
+	
+	<%= render :partial => 'shared/errors', :locals => {:object => @check} %>
+	
+	<%= form_for Check.new, :url => god_checks_path, :html => {:class => 'uniform'} do |f| %>
+		<%= hidden_field_tag :step, @step %>
+		<fieldset>
+
+			<legend>Select Remote warehouses</legend>
+			
+			<table class="infos">
+				<tr>
+					<% @check.locations.order("code ASC").each_with_index do |location, index| %>
+						<th><%= check_box_tag("remote_ids[]", location.id, false, :id => "location_#{location.id}") %></th>
+						<td><%= label_tag "location_#{location.id}", location.code %></td>
+						<%=raw("</tr><tr>") if (index + 1) % 3 == 0 %>
+					<% end %>
+				</tr>
+			</table>
+		</fieldset>
+
+		<div class="buttons">
+			<%= loading_submit f, "Finish", :class => 'button' %>
+		</div>
+		
+	<% end %>
+
+	
+</article>
+

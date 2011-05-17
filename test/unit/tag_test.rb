@@ -243,6 +243,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: tags
@@ -258,5 +259,6 @@ end
 #  final_count  :integer
 #  state        :string(255)
 #  adjustment   :integer
+#  audit        :integer
 #
 

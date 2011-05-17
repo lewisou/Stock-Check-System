@@ -1,5 +1,5 @@
 class Adm::BaseController < ApplicationController
 
-  before_filter {check_role :admin}
+  before_filter {check_role :organizer}
 
 end

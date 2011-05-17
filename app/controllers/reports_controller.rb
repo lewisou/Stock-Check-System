@@ -4,14 +4,14 @@ require 'pp'
 
 class ReportsController < ApplicationController
   before_filter { @nav = :tag }
-  before_filter {check_role :admin}
+  before_filter {check_role [:controller, :organizer]}
   
   def count_varience
 
     # @tole = {:tole_quantity => (params[:tole_quantity] || 5), :tole_value => (params[:tole_value] || 25)}
 
     @search = Tag.in_check(curr_check.id).finish(1).finish(2).search(
-    ({"tolerance_q" => 0, "tolerance_v" => 0}).merge((params[:search] || {}).delete_if {|key, value| value.blank? })
+    ({"tolerance_q" => curr_check.credit_q, "tolerance_v" => curr_check.credit_v}).merge((params[:search] || {}).delete_if {|key, value| value.blank? })
     )
     # tole_q_or_v(@tole[:tole_quantity], @tole[:tole_value]).search(params[:search])
 
@@ -45,7 +45,10 @@ class ReportsController < ApplicationController
   end
   
   def final_frozen
-    @search = Inventory.in_check(curr_check.id).search(params[:search])
+    @check = Check.find(params[:id])
+    
+    @search = Inventory.in_check(@check.id).search(params[:search])
+    @nav = :archive
 
     respond_to do |format|
       format.html { @inventories = @search.paginate(:page => params[:page]) }

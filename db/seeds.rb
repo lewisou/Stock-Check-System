@@ -5,23 +5,22 @@
 #
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
-
-unless cor = Role.find_by_code("controller")
-  cor = Role.create(:code => "controller")
+unless Role.find_by_code("controller")
+  Role.create(:code => "controller", :description => "Organizer")
 end
 
-unless Role.find_by_code("admin")
-  Role.create(:code => "admin")
+unless Role.find_by_code("organizer")
+  Role.create(:code => "organizer", :description => "Organizer")
 end
 
-unless Role.find_by_code("counter")
-  Role.create(:code => "counter")
+unless Role.find_by_code("dataentry")
+  Role.create(:code => "dataentry", :description => "Data Entry")
 end
 
-unless Admin.find_by_username('admin')
-  cor.admins.create(
-    :username => 'admin',
-    :email => 'admin@vxmt.com.cn',
+unless Admin.find_by_username('controller')
+  Role.find_by_code("controller").admins.create(
+    :username => 'controller',
+    :email => 'controller@vxmt.com.cn',
     :password => '123456',
     :password_confirmation => '123456'
   )

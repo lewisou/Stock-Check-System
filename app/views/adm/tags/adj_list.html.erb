@@ -1,12 +1,11 @@
-<% @sub_menu = :adj %>
-
 <article>
 	<%= render :partial => 'shared/flash' %>
 	<%= form_for @search, :url => adj_list_adm_tags_path do |f| %>
+	<%= hidden_field_tag :check_id, params[:check_id] %>
 		<fieldset>
 			<legend>Search</legend>
 			<dl class="inline">
-				<%= render :partial => 'adm/tags/search_dl', :locals => {:f => f} %>
+				<%= render :partial => 'tags/search_dl', :locals => {:f => f, :check => curr_check} %>
 			</dl>
 			<div class="buttons">
 				<%= f.submit 'Search', :class => "button" %>
@@ -16,7 +15,7 @@
 </article>
 
 <article>
-	<h1><%= @search.count %> Tags</h1>
+	<h1><%= @search.count %> Tickets</h1>
 
 	<table class="gtable detailtable">
 		<thead>

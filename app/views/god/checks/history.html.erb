@@ -1,0 +1,30 @@
+<article>
+	<h1>Archived List</h1>
+
+	<table class="gtable">
+		<thead>
+		<tr>
+			<th>Description</th>
+			<th>Launched by</th>
+			<th>Started at</th>
+			<th>Final</th>
+		</tr>
+		</thead>
+		
+		<tbody>
+		<% Check.history.each do |check| %>
+		<tr>
+			<td><%= check.description %></td>
+			<td><%= check.admin.try(:username) %></td>
+			<td><%=l check.created_at, :format => :long %></td>
+			<td>
+				<%= link_to "Counts by location", god_check_tags_path(check) %>
+				<br />
+				<%= link_to "Final Summary by value", god_check_inventories_path(check) %>
+			</td>
+		</tr>
+		<% end %>
+		</tbody>
+	</table>
+
+</article>

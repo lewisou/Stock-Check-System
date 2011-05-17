@@ -4,7 +4,7 @@
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
-				<%= render :partial => 'adm/tags/search_dl', :locals => {:f => f} %>
+				<%= render :partial => 'tags/search_dl', :locals => {:f => f, :check => curr_check} %>
 				<%= hidden_field_tag :count, @c_i %>
 			</dl>
 		</fieldset>
@@ -16,7 +16,7 @@
 </article>
 
 <article>
-	<h1><%= @search.count %> Missing Tags</h1>
+	<h1><%= @search.count %> Missing Tickets</h1>
 	
 	<%= link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
 	<%= link_to 'Export to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>

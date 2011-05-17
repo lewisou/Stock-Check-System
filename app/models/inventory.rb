@@ -68,9 +68,11 @@ class Inventory < ActiveRecord::Base
     end
 
     self.result_qty = self.location.try(:is_remote) ? self.inputed_qty : self.counted_qty
-    
+    self.ao_adj = self.result_qty - self.quantity unless self.result_qty.nil? || self.quantity.nil?
+
     self.result_value = (self.result_qty || 0) * (self.item.try(:cost) || 0)
     self.frozen_value = (self.quantity || 0) * (self.item.try(:al_cost) || 0)
+    self.ao_adj_value = (self.ao_adj || 0) * (self.item.try(:cost) || 0)
   end
 
   def adj_check
@@ -88,6 +90,8 @@ class Inventory < ActiveRecord::Base
   end
 
 end
+
+
 
 
 
@@ -121,5 +125,7 @@ end
 #  counted_2_value :float
 #  result_value    :float
 #  frozen_value    :float
+#  ao_adj          :integer
+#  ao_adj_value    :float
 #
 

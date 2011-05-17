@@ -1,16 +1,20 @@
 <% @sub_menu = :current %>
 <article>
-	<h1>New check</h1>
+	<h1>New check Step 1</h1>
 	
 	<%= render :partial => 'shared/errors', :locals => {:object => @check} %>
 	
-	<%= form_for @check, :method => :post, :html => {:class => 'uniform', :multipart => true} do |f| %>
+	<%= form_for @check, :url => god_checks_path, :html => {:class => 'uniform', :multipart => true} do |f| %>
+		<%= hidden_field_tag :step, @step %>
+
 		<fieldset>
 		<legend>Data</legend>
 		<dl class='inline'>
 
 			<dt><%= f.label :description, 'Inventory Name' %></dt>
-			<dd><%= f.text_field :description %></dd>
+			<dd>
+			<%= f.text_field :description %>
+			</dd>
 		
 			<dt><%= f.label :locations_xls %></dt>
 			<dd>
@@ -40,7 +44,7 @@
 		</fieldset>
 
 		<div class="buttons">
-			<%= loading_submit f, nil, :class => 'button' %>
+			<%= loading_submit f, "Next", :class => 'button' %>
 		</div>
 		
 	<% end %>

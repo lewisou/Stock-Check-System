@@ -1,0 +1,47 @@
+<% @sub_menu = :current %>
+
+<article>
+	<h1>Status</h1>
+
+	<div class="actions">
+		<% if curr_check && curr_check.state == 'open' %>
+			<%= loading_link 'Complete', change_state_god_check_path(curr_check, :state => :complete), :method => :put, :confirm => "Are you sure to complete the check '#{curr_check.description}' ?", :class => "button" %>
+			<%= loading_link 'Cancel', change_state_god_check_path(curr_check, :state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button" %>
+			<%= link_to 'Re-import', reimport_checks_path, :class => "button" %>
+		<% elsif curr_check && ['complete', 'cancel'].include?(curr_check.state) %>
+			<%= loading_link 'Archive', change_state_god_check_path(curr_check, :state => :archive), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button" %>
+			<%= loading_link 'Reopen', change_state_god_check_path(curr_check, :state => :open), :method => :put, :confirm => "Are you sure to reopen the check '#{curr_check.description}' ?", :class => "button" if curr_check.state != 'open' %>
+		<% else %>
+			<%= link_to 'Start New One', new_god_check_path, :class => "button" %>
+		<% end %>
+	</div>
+</article>
+
+<% if has_curr_check? %>
+<article>
+<%= render :partial => "shared/flash" %>
+<h2>Status</h2>
+<%= render :partial => 'shared/curr_check', :locals => {:curr_check => @check} %>
+</article>
+<% end %>
+
+<% if curr_check && curr_check.state == 'complete' %>
+<article>
+	<h2>Download</h2>
+
+	<table class="infos">
+	<tbody>
+		<tr>
+			<th>Export to ALL ORDER</th>
+			<td>
+			<%= link_to('locations.xls', download_attachment_path(curr_check.location_xls)) unless curr_check.location_xls.nil? %>
+			<br />
+			<%= link_to('items.xls', download_attachment_path(curr_check.item_xls)) unless curr_check.item_xls.nil? %>
+			<br />
+			<%= link_to('inventory_adjustment.xls', download_attachment_path(curr_check.inv_adj_xls)) unless curr_check.inv_adj_xls.nil? %>
+			</td>
+		</tr>
+	</tbody>
+	</table>
+</article>
+<% end %>

@@ -2,6 +2,7 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'ext/ruby-ole'
+require "#{Rails.root}/db/seeds.rb"
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
@@ -23,8 +24,17 @@ class ActiveSupport::TestCase
   end
   
   def new_blank_check
-    c = Check.new(:description => "new_blank_check#{Time.now.to_i}"); 
+    c = Check.new(:description => "new_blank_check#{rand(Time.now.to_i)}"); 
     c.save(:validate => false);
     c
+  end
+  
+  def new_admin i, role
+    role.admins.create(
+      :username => "#{role.code}_#{i}",
+      :email => "#{role.code}_#{i}@vxmt.com.cn",
+      :password => '123456',
+      :password_confirmation => '123456'
+    )
   end
 end

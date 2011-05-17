@@ -15,19 +15,19 @@
 			<td><%= curr_check.admin.try(:username) %></td>
 		</tr>
 		<tr>
-			<th>Started at</th>
-			<td><%= curr_check.created_at %></td>
+			<th>Start time</th>
+			<td><%=l curr_check.start_time, :format => :long %></td>
 		</tr>
 		<% if curr_check.state == 'open' %>
 		<tr>
 			<th>Duration</th>
-			<td><%= distance_of_time_in_words(Time.now - curr_check.created_at) %></td>
+			<td><%= distance_of_time_in_words(Time.now - curr_check.start_time.to_time) %></td>
 		</tr>
 		<% end %>
 	</tbody>
 </table>
 
-<h2>Tags</h2>
+<h2>Tickets</h2>
 <table class="infos">
 	<thead>
 		<tr>

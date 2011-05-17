@@ -1,8 +1,9 @@
 require 'ext/all_order'
 
 class Check < ActiveRecord::Base
+  scope :opt_s, where(:current.eq => true).where(:state => ["open", "complete", "cancel"]).limit(1)
   scope :curr_s, where(:current.eq => true).limit(1)
-  scope :history, where(:current.eq => false).order("created_at DESC")
+  scope :history, where(:state => "archive").order("created_at DESC")
 
   has_many :item_groups
   has_many :items, :through => :item_groups
@@ -20,7 +21,7 @@ class Check < ActiveRecord::Base
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
   validates_uniqueness_of :description
 
-  before_create :init_properties, :refresh_location, :refresh_item_and_group, :init_colors
+  before_create :refresh_location, :refresh_item_and_group, :init_colors
   after_create :refresh_inventories
 
   before_update :reimport_inventories, :adj_instruction
@@ -28,6 +29,15 @@ class Check < ActiveRecord::Base
 
   after_save :switch_inv
 
+  def set_remotes ids=[]
+    self.locations.each do |loc|
+      loc.update_attributes(:is_remote => false)
+    end
+
+    self.locations.find(ids || []).each do |location|
+      location.update_attributes(:is_remote => true)
+    end
+  end
 
   def make_current!
     Check.where(:id.not_eq => self.id).each {|c| c.current = false; c.save(:validate => false)}
@@ -88,19 +98,24 @@ class Check < ActiveRecord::Base
   def final_value
     Inventory.in_check(self.id).sum("result_value").to_f
   end
-  
-  # def total_count_value count
-  #   Inventory.in_check(self.id).includes(:tags).includes(:item).where(:tags => (:state.not_eq % "deleted" | :state.eq % nil)).sum("tags.count_#{count} * items.cost").to_f
-  #   Inventory.in_check(self.id)
-  # end
-  # 
-  # def total_count_final_value
-  #   Inventory.in_check(self.id).includes(:item).sum("inventories.result_qty * items.cost").to_f
-  # end
-  # 
-  # def total_frozen_value
-  #   Inventory.in_check(self.id).includes(:item).sum("quantity * items.cost").to_f
-  # end
+
+  def ao_adj_value
+    Inventory.in_check(self.id).sum("ao_adj_value").to_f
+  end
+
+  def ao_adj_abs_value
+    Inventory.in_check(self.id).sum("abs(ao_adj_value)").to_f
+  end
+
+
+  def archive!
+    self.update_attributes(:state => "archive", :current => false)
+
+    Role.where(:code.not_eq => "controller").all.each do |role|
+      role.admins = []
+      role.save
+    end
+  end
   
   private unless 'test' == Rails.env
   def switch_inv
@@ -115,10 +130,6 @@ class Check < ActiveRecord::Base
     end
   end
 
-  def init_properties
-    self.state = 'open'
-  end
-  
   def reimport_inv
     return if @reimport_inv_xls.nil?
 
@@ -244,12 +255,15 @@ end
 
 
 
+
+
+
 # == Schema Information
 #
 # Table name: checks
 #
 #  id              :integer         not null, primary key
-#  state           :string(255)
+#  state           :string(255)     default("init")
 #  created_at      :datetime
 #  updated_at      :datetime
 #  current         :boolean         default(FALSE)
@@ -263,5 +277,10 @@ end
 #  color_3         :string(255)
 #  generated       :boolean         default(FALSE)
 #  import_time     :integer         default(1)
+#  instruction_id  :integer
+#  start_time      :date
+#  end_time        :date
+#  credit_v        :float
+#  credit_q        :float
 #
 

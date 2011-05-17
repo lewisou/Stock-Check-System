@@ -1,0 +1,65 @@
+<% @sub_menu = :basic %>
+
+<% content_for :head do %>
+<%= javascript_include_tag 'jscolor/jscolor.js' %>
+<% end %>
+
+<article>
+	<%= render :partial => 'shared/flash' %>
+	<h1>Basic Setting</h1>
+	
+	<%= form_for @check, :url => god_check_path(@check), :html => {:class => 'uniform', :multipart => true} do |f| %>
+		<fieldset>
+			<legend>Common</legend>
+			<dl class="inline">
+				<dt><%= f.label :description, "Inventory Name" %></dt>
+				<dd><%= f.text_field :description, :tabindex => 1 %></dd>
+				
+				<dt><%= f.label :start_time, "Start Date" %></dt>
+				<dd><%= f.text_field :start_time, :class => "need_date", :tabindex => 2 %>
+				</dd>
+			</dl>
+		</fieldset>
+		
+		<fieldset>
+			<legend>Count Credits</legend>
+			<dl class="inline">
+				<dt><%= f.label :credit_v, "Value" %></dt>
+				<dd><%= f.text_field :credit_v, :tabindex => 3 %></dd>
+				
+				<dt><%= f.label :credit_q, "Qty" %></dt>
+				<dd><%= f.text_field :credit_q, :tabindex => 4 %></dd>
+			</dl>
+		</fieldset>
+
+		<fieldset>
+			<legend>Set Colors</legend>
+			<dl class="inline">
+				<dt><%= f.label :color_1 %></dt>
+				<dd><%= f.text_field :color_1, :tabindex => 1, :class => 'color', :tabindex => 5 %></dd>
+
+				<dt><%= f.label :color_2 %></dt>
+				<dd><%= f.text_field :color_2, :tabindex => 2, :class => 'color', :tabindex => 6 %></dd>
+
+				<dt><%= f.label :color_3 %></dt>
+				<dd>
+					<%= f.text_field :color_3, :tabindex => 3, :class => 'color', :tabindex => 7 %>
+				</dd>
+
+			</dl>
+		</fieldset>
+
+		<fieldset>
+		<legend>Instruction Excel</legend>
+
+		<dl class='inline'>
+			<dt><%= f.label :instruction %></dt>
+			<dd>
+				<%= f.file_field :instruction_file, :tabindex => 8 %>
+			</dd>
+		</dl>
+		</fieldset>
+		
+		<%= f.submit :class => 'button' %>
+	<% end %>
+</article>

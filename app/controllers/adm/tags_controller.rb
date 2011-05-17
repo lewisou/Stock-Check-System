@@ -100,10 +100,14 @@ class Adm::TagsController < Adm::BaseController
   def adj_list
     @search = Tag.in_check(curr_check.id).countable.includes(:inventory => :item, :inventory => :location).search(params[:search])
     @tags = @search.paginate(:page => params[:page])
+    @nav = :archive
+    render :layout => "application"
   end
 
   def to_adj
-    @tag = Tag.in_check(curr_check.id).find(params[:id])
+    @check = Check.find(params[:check_id])
+
+    @tag = Tag.in_check(@check.id).find(params[:id])
   end
 
   def update_adj

@@ -5,7 +5,7 @@
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
-				<%= render :partial => 'adm/tags/search_dl', :locals => {:f => f} %>
+				<%= render :partial => 'tags/search_dl', :locals => {:f => f, :check => curr_check} %>
 				<%= hidden_field_tag :count, @c_i %>
 			</dl>
 			<div class="buttons">

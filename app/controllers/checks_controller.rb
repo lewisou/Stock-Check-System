@@ -12,10 +12,6 @@ class ChecksController < BaseController
     end
   end
 
-  def history
-    @checks = Check.history.paginate(:page => params[:page])
-  end
-
   # GET /checks/1
   # GET /checks/1.xml
   def show
@@ -102,18 +98,6 @@ class ChecksController < BaseController
     end
   end
 
-  def change_state
-    curr_check.state = params[:state]
-    curr_check.generate_xls if curr_check.state == 'complete'
-
-    if curr_check.save
-
-      redirect_to current_checks_path, :notice => "CURREN CHECK has been changed to #{params[:state]}."
-    else
-      render index
-    end
-  end
-  
   def refresh_count
     curr_check.cache_counted!
     

@@ -134,19 +134,7 @@ class CheckTest < ActiveSupport::TestCase
         
     assert Tag.in_check(c.id).count == 0
   end
-  
-  test "init_properties before create" do
-    c = Check.new
-    c.save(:validate => false)
-    
-    assert c.state == 'open'
 
-    c.state = 'whatever'
-    c.save
-
-    assert c.state != 'open'
-  end
-  
   test "generate_xls" do
     c = new_check
     c.save(:validate => false)
@@ -247,13 +235,16 @@ class CheckTest < ActiveSupport::TestCase
   end
   
   test "history scope" do
-    new_blank_check.update_attributes(:current => true)
-    new_blank_check.update_attributes(:current => false)
-    new_blank_check.update_attributes(:current => false)
-    
+    new_blank_check.update_attributes(:state => "open")
+    new_blank_check.update_attributes(:state => "cancel")
+    new_blank_check.update_attributes(:state => "complete")
+    new_blank_check.update_attributes(:state => nil)
+    new_blank_check.update_attributes(:state => "archive")
+    new_blank_check.update_attributes(:state => "archive")
+
     assert Check.history.count == 2
   end
-  
+
   test "create_update_from_row" do
     c = new_blank_check
     item = c.item_groups.create.items.create(:code => '1.300')
@@ -304,6 +295,17 @@ class CheckTest < ActiveSupport::TestCase
     assert c.reload.final_value == 34
   end
   
+  test "ao_adj_value & ao_adj_abs_value" do
+    c = new_blank_check
+    # -5 qty
+    c.locations.create(:is_remote => false).inventories.create(:item => Item.create(:cost => 2), :quantity => 15).tags.create(:count_1 => 10, :count_2 => 10)
+    # +5 qty
+    c.locations.create(:is_remote => true).inventories.create(:item => Item.create(:cost => 3), :quantity => 5, :inputed_qty => 10)
+
+    assert c.reload.ao_adj_value == -5 * 2 + 5 * 3
+    assert c.reload.ao_adj_abs_value == 5 * 2 + 5 * 3
+  end
+
   test "inputed_value" do
     c = new_blank_check
     c.locations.create(:is_remote => false).inventories.create(:item => Item.create(:cost => 2)).tags.create(:count_1 => 2, :count_2 => 2)
@@ -341,7 +343,75 @@ class CheckTest < ActiveSupport::TestCase
     c.save
     assert c.instruction != nil
   end
+  
+  test "opt_s" do
+    new_blank_check
+    b = new_blank_check
+    c = new_blank_check
+    c.make_current!
+    
+    assert = Check.opt_s.first == nil
+    c.update_attributes(:state => "open")
+    assert = Check.opt_s.first == c
+    c.update_attributes(:state => "complete")
+    assert = Check.opt_s.first == c
+
+    b.make_current!
+    assert = Check.opt_s.first == nil
+  end
+  
+  test "set_remotes" do
+    c = new_blank_check
+    3.times {c.locations.create}
+    
+    l = Location.first
+    c.set_remotes [l.id]
+    
+    assert c.locations.count == 3
+    assert c.locations.where(:is_remote => false).count == 2
+    assert c.locations.where(:is_remote => true).count == 1
+    assert l.reload.is_remote == true
+  end
+  
+  test "archive!" do
+    Admin.all.each do |adm|
+      adm.destroy
+    end
+    assert Admin.count == 0
+    
+    a = new_admin 1, Role.find_by_code("organizer")
+    b = new_admin 2, Role.find_by_code("controller")
+    assert Admin.count == 2
+    
+    c = new_blank_check
+    c.archive!
+
+    assert c.reload.state == "archive"
+    assert Check.opt_s.count == 0
+    assert Check.curr_s.count == 0
+    assert Admin.count == 2
+    
+    assert a.reload.roles == []
+    assert b.reload.roles == [Role.find_by_code("controller")]
+    
+    
+    # 
+    # assert Admin.includes(:roles).where(:roles => {:code.not_eq => "controller"}).count != 0
+    # Admin.includes(:roles).where(:roles => {:code.not_eq => "controller"}).all.each do |adm|
+    #   
+    #   puts "$$$$$$"
+    #   puts adm.roles
+    #   puts "!!!!!"
+    # 
+    #   assert adm.roles == []
+    # end
+
+    # Admin.includes(:roles).where(:roles => {:code.eq => "controller"}).count != 0
+  end
 end
+
+
+
 
 
 
@@ -350,7 +420,7 @@ end
 # Table name: checks
 #
 #  id              :integer         not null, primary key
-#  state           :string(255)
+#  state           :string(255)     default("init")
 #  created_at      :datetime
 #  updated_at      :datetime
 #  current         :boolean         default(FALSE)
@@ -364,5 +434,10 @@ end
 #  color_3         :string(255)
 #  generated       :boolean         default(FALSE)
 #  import_time     :integer         default(1)
+#  instruction_id  :integer
+#  start_time      :date
+#  end_time        :date
+#  credit_v        :float
+#  credit_q        :float
 #
 

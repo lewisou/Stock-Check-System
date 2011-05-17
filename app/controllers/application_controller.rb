@@ -6,13 +6,13 @@ class ApplicationController < ActionController::Base
 
   helper_method :has_curr_check?
   def has_curr_check?
-    return Check.curr_s.size > 0
+    return Check.opt_s.size > 0
   end
   
   helper_method :curr_check
   def curr_check
     unless @curr_check
-      @curr_check = Check.curr_s.first
+      @curr_check = Check.opt_s.first
     end
 
     @curr_check
@@ -20,7 +20,17 @@ class ApplicationController < ActionController::Base
   
   helper_method :has_role?
   def has_role? role
-    return current_admin && current_admin.roles.map(&:code).include?(role.to_s)
+    return false unless current_admin
+    
+    case role
+    when Symbol
+      return current_admin.roles.map(&:code).include?(role.to_s)
+    when Array
+      role.each {|r| return true if current_admin.roles.map(&:code).include?(r.to_s)}
+    else
+      return false
+    end
+    return false
   end
   
   def check_role role

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110512021416) do
+ActiveRecord::Schema.define(:version => 20110517015807) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -61,7 +61,7 @@ ActiveRecord::Schema.define(:version => 20110512021416) do
   end
 
   create_table "checks", :force => true do |t|
-    t.string   "state"
+    t.string   "state",           :default => "init"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "current",         :default => false
@@ -76,6 +76,10 @@ ActiveRecord::Schema.define(:version => 20110512021416) do
     t.boolean  "generated",       :default => false
     t.integer  "import_time",     :default => 1
     t.integer  "instruction_id"
+    t.date     "start_time"
+    t.date     "end_time"
+    t.float    "credit_v"
+    t.float    "credit_q"
   end
 
   create_table "counters", :force => true do |t|
@@ -84,6 +88,27 @@ ActiveRecord::Schema.define(:version => 20110512021416) do
     t.datetime "updated_at"
     t.text     "description"
   end
+
+  create_table "gods", :force => true do |t|
+    t.string   "email",                               :default => "", :null => false
+    t.string   "encrypted_password",   :limit => 128, :default => "", :null => false
+    t.string   "password_salt",                       :default => "", :null => false
+    t.string   "reset_password_token"
+    t.string   "remember_token"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",                       :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.string   "username"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gods", ["email"], :name => "index_gods_on_email", :unique => true
+  add_index "gods", ["reset_password_token"], :name => "index_gods_on_reset_password_token", :unique => true
+  add_index "gods", ["username"], :name => "index_gods_on_username", :unique => true
 
   create_table "inventories", :force => true do |t|
     t.integer  "item_id"
@@ -103,6 +128,8 @@ ActiveRecord::Schema.define(:version => 20110512021416) do
     t.float    "counted_2_value"
     t.float    "result_value"
     t.float    "frozen_value"
+    t.integer  "ao_adj"
+    t.float    "ao_adj_value"
   end
 
   add_index "inventories", ["item_id"], :name => "index_inventories_on_item_id"
@@ -170,6 +197,7 @@ ActiveRecord::Schema.define(:version => 20110512021416) do
     t.string   "code"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "description"
   end
 
   create_table "tags", :force => true do |t|
@@ -183,6 +211,7 @@ ActiveRecord::Schema.define(:version => 20110512021416) do
     t.integer  "final_count"
     t.string   "state"
     t.integer  "adjustment"
+    t.integer  "audit"
   end
 
   add_index "tags", ["inventory_id"], :name => "index_tags_on_inventory_id"

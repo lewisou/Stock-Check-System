@@ -77,16 +77,26 @@ jQuery(function($) {
 
 				<% if has_role? :controller %>
 				<li <%= "class='current'" if @nav == :control %>>
-					<%= link_to 'Control', current_checks_path %>
+					<%= link_to 'Status', current_god_checks_path %>
+				</li>
+				
+				<% if has_curr_check? %>
+				<li <%= "class='current'" if @nav == :setting %>>
+					<%= link_to 'Setup', edit_god_check_path(curr_check) %>
 					<%= render :partial => 'shared/settings_ul' %>
+				</li>
+				<% end %>
+				
+				<li <%= "class='current'" if @nav == :archive %>>
+					<%= link_to 'Archived', history_god_checks_path %>
 				</li>
 				<% end %>
 
 				<% if has_curr_check? %>
 				
-				<% if has_role? :admin %>
+				<% if has_role? :organizer %>
 				<li <%= "class='current'" if @nav == :tag %>>
-					<%= link_to 'Admin', missing_cost_adm_items_path %>
+					<%= link_to 'Organizer', missing_cost_adm_items_path %>
 					<%= render :partial => 'shared/inventory_ul' %>
 				</li>
 				<% end %>

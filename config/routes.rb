@@ -1,5 +1,7 @@
 Scs::Application.routes.draw do
 
+  devise_for :gods
+
   devise_for :admins
 
   resources :accounts
@@ -22,7 +24,10 @@ Scs::Application.routes.draw do
 
   resources :reports, :only => [] do
     collection do
-      get 'count_varience', 'final_result', 'final_frozen', 'count_frozen'
+      get 'count_varience', 'count_frozen', 'final_result'
+    end
+    member do
+      get 'final_frozen'
     end
   end
 
@@ -30,8 +35,8 @@ Scs::Application.routes.draw do
 
   resources :checks do
     collection do
-      put 'change_state', 'refresh_count', 'color_update', 'generate', 'upload_ins'
-      get 'color', 'history', 'current', 'reimport', 'to_generate', 'instruction'
+      put 'refresh_count', 'color_update', 'generate', 'upload_ins'
+      get 'color', 'reimport', 'to_generate', 'instruction'
     end
 
     member do
@@ -78,6 +83,20 @@ Scs::Application.routes.draw do
   #       get 'recent', :on => :collection
   #     end
   #   end
+
+  namespace :god do
+    resources :checks do
+      resources :tags
+      resources :inventories
+      
+      collection do
+        get 'current', 'history'
+      end
+      member do
+        put 'change_state'
+      end
+    end
+  end
 
   namespace :adm do
     # Directs /admin/products/* to Admin::ProductsController

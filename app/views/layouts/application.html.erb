@@ -76,31 +76,28 @@ jQuery(function($) {
 				<li <%= "class='current'" if @nav == :dashboard %>><%= link_to 'Dashboard', root_path %></li>
 
 				<% if has_role? [:controller, :mgt] %>
-				<li <%= "class='current'" if @nav == :control %>>
-					<%= link_to 'Status', current_god_checks_path %>
-				</li>
+					<li <%= "class='current'" if @nav == :control %>>
+						<%= link_to 'Status', current_god_checks_path %>
+					</li>
 				
-				<% if has_curr_check? && allow_data_entry? %>
-				<li <%= "class='current'" if @nav == :setting %>>
-					<%= link_to 'Setup', edit_god_check_path(curr_check) %>
-					<%= render :partial => 'shared/settings_ul' %>
-				</li>
-				<% end %>
-				
-				<li <%= "class='current'" if @nav == :archive %>>
-					<%= link_to 'Archived', history_god_checks_path %>
-				</li>
+					<% if has_curr_check? && allow_data_entry? %>
+					<li <%= "class='current'" if @nav == :setting %>>
+						<%= link_to 'Setup', edit_god_check_path(curr_check) %>
+						<%= render :partial => 'shared/settings_ul' %>
+					</li>
+					<% end %>
+
 				<% end %>
 
 				<% if has_curr_check? %>
-					<% if has_role? :organizer %>
+					<% if has_role? [:organizer, :mgt] %>
 					<li <%= "class='current'" if @nav == :tag %>>
 						<%= link_to 'Organizer', missing_cost_adm_items_path %>
 						<%= render :partial => 'shared/inventory_ul' %>
 					</li>
 					<% end %>
 
-					<% if has_role? :audit %>
+					<% if has_role? [:audit, :mgt] %>
 					<li <%= "class='current'" if @nav == :audit %>>
 						<%= link_to 'External Audit', audit_tags_path %>
 					</li>
@@ -122,6 +119,13 @@ jQuery(function($) {
 						<%= link_to 'Count 3', counts_path(:count => 3) %>
 					</li>
 					<% end %>
+				<% end %>
+				
+				
+				<% if has_role? [:controller, :mgt] %>
+				<li <%= "class='current'" if @nav == :archive %>>
+					<%= link_to 'Archived', history_god_checks_path %>
+				</li>
 				<% end %>
 			</ul>
 			<ul id="usermenu">

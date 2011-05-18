@@ -1,3 +1,3 @@
 class Audit::BaseController < ApplicationController
-  before_filter {check_role :audit}
+  before_filter {check_role [:audit, :mgt]}
 end

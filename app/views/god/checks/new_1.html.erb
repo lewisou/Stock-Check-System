@@ -1,6 +1,6 @@
 <% @sub_menu = :current %>
 <article>
-	<h1>New check Step 1</h1>
+	<h1>Upload Locations / PartNumbers / Inventories</h1>
 	
 	<%= render :partial => 'shared/errors', :locals => {:object => @check} %>
 	
@@ -8,7 +8,7 @@
 		<%= hidden_field_tag :step, @step %>
 
 		<fieldset>
-		<legend>Data</legend>
+		<legend>New check Step 1</legend>
 		<dl class='inline'>
 
 			<dt><%= f.label :description, 'Inventory Name' %></dt>

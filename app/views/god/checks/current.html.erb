@@ -21,12 +21,11 @@
 <% end %>
 
 
+<% if allow_check_control? %>
 <article>
 	<h2>Actions</h2>
 
 	<div class="actions">
-	<% if allow_check_control? %>
-
 		<% if curr_check && curr_check.state == 'open' %>
 			<%= loading_link 'Complete', change_state_god_check_path(curr_check, :state => :complete), :method => :put, :confirm => "Are you sure to complete the check '#{curr_check.description}' ?", :class => "button" if curr_check.can_complete? %>
 			<%= loading_link 'Cancel', change_state_god_check_path(curr_check, :state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button" %>
@@ -34,14 +33,12 @@
 		<% elsif curr_check && ['complete', 'cancel'].include?(curr_check.state) %>
 			<%= loading_link 'Archive', change_state_god_check_path(curr_check, :state => :archive), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button" %>
 			<%= loading_link 'Reopen', change_state_god_check_path(curr_check, :state => :open), :method => :put, :confirm => "Are you sure to reopen the check '#{curr_check.description}' ?", :class => "button" if curr_check.state != 'open' %>
+		<% else %>
+			<%= link_to 'Start New One', new_god_check_path, :class => "button" %>
 		<% end %>
-
-	<% else %>
-		<%= link_to 'Start New One', new_god_check_path, :class => "button" %>
-	<% end %>
 	</div>
 </article>
-
+<% end %>
 
 <% if curr_check && curr_check.state == 'complete' %>
 <article>

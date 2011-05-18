@@ -75,7 +75,7 @@ class God::ChecksController < God::BaseController
     @check = Check.curr_s.first
     
     @check.set_remotes(params["remote_ids"])
-    @check.reload.update_attributes(:state => "open") && @check.generate!
+    @check.reload.update_attributes(:state => "open", :admin => current_admin) && @check.generate!
   end
   
   def choose_lay

@@ -2,9 +2,8 @@ require 'ext/tag_table'
 require 'ext/spreadsheet'
 require 'pp'
 
-class ReportsController < ApplicationController
+class ReportsController < Adm::BaseController
   before_filter { @nav = :tag }
-  before_filter {check_role :organizer}
   layout 'tags'
 
   def count_varience

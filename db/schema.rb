@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110517015807) do
+ActiveRecord::Schema.define(:version => 20110518021150) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20110517015807) do
 
   add_index "admins", ["email"], :name => "index_admins_on_email", :unique => true
   add_index "admins", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
+  add_index "admins", ["username"], :name => "index_admins_on_username"
 
   create_table "admins_roles", :id => false, :force => true do |t|
     t.integer "admin_id"
@@ -82,6 +83,8 @@ ActiveRecord::Schema.define(:version => 20110517015807) do
     t.float    "credit_q"
   end
 
+  add_index "checks", ["state"], :name => "index_checks_on_state"
+
   create_table "counters", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -132,6 +135,7 @@ ActiveRecord::Schema.define(:version => 20110517015807) do
     t.float    "ao_adj_value"
   end
 
+  add_index "inventories", ["check_id"], :name => "index_inventories_on_check_id"
   add_index "inventories", ["item_id"], :name => "index_inventories_on_item_id"
   add_index "inventories", ["location_id"], :name => "index_inventories_on_location_id"
 
@@ -166,6 +170,7 @@ ActiveRecord::Schema.define(:version => 20110517015807) do
     t.text     "inittags"
   end
 
+  add_index "items", ["code"], :name => "index_items_on_code"
   add_index "items", ["item_group_id"], :name => "index_items_on_item_group_id"
 
   create_table "locations", :force => true do |t|
@@ -184,6 +189,7 @@ ActiveRecord::Schema.define(:version => 20110517015807) do
   end
 
   add_index "locations", ["check_id"], :name => "index_locations_on_check_id"
+  add_index "locations", ["code"], :name => "index_locations_on_code"
 
   create_table "quantities", :force => true do |t|
     t.integer  "time"
@@ -193,12 +199,17 @@ ActiveRecord::Schema.define(:version => 20110517015807) do
     t.integer  "inventory_id"
   end
 
+  add_index "quantities", ["inventory_id"], :name => "index_quantities_on_inventory_id"
+  add_index "quantities", ["time"], :name => "index_quantities_on_time"
+
   create_table "roles", :force => true do |t|
     t.string   "code"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "description"
   end
+
+  add_index "roles", ["code"], :name => "index_roles_on_code"
 
   create_table "tags", :force => true do |t|
     t.integer  "count_1"
@@ -215,5 +226,6 @@ ActiveRecord::Schema.define(:version => 20110517015807) do
   end
 
   add_index "tags", ["inventory_id"], :name => "index_tags_on_inventory_id"
+  add_index "tags", ["state"], :name => "index_tags_on_state"
 
 end

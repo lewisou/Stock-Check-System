@@ -30,17 +30,10 @@ class Adm::LocationsController < Adm::BaseController
   def create
     @location = curr_check.locations.build(params[:location])
     @location.is_remote = false
-    # assigns = []
-    # Counter.all.each do |counter|
-    #   if params[:count][counter.id.to_s].to_i > 0 && params[:count][counter.id.to_s].to_i < 3
-    #     assigns << Assign.new(:count => params[:count][counter.id.to_s], :counter => counter)
-    #   end
-    # end
-    # @location.new_assigns, @location.curr_check = assigns, curr_check
 
     respond_to do |format|
       if @location.save
-        format.html { redirect_to( adm_items_path, :notice => 'Onsite Location was successfully created.') }
+        format.html { redirect_to( adm_counters_path, :notice => 'Onsite Location was successfully created.') }
         format.xml  { render :xml => @location, :status => :created, :location => @location }
       else
         format.html { render :action => "new" }

@@ -1,5 +1,3 @@
 class Adm::BaseController < ApplicationController
-
-  before_filter {check_role :organizer}
-
+  before_filter {check_role [:organizer, :mgt]}
 end

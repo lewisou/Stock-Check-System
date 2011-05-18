@@ -60,7 +60,7 @@ module Prawn
     def make_tag_table(tag)
       # Prawn::ImageWrapper.new(barcode(tag.id.to_s), TAG_TABLE_WIDTH / 3, TAG_TABLE_WIDTH / 10
       item = tag.inventory.item.try(:code) || "No content"
-      description = (tag.inventory.item.try(:description) || "No descrption")[0, 20]
+      description = (tag.inventory.item.try(:description) || "No descrption")[0, 20] + "..."
       data = [
         # [make_tag_sub_table(["\n#{tag.id}", image_wrapper(tag.id.to_s)], tag_color)],
         [make_tag_sub_table(["#{tag.id}", " "], :font_style => :bold)],

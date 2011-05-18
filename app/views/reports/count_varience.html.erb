@@ -62,7 +62,6 @@
 				<th>Value 2</th>
 				<th>Differ</th>
 				<th>Count 3</th>
-				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -76,11 +75,6 @@
 				<td class='number'><%=number_to_currency (tag.count_2 || 0) * (tag.inventory.item.try(:cost) || 0.0) %></td>
 				<td class='number'><%=number_to_currency tag.value_differ %></td>
 				<td class='number'><%= tag.count_3 %></td>
-				<td>
-					<% if curr_check.state == 'open' %>
-					<%= link_to 'Count 3', counts_path(:search => {:id_eq => tag.id}, :count => 3) %>
-					<% end %>
-				</td>
 			</tr>
 			
 			<tr class="detail">

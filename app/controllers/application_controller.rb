@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
   
   helper_method :allow_check_control?
   def allow_check_control?
-    return curr_check && ["complete", "cancel", "open"].include?(curr_check.state) && !has_role?(:mgt)
+    return (curr_check.nil? || ["complete", "cancel", "open"].include?(curr_check.state)) && !has_role?(:mgt)
   end
 
   def check_data_entry

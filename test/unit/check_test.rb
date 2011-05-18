@@ -152,7 +152,8 @@ class CheckTest < ActiveSupport::TestCase
     c = new_check
     c.save(:validate => false)
     c.locations.first.inventories.create.tags.create
-
+    c.locations.each {|l| l.update_attributes(:is_remote => false)}
+    
     Tag.update_all(:count_1 => 1)
     Tag.update_all(:count_2 => 2)
 
@@ -160,7 +161,7 @@ class CheckTest < ActiveSupport::TestCase
     
     Tag.update_all(:count_1 => nil)
     Tag.update_all(:count_2 => nil)
-    
+
     assert !c.finish_count?
   end
   
@@ -168,6 +169,7 @@ class CheckTest < ActiveSupport::TestCase
     c = new_check
     c.save(:validate => false)
     c.locations.first.inventories.create.tags.create
+    c.locations.each {|l| l.update_attributes(:is_remote => false)}
 
     Tag.update_all(:count_1 => 1)
     assert c.finish_count_in(1)

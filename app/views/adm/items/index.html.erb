@@ -1,4 +1,4 @@
-<% @sub_menu = :items %>
+<% @sub_menu = params[:sub_menu].try(:to_sym) %>
 <article>
 	<%= render :partial => 'shared/flash' %>
 	
@@ -18,7 +18,7 @@
 				<dd><%= f.submit 'Search', :class => 'button' %></dd>
 			</dl>
 		</fieldset>
-		<%= link_to "New Item", new_adm_item_path, :class => 'button' %>
+		<%= link_to "New Item", new_adm_item_path(:sub_menu => @sub_menu), :class => 'button' %>
 	<% end %>
 </article>
 
@@ -28,7 +28,6 @@
 		<thead>
 			<tr>
 				<th>Item Number</th>
-				<th>Description</th>
 				<th>Cost</th>
 				<th>Active</th>
 				<th>Action</th>
@@ -37,15 +36,26 @@
 		<tbody>
 			<% @items.each do |item| %>
 			<tr>
-				<td><%= item.code %></td>
-				<td><%= item.description[0, 35] %> <%= "..." if item.description.size > 35 %></td>
+				<td><a href="#" class="detail-link"><%= item.code %></a></td>
 				<td class='number'><%=number_to_currency item.cost %></td>
 				<td><%= item.is_active %></td>
 				<td>
-					<% if curr_check.state == 'open' %>
-					<%= link_to image_tag('icons/edit.png'), edit_adm_item_path(item), :title => 'Edit' %>
+					<% if allow_data_entry? %>
+					<%= link_to "Change_Cost", input_price_adm_item_path(item) %><br />
+					<%= link_to 'New_Ticket', new_adm_item_tag_path(item) %><br />
+					<%= link_to('New_Remote_Input', new_adm_item_inventory_path(item)) if item.is_active %>
 					<% end %>
-					<%= link_to 'New Tag', new_adm_item_tag_path(item) if curr_check.state == 'open' %>
+				</td>
+			</tr>
+			<tr class="detail">
+				<td colspan="5">
+					<table>
+						<tbody>
+							<tr>
+								<td><%= item.try(:description) %></td>
+							</tr>
+						</tbody>
+					</table>
 				</td>
 			</tr>
 			<% end %>

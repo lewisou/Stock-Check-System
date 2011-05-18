@@ -129,6 +129,11 @@ Scs::Application.routes.draw do
     end
 
     resources :counters
+
+    resources :items do
+      resources :inventories, :only => [:new, :create]
+    end
+
     resources :inventories do
       resources :tags
     end

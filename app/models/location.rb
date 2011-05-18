@@ -1,14 +1,17 @@
 class Location < ActiveRecord::Base
   scope :tagable, where(:is_remote => false)
   scope :not_tagable, where(:is_remote => true)
-
+  scope :remote_not_newable, lambda { |item|
+    includes(:inventories => :item).where(:items => {:id.eq => item.id}).not_tagable
+  }
+  
   has_many :assigns
   has_many :counters, :through => :assigns
-  
+
   belongs_to :check
   has_many :inventories
   has_many :tags, :through => :inventories
-  
+
   before_save :ensure_is_remote_has_a_value
   def ensure_is_remote_has_a_value
     if self.is_remote.nil?
@@ -20,7 +23,7 @@ class Location < ActiveRecord::Base
   def mark_flag
     self.data_changed = true
   end
-  
+
   attr_accessor :new_assigns, :curr_check
 
   before_save :refresh_assigns

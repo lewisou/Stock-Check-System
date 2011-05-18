@@ -1,0 +1,31 @@
+<% @sub_menu = :remote %>
+
+<article>
+	<%= render :partial => "shared/flash" %>
+
+	<h1>New Remote Warehouse Input</h1>
+
+	<%= form_for @inventory, :url => adm_item_inventories_path(@item) do |f| %>
+	<fieldset>
+		<dl class='inline'>
+			<dt><%= f.label :item_code %></dt>
+			<dd><%= f.label :item_code, @item.code %></dd>
+
+			<dt><%= f.label :item_description %></dt>
+			<dd><%= f.label :item_description, @item.description %></dd>
+
+			<dt><%= f.label :location_id, 'Warehouse' %></dt>
+			<dd>
+				<%= f.collection_select(:location_id, curr_check.locations.not_tagable - curr_check.locations.remote_not_newable(@item), :id, :code, {:include_blank => false}, {:class => "small", :tabindex => 1}) %>
+			</dd>
+
+			<dt><%= f.label :inputed_qty %></dt>
+			<dd>
+			<%= f.text_field :inputed_qty, :class => 'small', :tabindex => 2 %>
+			</dd>
+		</dl>
+	</fieldset>
+	
+	<%= f.submit "Save", :class => 'button' %>
+	<% end %>
+</article>

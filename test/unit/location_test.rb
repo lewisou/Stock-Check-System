@@ -113,6 +113,59 @@ class LocationTest < ActiveSupport::TestCase
     assert inv.reload.result_qty == 0
     assert inv2.reload.result_qty == 0
   end
+
+  test "remote_newable" do
+    check = new_blank_check
+    item_groups = check.item_groups.create
+    remote_location_1 = check.locations.create(:is_remote => true)
+    remote_location_2 = check.locations.create(:is_remote => true)
+    onsite_location_1 = check.locations.create(:is_remote => false)
+
+    item1 = item_groups.items.create
+    item2 = item_groups.items.create
+
+    remote_location_1.inventories.create(:item => item1)
+    remote_location_1.inventories.create(:item => item2)
+    remote_location_1.inventories.create
+
+    remote_location_2.inventories.create(:item => item2)
+    remote_location_2.inventories.create
+
+    onsite_location_1.inventories.create(:item => item1)
+    onsite_location_1.inventories.create(:item => item2)
+    onsite_location_1.inventories.create
+
+    assert check.locations.remote_not_newable(item1).include?(remote_location_1)
+    assert check.locations.remote_not_newable(item1).count == 1
+
+    assert check.locations.remote_not_newable(item2).include?(remote_location_1)
+    assert check.locations.remote_not_newable(item2).include?(remote_location_2)
+    assert check.locations.remote_not_newable(item2).count == 2
+
+
+    # lo0.inventories.create(:item => i)
+    # 
+    # c.locations.create(:is_remote => true)
+    # 
+    # 
+    # 
+    # .inventories.create(:item => i)
+    # 
+    # (lo1 = c.locations.create(:is_remote => true)).inventories.create(:item => i2)
+    # (lo2 = c.locations.create(:is_remote => true)).inventories.create
+    # lo3 = c.locations.create(:is_remote => true)
+    # 
+    # # onsite inventory
+    # c.locations.create(:is_remote => false).inventories.create(:item => i)
+    # 
+    # assert !c.locations.remote_newable(i).include?(lo0)
+    # assert c.locations.remote_newable(i).include?(lo1)
+    # assert c.locations.remote_newable(i).include?(lo2)
+    # assert c.locations.remote_newable(i).include?(lo3)
+    # 
+    # assert c.locations.remote_newable(i).count == 3
+    # assert c.locations.count == 6
+  end
 end
 
 

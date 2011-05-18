@@ -13,7 +13,7 @@ class Adm::ItemsController < Adm::BaseController
     @item = Item.find(params[:id])
 
     if @item.update_attributes(params[:item])
-      redirect_to adm_items_path, :notice => "Item #{@item.code} has been updated."
+      redirect_to missing_cost_adm_items_path(:sub_menu => :missing_cost), :notice => "Cost has been updated."
     else
       render :edit
     end
@@ -61,8 +61,7 @@ class Adm::ItemsController < Adm::BaseController
   def missing_cost
     # curr_check.cache_counted!
     @search = curr_check.items.missing_cost.search(params[:search])
-    
-    
+
     respond_to do |format|
       format.html {
         @items = @search.paginate(:page => params[:page])

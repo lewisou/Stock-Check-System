@@ -1,7 +1,7 @@
 class Tag < ActiveRecord::Base
-  scope :in_check, lambda {|check_id| includes(:inventory => {:location => :check}).where(:checks => {:id => check_id}) }
-  scope :not_finish, lambda{|count| where("count_#{count}".to_sym.eq % nil & (:state.not_eq % "deleted" | :state.eq % nil))}
-  scope :finish, lambda{|count| where("count_#{count}".to_sym.not_eq % nil & (:state.not_eq % "deleted" | :state.eq % nil))}
+  scope :in_check, lambda {|check_id| includes(:inventory => {:location => :check}).where(:checks => {:id => check_id}).countable }
+  scope :not_finish, lambda{|count| where("count_#{count}".to_sym.eq % nil).countable}
+  scope :finish, lambda{|count| where("count_#{count}".to_sym.not_eq % nil).countable}
   scope :deleted_s, where(:state => "deleted")
   scope :countable, includes(:inventory => :location).where(:locations => {:is_remote => false}).where(:state.not_eq % "deleted" | :state.eq % nil)
 
@@ -17,14 +17,16 @@ class Tag < ActiveRecord::Base
 
   search_methods :tolerance_q
   scope :tolerance_q, lambda { |quantity|
-    {:conditions => ["abs((tags.count_1 - tags.count_2) / least(cast(tags.count_1 as float), cast(tags.count_2 as float))) * 100 > ? and least(cast(tags.count_1 as float), cast(tags.count_2 as float)) <> 0", quantity.to_f.abs]}
+    where("abs((tags.count_1 - tags.count_2) / least(cast(tags.count_1 as float), cast(tags.count_2 as float))) * 100 > ? and least(cast(tags.count_1 as float), cast(tags.count_2 as float)) <> 0",
+    quantity.to_f.abs).countable
   }
 
   search_methods :tolerance_v
-  scope :tolerance_v, lambda {|value| includes(:inventory => :item).where(["abs(tags.count_1 * items.cost - tags.count_2 * items.cost) > ?", value.to_f.abs])}
+  scope :tolerance_v, lambda {|value| includes(:inventory => :item).where(["abs(tags.count_1 * items.cost - tags.count_2 * items.cost) > ?", value.to_f.abs]).countable}
 
   scope :tole_q_or_v, lambda {|quantity, value| includes(:inventory => :item) \
-    .where(["(abs((tags.count_1 - tags.count_2) / least(cast(tags.count_1 as float), cast(tags.count_2 as float))) * 100 >= ? and least(cast(tags.count_1 as float), cast(tags.count_2 as float)) <> 0) or (abs(tags.count_1 * items.cost - tags.count_2 * items.cost) >= ?)", (quantity || 0).to_f.abs, (value || 0).to_f.abs])}
+    .where("(abs((tags.count_1 - tags.count_2) / least(cast(tags.count_1 as float), cast(tags.count_2 as float))) * 100 >= ? and least(cast(tags.count_1 as float), cast(tags.count_2 as float)) <> 0) or (abs(tags.count_1 * items.cost - tags.count_2 * items.cost) >= ?)", 
+      (quantity || 0).to_f.abs, (value || 0).to_f.abs).countable}
 
 
   after_save :launch_inv_save

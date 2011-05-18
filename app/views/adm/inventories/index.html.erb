@@ -19,8 +19,8 @@
 				</dd>
 
 			</dl>
-
 		</fieldset>
+		<%= link_to "New Remote Input", adm_items_path(:sub_menu => :remote), :class => 'button' %>
 	<% end %>
 </article>
 
@@ -32,7 +32,6 @@
 				<th><%= sort_link @search, :item_code_and_location_code, 'Item Number' %></th>
 				<th><%= sort_link @search, :location_code_and_item_code, 'Location' %></th>
 				<th>Active</th>
-				<th><%= sort_link @search, :quantity %></th>
 				<th><%= sort_link @search, :inputed_qty %></th>
 
 				<th>Action</th>
@@ -44,7 +43,6 @@
 				<td><%= inventory.item.try(:code) %></td>
 				<td><%= inventory.location.try(:code) %></td>
 				<td><%= inventory.item.try(:is_active) %></td>
-				<td class='number'><%= inventory.quantity %></td>
 				<td class='number'><%= inventory.inputed_qty %></td>
 				<td>
 					<%= link_to "Input", edit_adm_inventory_path(inventory) if allow_data_entry? %>

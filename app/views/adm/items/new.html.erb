@@ -1,5 +1,4 @@
-<% @sub_menu = :items %>
-
+<% @sub_menu = params[:sub_menu].try(:to_sym) %>
 <article>
 	<%= render :partial => 'form' %>
 </article>

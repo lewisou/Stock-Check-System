@@ -3,11 +3,11 @@ require 'test_helper'
 class TagTest < ActiveSupport::TestCase
   test "in_check scope" do
     c = new_blank_check
-    l = c.locations.create
-    i = l.inventories.create
-    3.times {i.tags.create}
+    scope = c.locations.create(:is_remote => false).inventories.create.tags
+
+    3.times {scope.create}
     Tag.create
-    
+
     assert Tag.count == 4
     assert Tag.in_check(c.id).count == 3
   end
@@ -22,10 +22,12 @@ class TagTest < ActiveSupport::TestCase
   end
   
   test "deleted with finish & not finish" do
-    t1 = Tag.create(:count_1 => 1)
-    t2 = Tag.create(:count_2 => 2)
-    t3 = Tag.create(:count_1 => 1, :state => "deleted")
-    t4 = Tag.create(:count_2 => 2, :state => "deleted")
+    scope = Location.create(:is_remote => false).inventories.create.tags
+    
+    t1 = scope.create(:count_1 => 1)
+    t2 = scope.create(:count_2 => 2)
+    t3 = scope.create(:count_1 => 1, :state => "deleted")
+    t4 = scope.create(:count_2 => 2, :state => "deleted")
 
     assert Tag.finish(1) == [t1]
     assert Tag.finish(2) == [t2]
@@ -46,9 +48,11 @@ class TagTest < ActiveSupport::TestCase
 
   
   test "not_finish" do
-    t1 = Tag.create(:count_1 => 1)
-    Tag.create(:count_2 => 1)
-    Tag.create
+    scope = Location.create(:is_remote => false).inventories.create.tags
+    
+    t1 = scope.create(:count_1 => 1)
+    scope.create(:count_2 => 1)
+    scope.create
     
     assert Tag.not_finish(1).count == 2
     assert Tag.not_finish(2).count == 2
@@ -57,9 +61,11 @@ class TagTest < ActiveSupport::TestCase
   end
   
   test "finish scope" do
-    t1 = Tag.create(:count_1 => 1)
-    Tag.create(:count_2 => 1)
-    Tag.create
+    scope = Location.create(:is_remote => false).inventories.create.tags
+
+    t1 = scope.create(:count_1 => 1)
+    scope.create(:count_2 => 1)
+    scope.create
     
     assert Tag.finish(1).count == 1
     assert Tag.finish(2).count == 1
@@ -68,16 +74,20 @@ class TagTest < ActiveSupport::TestCase
   end
   
   test "not finish scope with zero qty" do
-    t1 = Tag.create(:count_1 => 0)
-    t2 = Tag.create(:count_2 => 0)
+    scope = Location.create(:is_remote => false).inventories.create.tags
+
+    t1 = scope.create(:count_1 => 0)
+    t2 = scope.create(:count_2 => 0)
 
     assert Tag.not_finish(1) == [t2]
     assert Tag.not_finish(2) == [t1]
   end
   
   test "finish scope with zero qty" do
-    Tag.create(:count_1 => 0)
-    Tag.create(:count_2 => 0)
+    scope = Location.create(:is_remote => false).inventories.create.tags
+
+    scope.create(:count_1 => 0)
+    scope.create(:count_2 => 0)
 
     assert Tag.finish(1).count == 1
     assert Tag.finish(2).count == 1
@@ -109,7 +119,7 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "tole_q_or_v scope" do
-    scope = Item.create(:cost => 2).inventories.create(:location => Location.create).tags
+    scope = Item.create(:cost => 2).inventories.create(:location => Location.create(:is_remote => false)).tags
     
     scope.create(:count_2 => 100, :count_1 => 110)
     scope.create(:count_2 => 100, :count_1 => 120)
@@ -135,13 +145,15 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "tolerance_q scope" do
-    Tag.create(:count_2 => 100, :count_1 => 110)
-    Tag.create(:count_2 => 100, :count_1 => 120)
-    Tag.create(:count_2 => 100, :count_1 => 130)
-    Tag.create(:count_2 => 100, :count_1 => 140)
-    Tag.create(:count_2 => 100, :count_1 => 150)
-    Tag.create(:count_2 => 100)
-    Tag.create()
+    scope = Inventory.create(:location => Location.create(:is_remote => false)).tags
+
+    scope.create(:count_2 => 100, :count_1 => 110)
+    scope.create(:count_2 => 100, :count_1 => 120)
+    scope.create(:count_2 => 100, :count_1 => 130)
+    scope.create(:count_2 => 100, :count_1 => 140)
+    scope.create(:count_2 => 100, :count_1 => 150)
+    scope.create(:count_2 => 100)
+    scope.create()
 
     assert Tag.tolerance_q(50).count == 0
     assert Tag.tolerance_q(49.9).count == 1
@@ -155,7 +167,7 @@ class TagTest < ActiveSupport::TestCase
   end
 
   test "tolerance_v scope" do
-    scope = Item.create(:cost => 2).inventories.create(:location => Location.create).tags
+    scope = Item.create(:cost => 2).inventories.create(:location => Location.create(:is_remote => false)).tags
     
     scope.create(:count_1 => 100, :count_2 => 110)
     scope.create(:count_1 => 100, :count_2 => 120)

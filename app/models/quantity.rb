@@ -3,6 +3,9 @@ class Quantity < ActiveRecord::Base
 end
 
 
+
+
+
 # == Schema Information
 #
 # Table name: quantities
@@ -13,5 +16,6 @@ end
 #  created_at   :datetime
 #  updated_at   :datetime
 #  inventory_id :integer
+#  from_al      :boolean
 #
 

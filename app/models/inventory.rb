@@ -1,7 +1,7 @@
 class Inventory < ActiveRecord::Base
   scope :in_check, lambda {|check_id| includes(:location => :check).where(:checks => {:id => check_id}) }
   scope :need_adjustment, includes(:item).includes(:location)\
-    .where("quantity <> result_qty").where(:result_qty.gt => 0).where(:items => {:from_al => true}).where(:locations => {:from_al => true})
+    .where("quantity <> result_qty").where(:items => {:from_al => true}).where(:locations => {:from_al => true})
 
   scope :need_manually_adj, includes(:item).includes(:location)\
     .where({:items => {:from_al => false}} | {:locations => {:from_al => false}}).where(:result_qty.gt => 0)
@@ -17,7 +17,7 @@ class Inventory < ActiveRecord::Base
 
   validates_presence_of :location
 
-  after_save :log_qty
+  after_save :log_qty_and_flag
   before_save :adj_check, :adj_qtys, :adj_count_qtys
 
   def item_full_name
@@ -83,17 +83,26 @@ class Inventory < ActiveRecord::Base
     self.check = self.location.check
   end
 
-  def log_qty
+  def log_qty_and_flag
     self.check.reload unless self.check.nil?
 
-    return if self.check.nil? || self.check.import_time.nil? || self.quantity.nil?
-    
-    unless self.quantities.where(:time => self.check.import_time).count > 0
-      self.quantities.create(:time => self.check.import_time, :value => self.quantity)
+    return if self.check.nil? || self.check.import_time.nil?
+
+    q = self.quantities.where(:time => self.check.import_time).first
+
+    if q
+      if q.value != self.quantity || q.from_al != self.from_al
+        q.update_attributes(:time => self.check.import_time, :value => self.quantity, :from_al => self.from_al)
+      end
+    else
+      self.quantities.create(:time => self.check.import_time, :value => self.quantity, :from_al => self.from_al)
     end
   end
 
 end
+
+
+
 
 
 
@@ -114,7 +123,7 @@ end
 #  id              :integer         not null, primary key
 #  item_id         :integer
 #  location_id     :integer
-#  quantity        :integer
+#  quantity        :integer         default(0)
 #  created_at      :datetime
 #  updated_at      :datetime
 #  from_al         :boolean         default(FALSE)

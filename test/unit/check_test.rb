@@ -36,25 +36,26 @@ class CheckTest < ActiveSupport::TestCase
     assert Tag.in_check(c.id).count == c.inventories.count + 1
   end
 
-  test "reimport" do
+  test "reimport_inv" do
     c = new_blank_check
     c.reimport_inv_xls = File.new("#{Rails.root.to_s}/test/files/reimport_inv.xls")
     c.save
-    
+
     whe = c.inventories.includes(:item).where(:items => (:code.eq % "04/CM002" | :code.eq % "04/CM003"))
     assert whe.count == 0
-    
+    assert c.reload.import_time == 1
+
     c = new_check
     c.save(:validate => false)
     c.locations.update_all(:is_remote => false)
-        
     assert c.inventories.count == 22
+    assert c.reload.import_time == 1
     
     c.reimport_inv_xls = File.new("#{Rails.root.to_s}/test/files/reimport_inv.xls")
     c.save
-    
+    assert c.reload.import_time == 1
     assert c.inventories.count == 23
-    
+
     where = c.inventories.includes(:item).where(:items => (:code.eq % "04/CM002" | :code.eq % "04/CM003"))
     assert where.count == 2
     where.where(:items => {:code => '04/CM002'}).first.quantity == 2
@@ -209,30 +210,40 @@ class CheckTest < ActiveSupport::TestCase
     assert c.reload.frozen_value == 3
   end
 
-  test "switch inventory" do
+  test "switch_inv" do
     c = new_blank_check
-    inv = c.locations.create.inventories.create(:quantity => 1)
-    
-    c.update_attributes(:import_time => 2)
-    inv.update_attributes(:quantity => 2)
-    
-    c.update_attributes(:import_time => 3)
-    inv.update_attributes(:quantity => 3)
+    inv = c.locations.create.inventories.create(:quantity => 1, :from_al => false)
+    inv2 = c.locations.create.inventories.create(:quantity => 1, :from_al => false)
 
-    c.update_attributes(:import_time => 1)
-    inv2 = c.locations.create.inventories.create(:quantity => 1)
-    
-    c.update_attributes(:import_time => 2)
-    inv2.update_attributes(:quantity => 2)
-    
-    c.update_attributes(:import_time => 3)
-    inv2.update_attributes(:quantity => 3)
+    c.reload.switch_inv(2)
+    inv.update_attributes(:quantity => 2, :from_al => true)
+    inv2.update_attributes(:quantity => 2, :from_al => true)
+
+    c.reload.switch_inv(3)
+    inv.update_attributes(:quantity => 3, :from_al => false)
+    inv2.update_attributes(:quantity => 3, :from_al => false)
+    inv3 = c.locations.create.inventories.create(:quantity => 23, :from_al => true)
 
     3.times do |t|
-      c.reload.update_attributes(:import_time => t + 1)
+      c.reload.switch_inv(t + 1)
       assert inv.reload.quantity == (t + 1)
+      assert inv.reload.from_al == (((t + 5) % 2 == 0) ? true : false)
+
       assert inv2.reload.quantity == (t + 1)
+      assert inv2.reload.from_al == (((t + 5) % 2 == 0) ? true : false)
+      
+      if t < 2
+        assert inv3.reload.quantity == 0
+        assert inv3.reload.from_al == false
+      else
+        assert inv3.reload.quantity == 23
+        assert inv3.reload.from_al == true
+      end
     end
+    
+    c.reload.switch_inv(1)
+    inv3.reload.quantity == 0
+    inv3.reload.from_al == false
   end
   
   test "history scope" do
@@ -252,25 +263,27 @@ class CheckTest < ActiveSupport::TestCase
     loc = c.locations.create(:code => 'CA')
     c.locations.create(:code => 'CD')
     
-    c.inventories.create(:item => item, :location => loc, :quantity => 30)
+    inv = c.inventories.create(:item => item, :location => loc, :quantity => 30)
     
     c.create_update_from_row ["1.300", "CA"] + [""] * 5 + [60]
     assert c.inventories.count == 1
-    
+    assert inv.reload.quantity == 60
+
     c.create_update_from_row ["1.300", "CD"] + [""] * 5 + [60]
     assert c.inventories.count == 2
+    assert c.import_time == 1
   end
   
-  test "after save switch_inv" do
+  test "switch_inv 2" do
     c = new_blank_check
     lo = c.locations.create
     
     inv = lo.inventories.create(:quantity => 20)
     
-    c.update_attributes(:import_time => 2)
-    assert inv.reload.quantity.nil?
+    c.switch_inv(2)
+    assert inv.reload.quantity == 0
 
-    c.update_attributes(:import_time => 1)
+    c.switch_inv(1)
     assert inv.reload.quantity == 20
   end
   
@@ -394,20 +407,7 @@ class CheckTest < ActiveSupport::TestCase
     
     assert a.reload.roles == []
     assert b.reload.roles == [Role.find_by_code("controller")]
-    
-    
-    # 
-    # assert Admin.includes(:roles).where(:roles => {:code.not_eq => "controller"}).count != 0
-    # Admin.includes(:roles).where(:roles => {:code.not_eq => "controller"}).all.each do |adm|
-    #   
-    #   puts "$$$$$$"
-    #   puts adm.roles
-    #   puts "!!!!!"
-    # 
-    #   assert adm.roles == []
-    # end
 
-    # Admin.includes(:roles).where(:roles => {:code.eq => "controller"}).count != 0
   end
 
   test "can_complete?" do
@@ -459,29 +459,32 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: checks
 #
-#  id              :integer         not null, primary key
-#  state           :string(255)     default("init")
-#  created_at      :datetime
-#  updated_at      :datetime
-#  current         :boolean         default(FALSE)
-#  description     :text
-#  admin_id        :integer
-#  location_xls_id :integer
-#  inv_adj_xls_id  :integer
-#  item_xls_id     :integer
-#  color_1         :string(255)
-#  color_2         :string(255)
-#  color_3         :string(255)
-#  generated       :boolean         default(FALSE)
-#  import_time     :integer         default(1)
-#  instruction_id  :integer
-#  start_time      :date
-#  end_time        :date
-#  credit_v        :float
-#  credit_q        :float
+#  id                :integer         not null, primary key
+#  state             :string(255)     default("init")
+#  created_at        :datetime
+#  updated_at        :datetime
+#  current           :boolean         default(FALSE)
+#  description       :text
+#  admin_id          :integer
+#  location_xls_id   :integer
+#  inv_adj_xls_id    :integer
+#  item_xls_id       :integer
+#  color_1           :string(255)
+#  color_2           :string(255)
+#  color_3           :string(255)
+#  generated         :boolean         default(FALSE)
+#  import_time       :integer         default(1)
+#  instruction_id    :integer
+#  start_time        :date
+#  end_time          :date
+#  credit_v          :float
+#  credit_q          :float
+#  al_account        :text
+#  manual_adj_xls_id :integer
 #
 

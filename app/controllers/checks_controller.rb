@@ -61,6 +61,7 @@ class ChecksController < BaseController
   # reimport
   def update
     @check = Check.find(params[:id])
+    @check.switch_inv(@check.import_time + 1)
 
     respond_to do |format|
       if @check.update_attributes(params[:check])

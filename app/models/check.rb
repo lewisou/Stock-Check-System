@@ -25,10 +25,8 @@ class Check < ActiveRecord::Base
   before_create :refresh_location, :refresh_item_and_group, :init_colors
   after_create :refresh_inventories
 
-  before_update :reimport_inventories, :adj_instruction
+  before_update :adj_instruction
   after_update :reimport_inv
-
-  after_save :switch_inv
 
   def set_remotes ids=[]
     self.locations.each do |loc|
@@ -146,18 +144,23 @@ class Check < ActiveRecord::Base
     end
   end
 
-  private unless 'test' == Rails.env
-  def switch_inv
-    if self.import_time != self.import_time_was
-      time = self.import_time
+  def switch_inv time
+    return if time.nil?
+    time = time.to_i
+    
+    self.update_attributes(:import_time => time)
 
-      self.inventories.each do |inv|
-        inv.update_attributes(
-          :quantity => inv.quantities.where(:time => time).first.try(:value)
-        )
-      end
+    Inventory.in_check(self.id).each do |inv|
+      log = inv.quantities.where(:time => time).first
+      
+      inv.update_attributes(
+        :quantity => (log.try(:value) || 0),
+        :from_al => (log.try(:from_al) || false)
+      )
     end
   end
+
+  private unless 'test' == Rails.env
 
   def reimport_inv
     return if @reimport_inv_xls.nil?
@@ -170,12 +173,7 @@ class Check < ActiveRecord::Base
       create_update_from_row row
     end
   end
-  
-  def reimport_inventories
-    return if @reimport_inv_xls.nil?
-    self.import_time = (self.import_time || 0) + 1
-  end
-  
+
   def refresh_inventories
     return if @inventories_xls.nil?
 
@@ -259,17 +257,19 @@ class Check < ActiveRecord::Base
   end
 
   def create_update_from_row row
-    inv = self.inventories.where(:item_id => self.items.find_by_code(row[0]).try(:id), :location_id => self.locations.find_by_code(row[1]).try(:id)).first
+    return if (item = self.items.find_by_code(row[0])).blank? || (location = self.locations.find_by_code(row[1])).blank?
 
-    if inv.nil?
+    inv = Inventory.in_check(self.id).where(:item_id => item.id, :location_id => location.id).first
+
+    if inv
+      inv.update_attributes(:quantity => (row[7].try(:to_i) || 0), :from_al => true)
+    else
       inv = Inventory.create(
-        :item => self.items.find_by_code(row[0]),
-        :location => self.locations.find_by_code(row[1]),
+        :item => item,
+        :location => location,
         :quantity => row[7],
         :from_al => true
       )
-    else
-      inv.update_attributes(:quantity => row[7].try(:to_i))
     end
   end
 
@@ -287,29 +287,32 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: checks
 #
-#  id              :integer         not null, primary key
-#  state           :string(255)     default("init")
-#  created_at      :datetime
-#  updated_at      :datetime
-#  current         :boolean         default(FALSE)
-#  description     :text
-#  admin_id        :integer
-#  location_xls_id :integer
-#  inv_adj_xls_id  :integer
-#  item_xls_id     :integer
-#  color_1         :string(255)
-#  color_2         :string(255)
-#  color_3         :string(255)
-#  generated       :boolean         default(FALSE)
-#  import_time     :integer         default(1)
-#  instruction_id  :integer
-#  start_time      :date
-#  end_time        :date
-#  credit_v        :float
-#  credit_q        :float
+#  id                :integer         not null, primary key
+#  state             :string(255)     default("init")
+#  created_at        :datetime
+#  updated_at        :datetime
+#  current           :boolean         default(FALSE)
+#  description       :text
+#  admin_id          :integer
+#  location_xls_id   :integer
+#  inv_adj_xls_id    :integer
+#  item_xls_id       :integer
+#  color_1           :string(255)
+#  color_2           :string(255)
+#  color_3           :string(255)
+#  generated         :boolean         default(FALSE)
+#  import_time       :integer         default(1)
+#  instruction_id    :integer
+#  start_time        :date
+#  end_time          :date
+#  credit_v          :float
+#  credit_q          :float
+#  al_account        :text
+#  manual_adj_xls_id :integer
 #
 

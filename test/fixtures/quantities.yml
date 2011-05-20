@@ -9,6 +9,9 @@ two:
   value: 1
 
 
+
+
+
 # == Schema Information
 #
 # Table name: quantities
@@ -19,5 +22,6 @@ two:
 #  created_at   :datetime
 #  updated_at   :datetime
 #  inventory_id :integer
+#  from_al      :boolean
 #
 

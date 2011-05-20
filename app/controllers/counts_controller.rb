@@ -30,7 +30,7 @@ class CountsController < ApplicationController
     vals = {
       @c_s => params[:tag][@c_s]
     }
-    vals = vals.merge({:sloc => params[:tag][:sloc]}) if @c_i == 1
+    # vals = vals.merge({:sloc => params[:tag][:sloc]}) if @c_i == 1
     
     @tag.update_attributes(vals)
 

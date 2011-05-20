@@ -50,8 +50,11 @@
 			<th>Export to ALL ORDER</th>
 			<td>
 			<%= link_to('inventory_adjustment.xls', download_attachment_path(curr_check.inv_adj_xls)) unless curr_check.inv_adj_xls.nil? %>
-			<%= link_to('manual_input.xls', download_attachment_path(curr_check.manual_adj_xls)) unless curr_check.manual_adj_xls.nil? %>
 			</td>
+		</tr>
+		<tr>
+			<th>Manual Input XLS</th>
+			<td><%= link_to('manual_input.xls', download_attachment_path(curr_check.manual_adj_xls)) unless curr_check.manual_adj_xls.nil? %></td>
 		</tr>
 	</tbody>
 	</table>

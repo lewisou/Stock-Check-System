@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110520010218) do
+ActiveRecord::Schema.define(:version => 20110520083043) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -199,6 +199,7 @@ ActiveRecord::Schema.define(:version => 20110520010218) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "inventory_id"
+    t.boolean  "from_al"
   end
 
   add_index "quantities", ["inventory_id"], :name => "index_quantities_on_inventory_id"

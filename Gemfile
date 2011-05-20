@@ -16,5 +16,6 @@ gem 'will_paginate', '3.0.pre2'
 group :development, :test do
 	gem 'sqlite3-ruby', '~> 1.3.3', :require => 'sqlite3'
 	gem 'metric_fu', '2.1.1'
+	gem 'timecop', '0.3.5'
 end
 

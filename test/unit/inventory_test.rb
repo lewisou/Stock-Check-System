@@ -12,20 +12,6 @@ class InventoryTest < ActiveSupport::TestCase
     assert Inventory.in_check(c.id).count == 3
   end
 
-  test "need_adjustment" do
-    scope = Location.create(:is_remote => true).inventories
-
-    scope.create(:quantity => 1, :inputed_qty => 1)
-    
-    i = scope.create(:quantity => 1, :inputed_qty => 2)
-    i2 = scope.create(:quantity => 1, :inputed_qty => nil)
-    scope.create(:quantity => nil, :inputed_qty => nil)
-
-    assert Inventory.need_adjustment.count == 2
-    assert Inventory.need_adjustment.include?(i)
-    assert Inventory.need_adjustment.include?(i2)
-  end
-
   test "create_default_tag!" do
     i = Inventory.create(:location => Location.create(:is_remote => false))
     i2 = Inventory.create(:location => Location.create(:is_remote => false))
@@ -37,15 +23,7 @@ class InventoryTest < ActiveSupport::TestCase
     assert i.tags.count == 1
     assert i2.tags.count == 1
   end
-  
-  # test "counted" do
-  #   i = Inventory.create(:location => Location.create)
-  #   i.tags.create(:count_1 => 1, :count_2 => 1)
-  #   i.tags.create(:count_1 => 2, :count_2 => 2)
-  #   
-  #   assert i.counted == 3
-  # end
-  
+
   test "frozen_value" do
     i = Item.create(:al_cost => 10)
     inv = i.inventories.create(:quantity => 9, :location => Location.create(:is_remote => false))
@@ -306,6 +284,64 @@ class InventoryTest < ActiveSupport::TestCase
     assert inv.ao_adj == -3
     assert inv.ao_adj_value == -90
   end
+  
+  test "need_manually_adj" do
+    al_l = Location.create(:is_remote => true, :from_al => true)
+    not_al_l = Location.create(:is_remote => true, :from_al => false)
+
+    al_i = Item.create(:from_al => true)
+    not_al_i = Item.create(:from_al => false)
+
+    in1 = al_l.inventories.create(:item => al_i, :inputed_qty => 10)
+    in2 = al_l.inventories.create(:item => al_i, :inputed_qty => 20)
+    al_l.inventories.create(:item => al_i)
+
+    al_l.inventories.create(:item => not_al_i, :inputed_qty => 10)
+    al_l.inventories.create(:item => not_al_i, :inputed_qty => 20)
+    al_l.inventories.create(:item => not_al_i)
+
+    not_al_l.inventories.create(:item => al_i, :inputed_qty => 10)
+    not_al_l.inventories.create(:item => al_i, :inputed_qty => 20)
+    not_al_l.inventories.create(:item => al_i)
+
+    not_al_l.inventories.create(:item => not_al_i, :inputed_qty => 10)
+    not_al_l.inventories.create(:item => not_al_i, :inputed_qty => 20)
+    not_al_l.inventories.create(:item => not_al_i)
+
+    assert Inventory.need_manually_adj.count == 6
+    assert !Inventory.need_manually_adj.include?(in1)
+    assert !Inventory.need_manually_adj.include?(in2)
+  end
+
+  test "need_adjustment" do
+    al_l = Location.create(:is_remote => true, :from_al => true)
+    not_al_l = Location.create(:is_remote => true, :from_al => false)
+
+    al_i = Item.create(:from_al => true)
+    not_al_i = Item.create(:from_al => false)
+
+    in1 = al_l.inventories.create(:item => al_i, :inputed_qty => 10)
+    in2 = al_l.inventories.create(:item => al_i, :inputed_qty => 20)
+    al_l.inventories.create(:item => al_i)
+
+    al_l.inventories.create(:item => not_al_i, :inputed_qty => 10)
+    al_l.inventories.create(:item => not_al_i, :inputed_qty => 20)
+    al_l.inventories.create(:item => not_al_i)
+
+    not_al_l.inventories.create(:item => al_i, :inputed_qty => 10)
+    not_al_l.inventories.create(:item => al_i, :inputed_qty => 20)
+    not_al_l.inventories.create(:item => al_i)
+
+    not_al_l.inventories.create(:item => not_al_i, :inputed_qty => 10)
+    not_al_l.inventories.create(:item => not_al_i, :inputed_qty => 20)
+    not_al_l.inventories.create(:item => not_al_i)
+
+    assert Inventory.need_adjustment.count == 2
+    assert Inventory.need_adjustment.include?(in1)
+    assert Inventory.need_adjustment.include?(in2)
+
+  end
+
 
 end
 

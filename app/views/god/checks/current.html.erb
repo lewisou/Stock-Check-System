@@ -49,11 +49,8 @@
 		<tr>
 			<th>Export to ALL ORDER</th>
 			<td>
-			<%= link_to('locations.xls', download_attachment_path(curr_check.location_xls)) unless curr_check.location_xls.nil? %>
-			<br />
-			<%= link_to('items.xls', download_attachment_path(curr_check.item_xls)) unless curr_check.item_xls.nil? %>
-			<br />
 			<%= link_to('inventory_adjustment.xls', download_attachment_path(curr_check.inv_adj_xls)) unless curr_check.inv_adj_xls.nil? %>
+			<%= link_to('manual_input.xls', download_attachment_path(curr_check.manual_adj_xls)) unless curr_check.manual_adj_xls.nil? %>
 			</td>
 		</tr>
 	</tbody>

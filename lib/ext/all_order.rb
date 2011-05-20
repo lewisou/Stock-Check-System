@@ -48,11 +48,10 @@ module ALL_ORDER
          end
         end
 
-        # sheet.row(index + 1).concat cells
         sheet.row(index + 1).concat cells
       end
     end
-    
+
     def self.xls xls, content = [], options = {}
       case xls
       when String

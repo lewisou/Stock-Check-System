@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110518021150) do
+ActiveRecord::Schema.define(:version => 20110520010218) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -62,10 +62,10 @@ ActiveRecord::Schema.define(:version => 20110518021150) do
   end
 
   create_table "checks", :force => true do |t|
-    t.string   "state",           :default => "init"
+    t.string   "state",             :default => "init"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "current",         :default => false
+    t.boolean  "current",           :default => false
     t.text     "description"
     t.integer  "admin_id"
     t.integer  "location_xls_id"
@@ -74,13 +74,15 @@ ActiveRecord::Schema.define(:version => 20110518021150) do
     t.string   "color_1"
     t.string   "color_2"
     t.string   "color_3"
-    t.boolean  "generated",       :default => false
-    t.integer  "import_time",     :default => 1
+    t.boolean  "generated",         :default => false
+    t.integer  "import_time",       :default => 1
     t.integer  "instruction_id"
     t.date     "start_time"
     t.date     "end_time"
     t.float    "credit_v"
     t.float    "credit_q"
+    t.text     "al_account"
+    t.integer  "manual_adj_xls_id"
   end
 
   add_index "checks", ["state"], :name => "index_checks_on_state"
@@ -116,7 +118,7 @@ ActiveRecord::Schema.define(:version => 20110518021150) do
   create_table "inventories", :force => true do |t|
     t.integer  "item_id"
     t.integer  "location_id"
-    t.integer  "quantity"
+    t.integer  "quantity",        :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "from_al",         :default => false

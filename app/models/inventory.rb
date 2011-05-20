@@ -1,6 +1,10 @@
 class Inventory < ActiveRecord::Base
   scope :in_check, lambda {|check_id| includes(:location => :check).where(:checks => {:id => check_id}) }
-  scope :need_adjustment, where("quantity <> result_qty")
+  scope :need_adjustment, includes(:item).includes(:location)\
+    .where("quantity <> result_qty").where(:result_qty.gt => 0).where(:items => {:from_al => true}).where(:locations => {:from_al => true})
+
+  scope :need_manually_adj, includes(:item).includes(:location)\
+    .where({:items => {:from_al => false}} | {:locations => {:from_al => false}}).where(:result_qty.gt => 0)
   scope :remote_s, includes(:location).where(:locations => {:is_remote => true})
   scope :onsite_s, includes(:location).where(:locations => {:is_remote => false})
 
@@ -41,7 +45,7 @@ class Inventory < ActiveRecord::Base
     cod = self.location.try(:code).try(:upcase)
     return 0 if cod.blank?
 
-    rs = (self.item.try(:inittags) || '').split(/[, ]/).delete_if {|ing| ing.blank? || !ing.upcase.start_with?(cod)}
+    rs = (self.item.try(:inittags) || '').split(/[,\s]/).delete_if {|ing| ing.blank? || !ing.upcase.start_with?(cod)}
 
     (rs.collect {|el| el.upcase.delete(cod) }).each do |sloc|
       self.tags.create(:sloc => sloc)

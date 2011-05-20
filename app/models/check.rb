@@ -1,8 +1,9 @@
 require 'ext/all_order'
+require 'ext/spreadsheet'
 
 class Check < ActiveRecord::Base
-  scope :opt_s, where(:current.eq => true).where(:state => ["open", "complete", "cancel"]).limit(1)
   scope :curr_s, where(:current.eq => true).limit(1)
+  scope :opt_s, where(:state => ["open", "complete", "cancel"]).curr_s
   scope :history, where(:state => "archive").order("created_at DESC")
 
   has_many :item_groups
@@ -11,11 +12,11 @@ class Check < ActiveRecord::Base
   has_many :inventories
   has_many :assigns, :through => :locations
   belongs_to :admin
-  belongs_to :location_xls, :class_name => "::Attachment"
+  # belongs_to :location_xls, :class_name => "::Attachment"
   belongs_to :inv_adj_xls, :class_name => "::Attachment"
-  belongs_to :item_xls, :class_name => "::Attachment"
+  belongs_to :manual_adj_xls, :class_name => "::Attachment"
+  # belongs_to :item_xls, :class_name => "::Attachment"
   belongs_to :instruction, :class_name => "::Attachment"
-
 
   attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :reimport_inv_xls, :instruction_file
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
@@ -47,9 +48,25 @@ class Check < ActiveRecord::Base
   end
 
   def generate_xls
-    self.location_xls = ::Attachment.new(:data => ALL_ORDER::Import.locations(self))
-    self.item_xls = ::Attachment.new(:data => ALL_ORDER::Import.items(self))
+    # self.location_xls = ::Attachment.new(:data => ALL_ORDER::Import.locations(self))
+    # self.item_xls = ::Attachment.new(:data => ALL_ORDER::Import.items(self))
     self.inv_adj_xls = ::Attachment.new(:data => ALL_ORDER::Import.inventory_adjustment(self))
+
+    self.manual_adj_xls = ::Attachment.new(:data => Spreadsheet::Workbook.new.generate_xls_file(
+    "All Order Manual Adj", (self.inventories.need_manually_adj || []),
+    %w{Warehouse Desc1 Desc2 Desc3 Part# Desc. Cost MaxQty IsActive ShelfLoc. SCS_Result_Qty},
+    [[:location, :code],
+      [:location, :desc1],
+      [:location, :desc2],
+      [:location, :desc3],
+      [:item, :code],
+      [:item, :description],
+      [:item, :cost],
+      [:item, :max_quantity],
+      [:item, :is_active],
+      [:item, :inittags],
+      :result_qty]
+    ))
   end
 
   def finish_count?
@@ -121,6 +138,14 @@ class Check < ActiveRecord::Base
     return Inventory.in_check(self.id).remote_s.where(:inputed_qty.eq => nil).count == 0 && Tag.in_check(self.id).countable.not_finish(2).count == 0 && Tag.in_check(self.id).countable.not_finish(1).count == 0
   end
   
+  def duration
+    if !self.start_time.nil? && ((self.end_time || Time.now.to_date.to_time) > self.start_time.to_time)
+      (self.end_time || Time.now.to_date.to_time) - self.start_time.to_time
+    else
+      0
+    end
+  end
+
   private unless 'test' == Rails.env
   def switch_inv
     if self.import_time != self.import_time_was

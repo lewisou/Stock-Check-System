@@ -142,10 +142,9 @@ class CheckTest < ActiveSupport::TestCase
     c.generate_xls
     c.save(:validate => false)
 
-    c = Check.find(c.id)
-    assert c.location_xls.data_file_size > 0
-    assert c.item_xls.data_file_size > 0
+    c.reload
     assert c.inv_adj_xls.data_file_size > 0
+    assert c.manual_adj_xls.data_file_size > 0
   end
   
   test "finish_count?" do
@@ -426,6 +425,32 @@ class CheckTest < ActiveSupport::TestCase
     assert !c.can_complete?
     inv.update_attributes(:inputed_qty => 3)
     assert c.can_complete?
+  end
+  
+  test "duration" do
+    Timecop.freeze(Time.now) do    
+      c = new_blank_check
+
+      c.update_attributes(:start_time => nil, :end_time => nil)
+      assert c.duration == 0
+      c.update_attributes(:start_time => Time.now + 1.days, :end_time => nil)
+      assert c.duration == 0
+      c.update_attributes(:start_time => Time.now, :end_time => nil)
+      assert c.duration == 0
+      c.update_attributes(:start_time => Time.now - 1.days, :end_time => nil)
+      assert c.duration > 0
+
+      c.update_attributes(:start_time => Time.now, :end_time => Time.now + 2.days)
+      assert c.duration > 0
+      c.update_attributes(:start_time => Time.now, :end_time => Time.now - 1.days)
+      assert c.duration == 0
+      c.update_attributes(:start_time => Time.now, :end_time => Time.now)
+      assert c.duration == 0
+
+      c.update_attributes(:start_time => nil, :end_time => Time.now)
+      assert c.duration == 0
+
+    end
   end
 end
 

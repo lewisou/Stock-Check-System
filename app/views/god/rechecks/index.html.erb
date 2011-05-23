@@ -1,0 +1,69 @@
+<article>
+	<h1>Re-check</h1>
+
+	<%= form_for @search, :url => god_rechecks_path, :method => :get do |f| %>
+		<fieldset>
+			<legend>Filter</legend>
+			<dl class="inline">
+				<dt><%= f.label :item_code_like, 'Part #' %></dt>
+				<dd><%= f.text_field :item_code_like, :class => "small", :tabindex => 1 %></dd>
+				<dt><%= f.label :location_id_eq, 'Warehouse' %></dt>
+				<dd>
+					<%= f.collection_select(:location_id_eq, @check.locations.order("code ASC"), :id, :code, {:include_blank => true}, {:class => "small", :tabindex => 2})  %>
+				</dd>
+			</dl>
+
+			<div class="buttons">
+				<%= f.submit 'Search', :class => "button" %>
+			</div>
+		</fieldset>
+	<% end %>
+	<%= link_to 'Re-Import Re-Check XLS', edit_god_recheck_path(curr_check), :class => 'button' %>
+
+</article>
+
+<article>
+	<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
+
+	<table id="table1" class="gtable detailtable">
+		<thead>
+			<tr>
+				<th><%= sort_link @search, :location_id_and_item_id, 'Warehouse' %></th>
+				<th><%= sort_link @search, :item_id_and_location_id, 'Part #' %></th>
+				<th><%= sort_link @search, :quantity, 'Frozen QTY' %></th>
+				<th><%= sort_link @search, :result_qty, 'Final SCS QTY' %></th>
+				<th><%= sort_link @search, :re_export_qty, 'Re export' %></th>
+				<th><%= sort_link @search, :re_export_offset, 'Re export offset' %></th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<% @inventories.each do |inventory| %>
+			<tr>
+				<td><%= inventory.location.try(:code) %></td>
+				<td><a href="#" class="detail-link"><%= inventory.item.try(:code) %></a></td>
+				<td class='number'><%= inventory.quantity %></td>
+				<td class='number'><%= inventory.result_qty %></td>
+				<td class='number'><%= inventory.re_export_qty %></td>
+				<td class='number'><%= inventory.re_export_offset %></td>
+			</tr>
+			<tr class="detail">
+				<td colspan="6">
+					<table>
+						<tbody>
+							<tr>
+								<td><%= inventory.item.try(:description) %></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<% end %>
+
+		</tbody>
+	</table>
+
+	<div class="tablefooter clearfix">
+		<%= will_paginate @inventories %>
+	</div>
+</article>

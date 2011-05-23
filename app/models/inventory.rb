@@ -73,6 +73,7 @@ class Inventory < ActiveRecord::Base
 
     self.result_qty = self.location.try(:is_remote) ? (self.inputed_qty || 0) : self.counted_qty
     self.ao_adj = (self.result_qty || 0) - (self.quantity || 0)
+    self.re_export_offset = self.re_export_qty - self.result_qty if self.re_export_qty
 
     self.result_value = (self.result_qty || 0) * (self.item.try(:cost) || 0)
     self.frozen_value = (self.quantity || 0) * (self.item.try(:al_cost) || 0)
@@ -89,7 +90,6 @@ class Inventory < ActiveRecord::Base
     return if self.check.nil? || self.check.import_time.nil?
 
     q = self.quantities.where(:time => self.check.import_time).first
-
     if q
       if q.value != self.quantity || q.from_al != self.from_al
         q.update_attributes(:time => self.check.import_time, :value => self.quantity, :from_al => self.from_al)
@@ -116,29 +116,33 @@ end
 
 
 
+
+
 # == Schema Information
 #
 # Table name: inventories
 #
-#  id              :integer         not null, primary key
-#  item_id         :integer
-#  location_id     :integer
-#  quantity        :integer         default(0)
-#  created_at      :datetime
-#  updated_at      :datetime
-#  from_al         :boolean         default(FALSE)
-#  inputed_qty     :integer
-#  counted_qty     :integer
-#  result_qty      :integer
-#  check_id        :integer
-#  tag_inited      :boolean         default(FALSE)
-#  counted_1_qty   :integer
-#  counted_2_qty   :integer
-#  counted_1_value :float
-#  counted_2_value :float
-#  result_value    :float
-#  frozen_value    :float
-#  ao_adj          :integer
-#  ao_adj_value    :float
+#  id               :integer         not null, primary key
+#  item_id          :integer
+#  location_id      :integer
+#  quantity         :integer         default(0)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  from_al          :boolean         default(FALSE)
+#  inputed_qty      :integer
+#  counted_qty      :integer
+#  result_qty       :integer
+#  check_id         :integer
+#  tag_inited       :boolean         default(FALSE)
+#  counted_1_qty    :integer
+#  counted_2_qty    :integer
+#  counted_1_value  :float
+#  counted_2_value  :float
+#  result_value     :float
+#  frozen_value     :float
+#  ao_adj           :integer
+#  ao_adj_value     :float
+#  re_export_qty    :integer
+#  re_export_offset :integer
 #
 

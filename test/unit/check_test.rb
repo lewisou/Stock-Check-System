@@ -36,9 +36,45 @@ class CheckTest < ActiveSupport::TestCase
     assert Tag.in_check(c.id).count == c.inventories.count + 1
   end
 
-  test "reimport_inv" do
+  test "refresh_re_export_qtys from mising inventory" do
+    c = new_check
+    c.save(:validate => false)
+    assert c.inventories.count == 22
+
+    c.re_export_qtys_xls = reimport_file
+    c.save
+    assert c.inventories.count == 23
+
+    new_inv = c.inventories.includes(:item).includes(:location).where(:items => {:code => "104-102-011"}, :locations => {:code => "MR"}).first
+    assert new_inv.try(:quantity) == 0
+    assert new_inv.try(:re_export_qty) == 30
+
+    where = c.inventories.includes(:item).where(:items => (:code.eq % "04/CM002" | :code.eq % "04/CM003"))
+    assert where.count == 2
+    assert where.where(:items => {:code => '04/CM002'}).first.quantity == 1
+    assert where.where(:items => {:code => '04/CM003'}).first.quantity == 15
+    assert where.where(:items => {:code => '04/CM002'}).first.re_export_qty == 2
+    assert where.where(:items => {:code => '04/CM003'}).first.re_export_qty == 14
+
+    # mising inventory
+    c.re_export_qtys_xls = import_file
+    c.save
+
+    where = c.inventories.includes(:item).where(:items => (:code.eq % "04/CM002" | :code.eq % "04/CM003"))
+    assert where.count == 2
+    assert where.where(:items => {:code => '04/CM002'}).first.quantity == 1
+    assert where.where(:items => {:code => '04/CM003'}).first.quantity == 15
+    assert where.where(:items => {:code => '04/CM002'}).first.re_export_qty == 1
+    assert where.where(:items => {:code => '04/CM003'}).first.re_export_qty == 15
+
+    new_inv = c.inventories.includes(:item).includes(:location).where(:items => {:code => "104-102-011"}, :locations => {:code => "MR"}).first
+    assert new_inv.try(:quantity) == 0
+    assert new_inv.try(:re_export_qty) == 0
+
+  end
+
+  test "switch_inv with reimport_inv_xls" do
     c = new_blank_check
-    c.reimport_inv_xls = File.new("#{Rails.root.to_s}/test/files/reimport_inv.xls")
     c.save
 
     whe = c.inventories.includes(:item).where(:items => (:code.eq % "04/CM002" | :code.eq % "04/CM003"))
@@ -48,18 +84,30 @@ class CheckTest < ActiveSupport::TestCase
     c = new_check
     c.save(:validate => false)
     c.locations.update_all(:is_remote => false)
+    
     assert c.inventories.count == 22
     assert c.reload.import_time == 1
-    
-    c.reimport_inv_xls = File.new("#{Rails.root.to_s}/test/files/reimport_inv.xls")
-    c.save
-    assert c.reload.import_time == 1
+
+    c.reimport_inv_xls = reimport_file
+    c.switch_inv!(2)
+    assert c.reload.import_time == 2
     assert c.inventories.count == 23
 
     where = c.inventories.includes(:item).where(:items => (:code.eq % "04/CM002" | :code.eq % "04/CM003"))
     assert where.count == 2
-    where.where(:items => {:code => '04/CM002'}).first.quantity == 2
-    where.where(:items => {:code => '04/CM003'}).first.quantity == 14
+    assert where.where(:items => {:code => '04/CM002'}).first.quantity == 2
+    assert where.where(:items => {:code => '04/CM003'}).first.quantity == 14
+
+    new_inv = c.inventories.includes(:item).includes(:location).where(:items => {:code => "104-102-011"}, :locations => {:code => "MR"}).first
+    assert new_inv.try(:quantity) == 30
+    
+    c.reimport_inv_xls = import_file
+    c.switch_inv!(3)
+    assert c.reload.import_time == 3
+    assert c.inventories.count == 23
+    
+    new_inv = c.inventories.includes(:item).includes(:location).where(:items => {:code => "104-102-011"}, :locations => {:code => "MR"}).first
+    assert new_inv.try(:quantity) == 0
   end
 
   test "curr_s scope" do
@@ -127,7 +175,7 @@ class CheckTest < ActiveSupport::TestCase
 
     assert Inventory.in_check(c.id).count == 22
   end
-  
+
   test "refresh_inventories will not create default tags" do
     c = new_check
     c.save(:validate => false)
@@ -215,17 +263,18 @@ class CheckTest < ActiveSupport::TestCase
     inv = c.locations.create.inventories.create(:quantity => 1, :from_al => false)
     inv2 = c.locations.create.inventories.create(:quantity => 1, :from_al => false)
 
-    c.reload.switch_inv(2)
+    c.reload.switch_inv!(2)
     inv.update_attributes(:quantity => 2, :from_al => true)
     inv2.update_attributes(:quantity => 2, :from_al => true)
 
-    c.reload.switch_inv(3)
+    c.reload.switch_inv!(3)
     inv.update_attributes(:quantity => 3, :from_al => false)
     inv2.update_attributes(:quantity => 3, :from_al => false)
     inv3 = c.locations.create.inventories.create(:quantity => 23, :from_al => true)
 
     3.times do |t|
-      c.reload.switch_inv(t + 1)
+      c.reload.switch_inv!(t + 1)
+
       assert inv.reload.quantity == (t + 1)
       assert inv.reload.from_al == (((t + 5) % 2 == 0) ? true : false)
 
@@ -241,7 +290,7 @@ class CheckTest < ActiveSupport::TestCase
       end
     end
     
-    c.reload.switch_inv(1)
+    c.reload.switch_inv!(1)
     inv3.reload.quantity == 0
     inv3.reload.from_al == false
   end
@@ -273,20 +322,20 @@ class CheckTest < ActiveSupport::TestCase
     assert c.inventories.count == 2
     assert c.import_time == 1
   end
-  
-  test "switch_inv 2" do
+
+  test "switch_inv! 2" do
     c = new_blank_check
     lo = c.locations.create
-    
+
     inv = lo.inventories.create(:quantity => 20)
-    
-    c.switch_inv(2)
+
+    c.switch_inv!(2)
     assert inv.reload.quantity == 0
 
-    c.switch_inv(1)
+    c.switch_inv!(1)
     assert inv.reload.quantity == 20
   end
-  
+
   test "count_time_value with deleted_tag" do
     c = new_blank_check
     c.locations.create(:is_remote => false).inventories.create(:item => Item.create(:cost => 2)).tags.create(:count_1 => 1, :count_2 => 1)

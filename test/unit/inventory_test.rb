@@ -126,7 +126,7 @@ class InventoryTest < ActiveSupport::TestCase
     inv1 = scope.create(:quantity => 3, :from_al => false)
     inv1.update_attributes(:quantity => 4, :from_al => true)
 
-    c.switch_inv(2)
+    c.switch_inv!(2)
     inv1.reload.update_attributes(:quantity => 5, :from_al => false)
     inv1.update_attributes(:quantity => nil, :from_al => false)
 
@@ -233,6 +233,14 @@ class InventoryTest < ActiveSupport::TestCase
 
     assert inv.reload.result_qty == 2
     
+  end
+  
+  test "adj_qtys with re_export_qty" do
+    inv = Inventory.create(:location => Location.create(:is_remote => true), :inputed_qty => 10)
+
+    assert inv.re_export_offset.nil?
+    inv.update_attributes(:re_export_qty => 20)
+    assert inv.re_export_offset == 10
   end
   
   test "adj_count_qtys with cost" do
@@ -394,29 +402,33 @@ end
 
 
 
+
+
 # == Schema Information
 #
 # Table name: inventories
 #
-#  id              :integer         not null, primary key
-#  item_id         :integer
-#  location_id     :integer
-#  quantity        :integer         default(0)
-#  created_at      :datetime
-#  updated_at      :datetime
-#  from_al         :boolean         default(FALSE)
-#  inputed_qty     :integer
-#  counted_qty     :integer
-#  result_qty      :integer
-#  check_id        :integer
-#  tag_inited      :boolean         default(FALSE)
-#  counted_1_qty   :integer
-#  counted_2_qty   :integer
-#  counted_1_value :float
-#  counted_2_value :float
-#  result_value    :float
-#  frozen_value    :float
-#  ao_adj          :integer
-#  ao_adj_value    :float
+#  id               :integer         not null, primary key
+#  item_id          :integer
+#  location_id      :integer
+#  quantity         :integer         default(0)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  from_al          :boolean         default(FALSE)
+#  inputed_qty      :integer
+#  counted_qty      :integer
+#  result_qty       :integer
+#  check_id         :integer
+#  tag_inited       :boolean         default(FALSE)
+#  counted_1_qty    :integer
+#  counted_2_qty    :integer
+#  counted_1_value  :float
+#  counted_2_value  :float
+#  result_value     :float
+#  frozen_value     :float
+#  ao_adj           :integer
+#  ao_adj_value     :float
+#  re_export_qty    :integer
+#  re_export_offset :integer
 #
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110520083043) do
+ActiveRecord::Schema.define(:version => 20110523081257) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(:version => 20110520083043) do
     t.float    "credit_q"
     t.text     "al_account"
     t.integer  "manual_adj_xls_id"
+    t.boolean  "final_inv",         :default => false
   end
 
   add_index "checks", ["state"], :name => "index_checks_on_state"
@@ -118,15 +119,15 @@ ActiveRecord::Schema.define(:version => 20110520083043) do
   create_table "inventories", :force => true do |t|
     t.integer  "item_id"
     t.integer  "location_id"
-    t.integer  "quantity",        :default => 0
+    t.integer  "quantity",         :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "from_al",         :default => false
+    t.boolean  "from_al",          :default => false
     t.integer  "inputed_qty"
     t.integer  "counted_qty"
     t.integer  "result_qty"
     t.integer  "check_id"
-    t.boolean  "tag_inited",      :default => false
+    t.boolean  "tag_inited",       :default => false
     t.integer  "counted_1_qty"
     t.integer  "counted_2_qty"
     t.float    "counted_1_value"
@@ -135,6 +136,8 @@ ActiveRecord::Schema.define(:version => 20110520083043) do
     t.float    "frozen_value"
     t.integer  "ao_adj"
     t.float    "ao_adj_value"
+    t.integer  "re_export_qty"
+    t.integer  "re_export_offset"
   end
 
   add_index "inventories", ["check_id"], :name => "index_inventories_on_check_id"

@@ -18,7 +18,7 @@ class Check < ActiveRecord::Base
   # belongs_to :item_xls, :class_name => "::Attachment"
   belongs_to :instruction, :class_name => "::Attachment"
 
-  attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :reimport_inv_xls, :instruction_file
+  attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :reimport_inv_xls, :instruction_file, :re_export_qtys_xls
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
   validates_uniqueness_of :description
 
@@ -26,7 +26,7 @@ class Check < ActiveRecord::Base
   after_create :refresh_inventories
 
   before_update :adj_instruction
-  after_update :reimport_inv
+  after_update :refresh_re_export_qtys
 
   def set_remotes ids=[]
     self.locations.each do |loc|
@@ -144,45 +144,56 @@ class Check < ActiveRecord::Base
     end
   end
 
-  def switch_inv time
+  def switch_inv! time
     return if time.nil?
     time = time.to_i
-    
-    self.update_attributes(:import_time => time)
 
-    Inventory.in_check(self.id).each do |inv|
-      log = inv.quantities.where(:time => time).first
+    if self.update_attributes(:import_time => time)
+      Inventory.in_check(self.id).each do |inv|
+        log = inv.quantities.where(:time => time).first
+
+        inv.update_attributes(
+          :quantity => (log.try(:value) || 0),
+          :from_al => (log.try(:from_al) || false)
+        )
+      end
       
-      inv.update_attributes(
-        :quantity => (log.try(:value) || 0),
-        :from_al => (log.try(:from_al) || false)
-      )
+      return true if @reimport_inv_xls.nil?
+      
+      @book = Spreadsheet.open @reimport_inv_xls.path
+      @sheet0 = @book.worksheet 0
+      @sheet0.each_with_index do |row, index|
+        next if (index == 0 || row[0].blank?)
+        create_update_from_row row
+      end
+      return true
     end
+    
+    false
   end
 
   private unless 'test' == Rails.env
-
-  def reimport_inv
-    return if @reimport_inv_xls.nil?
-
-    @book = Spreadsheet.open @reimport_inv_xls.path
-    @sheet0 = @book.worksheet 0
-
-    @sheet0.each_with_index do |row, index|
-      next if (index == 0 || row[0].blank?)
-      create_update_from_row row
-    end
+  def refresh_re_export_qtys
+    refresh_qtys_from_xls @re_export_qtys_xls, :re_export_qty
+  end
+  
+  def refresh_inventories
+    refresh_qtys_from_xls @inventories_xls
   end
 
-  def refresh_inventories
-    return if @inventories_xls.nil?
+  def refresh_qtys_from_xls xls, sym = :quantity
+    return if xls.nil?
+    
+    Inventory.in_check(self.id).each do |inv|
+      inv.update_attributes(sym => 0)
+    end
 
-    @book = Spreadsheet.open @inventories_xls.path
+    @book = Spreadsheet.open xls.path
     @sheet0 = @book.worksheet 0
 
     @sheet0.each_with_index do |row, index|
       next if (index == 0 || row[0].blank?)
-      create_update_from_row row
+      create_update_from_row row, :quantity_sym => sym
     end
   end
 
@@ -256,18 +267,20 @@ class Check < ActiveRecord::Base
     end
   end
 
-  def create_update_from_row row
+  def create_update_from_row row, options={}
     return if (item = self.items.find_by_code(row[0])).blank? || (location = self.locations.find_by_code(row[1])).blank?
 
     inv = Inventory.in_check(self.id).where(:item_id => item.id, :location_id => location.id).first
 
+    qty_sym = options[:quantity_sym].blank? ? :quantity : options[:quantity_sym]
+
     if inv
-      inv.update_attributes(:quantity => (row[7].try(:to_i) || 0), :from_al => true)
+      inv.update_attributes(qty_sym => (row[7].try(:to_i) || 0), :from_al => true)
     else
       inv = Inventory.create(
         :item => item,
         :location => location,
-        :quantity => row[7],
+        qty_sym => row[7],
         :from_al => true
       )
     end

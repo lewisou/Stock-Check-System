@@ -13,14 +13,34 @@ class ActiveSupport::TestCase
 
   # Add more helper methods to be used by all tests here...
   
+  def reimport_file
+    File.new("#{Rails.root.to_s}/test/files/reimport_inv.xls")
+  end
+  
+  def import_file
+    File.new("#{Rails.root.to_s}/test/files/inventories.xls")
+  end
+  
+  
   def new_check
     Check.new(
       :description => Time.now.to_i,
-      :inventories_xls => File.new("#{Rails.root.to_s}/test/files/inventories.xls"),
+      :inventories_xls => import_file,
       :locations_xls => File.new("#{Rails.root.to_s}/test/files/locations.xls"),
       :item_groups_xls => File.new("#{Rails.root.to_s}/test/files/groups.xls"),
       :items_xls => File.new("#{Rails.root.to_s}/test/files/items.xls")
     )
+  end
+  
+  def new_check_from_reimport_xls
+    Check.new(
+      :description => Time.now.to_i,
+      :inventories_xls => reimport_file,
+      :locations_xls => File.new("#{Rails.root.to_s}/test/files/locations.xls"),
+      :item_groups_xls => File.new("#{Rails.root.to_s}/test/files/groups.xls"),
+      :items_xls => File.new("#{Rails.root.to_s}/test/files/items.xls")
+    )
+    
   end
   
   def new_blank_check

@@ -50,7 +50,7 @@ class ChecksController < BaseController
 
     @check.admin = current_admin
     if @check.save && @check.make_current!
-      redirect_to(current_checks_path, :notice => 'Check was successfully created.')
+      redirect_to(current_god_checks_path, :notice => 'Check was successfully created.')
     else
       render :action => "new"
     end
@@ -61,10 +61,10 @@ class ChecksController < BaseController
   # reimport
   def update
     @check = Check.find(params[:id])
-    @check.switch_inv(@check.import_time + 1)
+    @check.attributes = params[:check]
 
     respond_to do |format|
-      if @check.update_attributes(params[:check])
+      if @check.switch_inv!(@check.import_time + 1)
         format.html { redirect_to(current_checks_path, :notice => 'Reimport finished.') }
         format.xml  { head :ok }
       else
@@ -108,7 +108,7 @@ class ChecksController < BaseController
   def color
     @check = curr_check
   end
-  
+
   def color_update
     if curr_check.update_attributes(params[:check])
       redirect_to color_checks_path, :notice => "Colors changed."
@@ -121,14 +121,14 @@ class ChecksController < BaseController
     curr_check.generate!
     redirect_to current_checks_path, :notice => "Initial tags have been generated."
   end
-  
+
   def to_generate
   end
-  
+
   def instruction
     @check = curr_check
   end
-  
+
   def upload_ins
     @check = curr_check
     

@@ -22,6 +22,16 @@
 			<th>Duration</th>
 			<td><%= distance_of_time_in_words(curr_check.duration) %></td>
 		</tr>
+		<tr>
+			<th>Missing cost</th>
+			<td><strong><%= curr_check.items.missing_cost.count %></strong></td>
+		</tr>
+
+		<tr>
+			<th>Recheck Failed</th>
+			<td><strong><%= Inventory.in_check(curr_check.id).where(:re_export_offset.gt => 0).count %></strong></td>
+		</tr>
+
 	</tbody>
 </table>
 
@@ -86,15 +96,7 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 		</tr>
-		
-		<tr>
-			<th>Missing cost</th>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td class="number"><strong><%= curr_check.items.missing_cost.count %></strong></td>
-		</tr>
-		
+
 	</tbody>
 </table>
 

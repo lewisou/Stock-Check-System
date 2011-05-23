@@ -1,0 +1,30 @@
+<% @sub_menu = :current %>
+<article>
+	<h1>Re-Check</h1>
+
+	<%= render :partial => 'shared/errors', :locals => {:object => @check} %>
+
+	<%= form_for @check, :url => god_recheck_path(@check), :html => {:class => 'uniform', :multipart => true} do |f| %>
+		<fieldset>
+		<legend>Re check excel from ALL ORDER</legend>
+		<dl class='inline'>
+
+			<dt><%= f.label :description, 'Inventory Name' %></dt>
+			<dd><%= @check.description %></dd>
+
+			<dt><%= f.label :re_export_qtys_xls, "Re-Check Inventory excel" %></dt>
+			<dd>
+				<%= f.file_field :re_export_qtys_xls %>
+				<small>ALL ORDER: Reports -> Inventory Tracking -> Location by Item Summary</small>
+			</dd>
+
+		</dl>
+		</fieldset>
+
+		<div class="buttons">
+			<%= loading_submit f, "Re-Check", :class => 'button' %>
+		</div>
+
+	<% end %>
+
+</article>

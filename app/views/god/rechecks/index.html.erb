@@ -11,10 +11,15 @@
 				<dd>
 					<%= f.collection_select(:location_id_eq, @check.locations.order("code ASC"), :id, :code, {:include_blank => true}, {:class => "small", :tabindex => 2})  %>
 				</dd>
+				<dt><%= f.label :re_export_offset_gt, "Offset range" %></dt>
+				<dd>
+					<%= f.text_field :re_export_offset_gt, :class => "small", :tabindex => 3 %> -
+					<%= f.text_field :re_export_offset_lt, :class => "small", :tabindex => 4 %>
+				</dd>
 			</dl>
 
 			<div class="buttons">
-				<%= f.submit 'Search', :class => "button" %>
+				<%= f.submit 'Search', :class => "button", :tabindex => 5 %>
 			</div>
 		</fieldset>
 	<% end %>

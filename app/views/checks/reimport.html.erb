@@ -1,10 +1,10 @@
-<% @sub_menu = :current %>
 <article>
-	<h1>Re-import</h1>
+	<h1><%= 'Final ' if @check.final_inv %>Re-import</h1>
 	
 	<%= render :partial => 'shared/errors', :locals => {:object => @check} %>
 	
 	<%= form_for @check, :html => {:class => 'uniform', :multipart => true} do |f| %>
+	<%= f.hidden_field :final_inv %>
 		<fieldset>
 		<legend>Inventory excel</legend>
 		<dl class='inline'>
@@ -24,9 +24,6 @@
 		<div class="buttons">
 			<%= loading_submit f, "Re import", :class => 'button' %>
 		</div>
-		
 	<% end %>
-	
-	
 </article>
 

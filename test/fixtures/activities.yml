@@ -1,0 +1,30 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  admin_id: 1
+  request: MyText
+  response: MyText
+  ended_at: 2011-05-24 13:00:50
+
+two:
+  admin_id: 1
+  request: MyText
+  response: MyText
+  ended_at: 2011-05-24 13:00:50
+
+
+# == Schema Information
+#
+# Table name: activities
+#
+#  id          :integer         not null, primary key
+#  admin_id    :integer
+#  request     :text
+#  response    :text
+#  ended_at    :datetime
+#  finish      :boolean         default(FALSE)
+#  created_at  :datetime
+#  updated_at  :datetime
+#  description :text
+#
+

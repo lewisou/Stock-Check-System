@@ -461,6 +461,8 @@ class CheckTest < ActiveSupport::TestCase
 
   test "can_complete?" do
     c = new_blank_check
+    assert !c.can_complete?
+    c.update_attributes(:final_inv => true)
     assert c.can_complete?
     
     t = c.locations.create(:is_remote => false).inventories.create.tags.create
@@ -509,6 +511,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: checks
@@ -535,5 +538,6 @@ end
 #  credit_q          :float
 #  al_account        :text
 #  manual_adj_xls_id :integer
+#  final_inv         :boolean         default(FALSE)
 #
 

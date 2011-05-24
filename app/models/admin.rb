@@ -9,6 +9,7 @@ class Admin < ActiveRecord::Base
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me
   
   has_and_belongs_to_many :roles
+  has_many :activities
 end
 
 

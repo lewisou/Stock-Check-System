@@ -29,7 +29,7 @@ class Adm::InventoriesController < Adm::BaseController
     @inventory = Inventory.find(params[:id])
     
     if @inventory.update_attributes(params[:inventory])
-      redirect_to adm_missing_cost_inventories_path, :notice => "Inputed successfully."
+      redirect_to adm_inventories_path, :notice => "Inputed successfully."
     else
       render :edit
     end

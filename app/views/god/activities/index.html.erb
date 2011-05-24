@@ -1,0 +1,59 @@
+<article>
+	<%= render :partial => 'shared/flash' %>
+	<%= form_for @search, :url => god_check_activities_path(@check) do |f| %>
+		<fieldset>
+			<legend>Search</legend>
+			<dl class="inline">
+				<dt><%= f.label :description_like %></dt>
+				<dd><%= f.text_field :description_like, :tabindex => 1 %></dd>
+
+				<dt><%= f.label :admin_id_eq, 'Account' %></dt>
+				<dd>
+					<%= f.collection_select(:admin_id_eq, Admin.order("username DESC"), :id, :username, {:include_blank => true}, {:class => "small", :tabindex => 2})  %>
+				</dd>
+
+				<dt><%= f.label :created_at_gt, "Time range" %></dt>
+				<dd>
+					<%= f.text_field :created_at_gte, :class => "need_date", :tabindex => 3 %> -
+					<%= f.text_field :created_at_lte, :class => "need_date", :tabindex => 4 %>
+				</dd>
+
+			</dl>
+
+			<div class="buttons">
+				<%= f.submit 'Search', :class => "button" %>
+			</div>
+		</fieldset>
+	<% end %>
+</article>
+
+<article>
+	<h1><%= @search.count %> Logs</h1>
+	<table class="gtable">
+		<thead>
+			<tr>
+				<th>Method</th>
+				<th><%= sort_link @search, :user_id, 'Account' %></th>
+				<th><%= sort_link @search, :description %></th>
+				<th><%= sort_link @search, :created_at, 'Time' %></th>
+				<th><%= sort_link @search, :finish %></th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<% @activities.each do |log| %>
+			<tr>
+				<td><%= log.met %></td>
+				<td><%= log.admin.try(:username) %></td>
+				<td><%= log.description %></td>
+				<td><%=l(log.created_at, :format => :long) unless log.created_at.nil? %></td>
+				<td><%= log.finish %></td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	
+	<div class="tablefooter clearfix">
+		<%= will_paginate @activities %>
+	</div>
+</article>

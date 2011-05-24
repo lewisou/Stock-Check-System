@@ -29,7 +29,7 @@
 
 		<tr>
 			<th>Recheck Failed</th>
-			<td><strong><%= Inventory.in_check(curr_check.id).where(:re_export_offset.gt => 0).count %></strong></td>
+			<td><strong><%= Inventory.in_check(curr_check.id).where(:re_export_offset.not_eq => 0).count %></strong></td>
 		</tr>
 
 	</tbody>

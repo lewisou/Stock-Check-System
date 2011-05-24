@@ -1,14 +1,28 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-
   before_filter :authenticate_admin!
+
+  around_filter :log_activities
+  def log_activities
+    
+    if request.method.to_s != "GET"
+      scope = admin_signed_in? ? current_admin.activities : Activity
+      act_log = scope.create(:request => get_all_string_values(params).to_json, :finish => false, :met => request.method, :check => curr_check)
+    end
+    
+    yield
+    
+    if request.method.to_s != "GET"
+      act_log.update_attributes(:response => response.status.to_s, :ended_at => Time.now, :finish => true)
+    end
+  end
 
   helper_method :has_curr_check?
   def has_curr_check?
     return Check.opt_s.size > 0
   end
-  
+
   helper_method :curr_check
   def curr_check
     unless @curr_check
@@ -17,11 +31,11 @@ class ApplicationController < ActionController::Base
 
     @curr_check
   end
-  
+
   helper_method :has_role?
   def has_role? role
     return false unless current_admin
-    
+
     case role
     when Symbol
       return current_admin.roles.map(&:code).include?(role.to_s)
@@ -32,7 +46,7 @@ class ApplicationController < ActionController::Base
     end
     return false
   end
-  
+
   def check_role role
     if current_admin && !has_role?(role)
       render :text => "<h1>403 Forbidden</h1>", :status => 403
@@ -64,4 +78,27 @@ class ApplicationController < ActionController::Base
     end
     assigns
   end
+  
+  private
+  def get_all_string_values hash
+    return {} unless hash
+
+    rs = {}
+
+    hash.each do |key, value|
+      case value
+      when String
+        rs[key] = value
+      when Hash
+        rs[key] = get_all_string_values(value)
+      when Array
+        rs[key] = value
+      else
+        rs[key] = "Object"
+      end
+    end
+
+    rs
+  end
+  
 end

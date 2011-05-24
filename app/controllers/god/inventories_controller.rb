@@ -8,7 +8,7 @@ class God::InventoriesController < God::BaseController
   end
 
   def index
-    @search = Inventory.in_check(@check.id).search(params[:search])
+    @search = Inventory.in_check(@check.id).report_valid.search(params[:search])
 
     respond_to do |format|
       format.html { @inventories = @search.paginate(:page => params[:page]) }

@@ -11,11 +11,10 @@ class Check < ActiveRecord::Base
   has_many :locations
   has_many :inventories
   has_many :assigns, :through => :locations
+  has_many :activities
   belongs_to :admin
-  # belongs_to :location_xls, :class_name => "::Attachment"
   belongs_to :inv_adj_xls, :class_name => "::Attachment"
   belongs_to :manual_adj_xls, :class_name => "::Attachment"
-  # belongs_to :item_xls, :class_name => "::Attachment"
   belongs_to :instruction, :class_name => "::Attachment"
 
   attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :reimport_inv_xls, :instruction_file, :re_export_qtys_xls
@@ -133,7 +132,7 @@ class Check < ActiveRecord::Base
   end
   
   def can_complete?
-    return Inventory.in_check(self.id).remote_s.where(:inputed_qty.eq => nil).count == 0 && Tag.in_check(self.id).countable.not_finish(2).count == 0 && Tag.in_check(self.id).countable.not_finish(1).count == 0
+    return self.final_inv && Inventory.in_check(self.id).remote_s.where(:inputed_qty.eq => nil).count == 0 && Tag.in_check(self.id).countable.not_finish(2).count == 0 && Tag.in_check(self.id).countable.not_finish(1).count == 0
   end
   
   def duration
@@ -147,8 +146,9 @@ class Check < ActiveRecord::Base
   def switch_inv! time
     return if time.nil?
     time = time.to_i
-
-    if self.update_attributes(:import_time => time)
+    
+    
+    if self.save && self.update_attributes(:import_time => time)
       Inventory.in_check(self.id).each do |inv|
         log = inv.quantities.where(:time => time).first
 
@@ -301,6 +301,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: checks
@@ -327,5 +328,6 @@ end
 #  credit_q          :float
 #  al_account        :text
 #  manual_adj_xls_id :integer
+#  final_inv         :boolean         default(FALSE)
 #
 

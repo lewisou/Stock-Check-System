@@ -10,7 +10,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110523081257) do
+ActiveRecord::Schema.define(:version => 20110524073708) do
+
+  create_table "activities", :force => true do |t|
+    t.integer  "admin_id"
+    t.text     "request"
+    t.text     "response"
+    t.datetime "ended_at"
+    t.boolean  "finish",      :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "description"
+    t.string   "met"
+    t.integer  "check_id"
+  end
+
+  add_index "activities", ["admin_id"], :name => "index_activities_on_admin_id"
 
   create_table "admins", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
@@ -138,6 +153,7 @@ ActiveRecord::Schema.define(:version => 20110523081257) do
     t.float    "ao_adj_value"
     t.integer  "re_export_qty"
     t.integer  "re_export_offset"
+    t.integer  "his_max"
   end
 
   add_index "inventories", ["check_id"], :name => "index_inventories_on_check_id"

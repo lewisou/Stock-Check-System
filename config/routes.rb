@@ -92,6 +92,7 @@ Scs::Application.routes.draw do
     resources :rechecks
 
     resources :checks do
+      resources :activities
       resources :tags
       resources :inventories
       

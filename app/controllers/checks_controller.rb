@@ -1,6 +1,9 @@
 class ChecksController < BaseController
-  layout 'settings'
-  
+
+  before_filter do
+    @nav = :control
+  end
+
   # GET /checks
   # GET /checks.xml
   def index
@@ -63,9 +66,12 @@ class ChecksController < BaseController
     @check = Check.find(params[:id])
     @check.attributes = params[:check]
 
+    require "pp"
+    pp params[:check]
+
     respond_to do |format|
       if @check.switch_inv!(@check.import_time + 1)
-        format.html { redirect_to(current_checks_path, :notice => 'Reimport finished.') }
+        format.html { redirect_to(current_god_checks_path, :notice => 'Reimport finished.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "reimport" }
@@ -76,6 +82,7 @@ class ChecksController < BaseController
 
   def reimport
     @check = curr_check
+    @check.attributes = params[:check]
   end
 
   # DELETE /checks/1

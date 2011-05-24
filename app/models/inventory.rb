@@ -1,13 +1,12 @@
 class Inventory < ActiveRecord::Base
   scope :in_check, lambda {|check_id| includes(:location => :check).where(:checks => {:id => check_id}) }
+  scope :report_valid, where({:his_max.gt => 0, :from_al => true} | {:from_al => false})
   scope :need_adjustment, includes(:item).includes(:location)\
-    .where("quantity <> result_qty").where(:items => {:from_al => true}).where(:locations => {:from_al => true})
-
+    .where(:ao_adj.not_eq => 0).where(:items => {:from_al => true}).where(:locations => {:from_al => true}).report_valid
   scope :need_manually_adj, includes(:item).includes(:location)\
-    .where({:items => {:from_al => false}} | {:locations => {:from_al => false}}).where(:result_qty.gt => 0)
-  scope :remote_s, includes(:location).where(:locations => {:is_remote => true})
-  scope :onsite_s, includes(:location).where(:locations => {:is_remote => false})
-
+    .where({:items => {:from_al => false}} | {:locations => {:from_al => false}}).where(:result_qty.gt => 0).report_valid
+  scope :remote_s, includes(:location).where(:locations => {:is_remote => true}).report_valid
+  scope :onsite_s, includes(:location).where(:locations => {:is_remote => false}).report_valid
 
   belongs_to :item
   belongs_to :location
@@ -78,6 +77,8 @@ class Inventory < ActiveRecord::Base
     self.result_value = (self.result_qty || 0) * (self.item.try(:cost) || 0)
     self.frozen_value = (self.quantity || 0) * (self.item.try(:al_cost) || 0)
     self.ao_adj_value = (self.ao_adj || 0) * (self.item.try(:cost) || 0)
+    
+    self.his_max = [self.quantities.map(&:value).map(&:to_i).map(&:abs).max.to_i, self.quantity.to_i].max
   end
 
   def adj_check
@@ -100,6 +101,7 @@ class Inventory < ActiveRecord::Base
   end
 
 end
+
 
 
 
@@ -144,5 +146,6 @@ end
 #  ao_adj_value     :float
 #  re_export_qty    :integer
 #  re_export_offset :integer
+#  his_max          :integer
 #
 

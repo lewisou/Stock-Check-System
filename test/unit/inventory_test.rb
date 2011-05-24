@@ -132,12 +132,12 @@ class InventoryTest < ActiveSupport::TestCase
 
     inv1.reload.quantities.count == 2
     l1 = inv1.reload.quantities.where(:time => 1).first
-    l1.value == 4
-    l1.from_al == true
+    assert l1.value == 4
+    assert l1.from_al == true
 
     l2 = inv1.reload.quantities.where(:time => 2).first
-    l2.value == nil
-    l2.from_al == false
+    assert l2.value == nil
+    assert l2.from_al == false
 
     
     # c.switch_inv(2)
@@ -388,7 +388,37 @@ class InventoryTest < ActiveSupport::TestCase
 
   end
 
+  test "his_max" do
+    c = new_blank_check
+    scope = c.locations.create.inventories
+
+    inv = scope.create(:quantity => 3)
+    inv.update_attributes(:quantity => 4)
+
+    c.switch_inv!(2)
+    inv.reload.update_attributes(:quantity => 5)
+    inv.update_attributes(:quantity => nil)
+
+    c.switch_inv!(3)
+    inv.update_attributes(:quantity => 0)
+
+    assert inv.reload.his_max == 4
+  end
+
+  test "report_valid" do
+    c = new_blank_check
+    scope = c.locations.create.inventories
+
+    inv1 = scope.create(:from_al => false)
+    inv2 = scope.create(:quantity => 3, :from_al => true)
+    inv3 = scope.create(:quantity => 0, :from_al => true)
+
+    assert Inventory.report_valid.count == 2
+    assert !Inventory.report_valid.all.include?(inv3)
+
+  end
 end
+
 
 
 
@@ -430,5 +460,6 @@ end
 #  ao_adj_value     :float
 #  re_export_qty    :integer
 #  re_export_offset :integer
+#  his_max          :integer
 #
 

@@ -1,8 +1,9 @@
 <% @sub_menu = :current %>
 
-<%= render :partial => "shared/flash" %>
 <% if has_curr_check? %>
 <article>
+<%= render :partial => "shared/flash" %>
+
 <h1>Status</h1>
 <%= render :partial => 'shared/curr_check', :locals => {:curr_check => @check} %>
 </article>
@@ -15,6 +16,9 @@
 	</tr>
 	<tr>
 		<td><%= link_to "Summary by value", god_check_inventories_path(curr_check) %></td>
+	</tr>
+	<tr>
+		<td><%= link_to 'Log', god_check_activities_path(curr_check) %></td>
 	</tr>
 </table>
 </article>
@@ -29,10 +33,11 @@
 		<% if curr_check && curr_check.state == 'open' %>
 			<%= loading_link 'Complete', change_state_god_check_path(curr_check, :state => :complete), :method => :put, :confirm => "Are you sure to complete the check '#{curr_check.description}' ?", :class => "button" if curr_check.can_complete? %>
 			<%= loading_link 'Cancel', change_state_god_check_path(curr_check, :state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button" %>
-			<%= link_to 'Re-import', reimport_checks_path, :class => "button" %>
+			<%= link_to 'Re-import', reimport_checks_path, :class => "button" unless curr_check.final_inv %>
+			<%= link_to 'Final Re-import', reimport_checks_path(:check => {:final_inv => true}), :class => "button" %>
 		<% elsif curr_check && ['complete', 'cancel'].include?(curr_check.state) %>
 			<%= loading_link 'Archive', change_state_god_check_path(curr_check, :state => :archive), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button" %>
-			<%= loading_link 'Reopen', change_state_god_check_path(curr_check, :state => :open), :method => :put, :confirm => "Are you sure to reopen the check '#{curr_check.description}' ?", :class => "button" if curr_check.state != 'open' %>
+			<%= loading_link 'Reopen', change_state_god_check_path(curr_check, :state => :open), :method => :put, :confirm => "Are you sure to reopen the check '#{curr_check.description}' ?", :class => "button" if curr_check.state != 'open' && true %>
 			<%= link_to 'Recheck', god_rechecks_path, :class => 'button' %>
 		<% else %>
 			<%= link_to 'Start New One', new_god_check_path, :class => "button" %>

@@ -132,7 +132,7 @@ class Check < ActiveRecord::Base
   end
   
   def can_complete?
-    return self.final_inv && Inventory.in_check(self.id).remote_s.where(:inputed_qty.eq => nil).count == 0 && Tag.in_check(self.id).countable.not_finish(2).count == 0 && Tag.in_check(self.id).countable.not_finish(1).count == 0
+    return self.state == 'open' && self.final_inv && Inventory.in_check(self.id).remote_s.where(:inputed_qty.eq => nil).count == 0 && Tag.in_check(self.id).countable.not_finish(2).count == 0 && Tag.in_check(self.id).countable.not_finish(1).count == 0
   end
   
   def duration

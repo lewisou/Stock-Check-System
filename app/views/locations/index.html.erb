@@ -1,14 +1,14 @@
 <article>
 	<%= render :partial => 'shared/flash' %>
 
-	<h1>Locations</h1>
+	<h1>Warehouse</h1>
 
 	<table id="table1" class="gtable">
 		<thead>
 			<tr>
 				<th width="30%"><%= sort_link @search, :code %></th>
 				<th><%= sort_link @search, :description %></th>
-				<th><%= sort_link @search, :is_remote, 'Remote' %></th>
+				<th><%= sort_link @search, :is_remote, 'Site' %></th>
 				<th>Action</th>
 			</tr>
 		</thead>

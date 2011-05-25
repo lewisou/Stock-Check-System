@@ -22,12 +22,12 @@
 		</fieldset>
 		
 		<fieldset>
-			<legend>Count Credits</legend>
+			<legend>Count Criteria</legend>
 			<dl class="inline">
-				<dt><%= f.label :credit_v, "Value" %></dt>
+				<dt><%= f.label :credit_v, "Value ($)" %></dt>
 				<dd><%= f.text_field :credit_v, :tabindex => 3 %></dd>
 				
-				<dt><%= f.label :credit_q, "Qty" %></dt>
+				<dt><%= f.label :credit_q, "Qty (%)" %></dt>
 				<dd><%= f.text_field :credit_q, :tabindex => 4 %></dd>
 			</dl>
 		</fieldset>
@@ -60,6 +60,6 @@
 		</dl>
 		</fieldset>
 		
-		<%= f.submit :class => 'button' %>
+		<%= f.submit 'Save', :class => 'button' %>
 	<% end %>
 </article>

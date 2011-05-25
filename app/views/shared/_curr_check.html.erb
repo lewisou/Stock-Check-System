@@ -2,7 +2,7 @@
 <table class="infos">
 	<tbody>
 		<tr>
-			<th>Inventory name</th>
+			<th sytle="width:30%">Inventory name</th>
 			<td><%= curr_check.description %></td>
 		</tr>
 		<tr>
@@ -28,7 +28,7 @@
 		</tr>
 
 		<tr>
-			<th>Recheck Failed</th>
+			<th>Recheck (Number of Discrepancy)</th>
 			<td><strong><%= Inventory.in_check(curr_check.id).where(:re_export_offset.not_eq => 0).count %></strong></td>
 		</tr>
 
@@ -38,7 +38,7 @@
 <h2>Tickets</h2>
 <table class="infos">
 	<thead>
-		<tr>
+		<tr style="text-align: right">
 			<th>&nbsp;</th>
 			<th>Issued</th>
 			<th>Deleted</th>

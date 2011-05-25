@@ -1,5 +1,98 @@
 <% @sub_menu = :current %>
 
+<% if allow_check_control? %>
+<article>
+	<h2>Actions</h2>
+
+	<div class="actions">
+		
+		<% if curr_check %>
+		<table class='infos'>
+			<tr>
+				<td>
+					<%= action_link curr_check.can_complete?, 'Complete', change_state_god_check_path(curr_check, :state => :complete), :method => :put, :confirm => "Are you sure to complete the check '#{curr_check.description}' ?", :class => "button" %>
+				</td>
+				<td>
+					<%= "(You can not complete the check now.)" unless curr_check.can_complete? %> Complete the whole stock check. Generate adjustment excels.
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<%= action_link curr_check.state == 'open', 'Cancel', change_state_god_check_path(curr_check, :state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button" %>
+				</td>
+				<td>
+					<%= "(You can not cancel the check now.)" unless curr_check.state == 'open' %> Cancel current stock check session.
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<%= action_link (curr_check.state == 'open' && !curr_check.final_inv), 'Re-import', reimport_checks_path, :class => "button" %>
+				</td>
+				<td>
+					<%= "(You can not reimport the check now.)" unless (curr_check.state == 'open' && !curr_check.final_inv) %> Re-import frozen quantities from ALL ORDER to Stock check system (SCS)
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<%= action_link (curr_check.state == 'open' && !curr_check.final_inv), 'Final Re-import', reimport_checks_path(:check => {:final_inv => true}), :class => "button" %>
+				</td>
+				<td>
+					<%= "(You can not do the Final Re-Import now.)" unless (curr_check.state == 'open' && !curr_check.final_inv) %> IMPORTANT: One time only, imported quantities should be final.
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<%= action_link ['complete', 'cancel'].include?(curr_check.state), 'Archive', change_state_god_check_path(curr_check, :state => :archive), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button" %>
+				</td>
+				<td>
+					<%= "(You can not archive the check now.)" unless (['complete', 'cancel'].include?(curr_check.state)) %> Archive the stock check.
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<%= action_link (curr_check.state != 'open'), 'Reopen', change_state_god_check_path(curr_check, :state => :open), :method => :put, :confirm => "Are you sure to reopen the check '#{curr_check.description}' ?", :class => "button" %>
+				</td>
+				<td>
+					<%= "(You can not archive the check now.)" unless (curr_check.state != 'open') %> Reopen a completed or canceled stock check. You might forget to input something.
+				</td>
+			</tr>
+
+
+			<tr>
+				<td>
+					<%= action_link (curr_check.state == 'complete'), 'Recheck', god_rechecks_path, :class => 'button' %>
+				</td>
+				<td>
+					<%= "(You can not Recheck the check now.)" unless (curr_check.state == 'complete') %> You must complete the stock check first and export all adjustment excels back to ALL ORDER.
+				</td>
+			</tr>
+
+		</table>
+		<% end %>
+		
+		
+		<% if curr_check &&  %>
+			
+			
+			<%=  %>
+		<% else %>
+			<a href="#">Archive</a>
+			<a href="#">Re-open</a>
+			<a href='#'>Re-check</a>
+		<% end %>
+
+		<% unless curr_check %>
+			<%= link_to 'Start New One', new_god_check_path, :class => "button" %>
+		<% end %>
+	</div>
+</article>
+<% end %>
+
 <% if has_curr_check? %>
 <article>
 <%= render :partial => "shared/flash" %>
@@ -12,37 +105,15 @@
 <h2>Reports</h2>
 <table class="infos">
 	<tr>
-		<td><%= link_to "Summary of counts by location", god_check_tags_path(curr_check) %></td>
+		<td><%= link_to "Final - Summary of counts by location", god_check_tags_path(curr_check) %></td>
 	</tr>
 	<tr>
-		<td><%= link_to "Summary by value", god_check_inventories_path(curr_check) %></td>
+		<td><%= link_to "Final - Summary by counts by value", god_check_inventories_path(curr_check) %></td>
 	</tr>
 	<tr>
 		<td><%= link_to 'Log', god_check_activities_path(curr_check) %></td>
 	</tr>
 </table>
-</article>
-<% end %>
-
-
-<% if allow_check_control? %>
-<article>
-	<h2>Actions</h2>
-
-	<div class="actions">
-		<% if curr_check && curr_check.state == 'open' %>
-			<%= loading_link 'Complete', change_state_god_check_path(curr_check, :state => :complete), :method => :put, :confirm => "Are you sure to complete the check '#{curr_check.description}' ?", :class => "button" if curr_check.can_complete? %>
-			<%= loading_link 'Cancel', change_state_god_check_path(curr_check, :state => :cancel), :method => :put, :confirm => "Are you sure to cancel the check '#{curr_check.description}' ?", :class => "button" %>
-			<%= link_to 'Re-import', reimport_checks_path, :class => "button" unless curr_check.final_inv %>
-			<%= link_to 'Final Re-import', reimport_checks_path(:check => {:final_inv => true}), :class => "button" %>
-		<% elsif curr_check && ['complete', 'cancel'].include?(curr_check.state) %>
-			<%= loading_link 'Archive', change_state_god_check_path(curr_check, :state => :archive), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button" %>
-			<%= loading_link 'Reopen', change_state_god_check_path(curr_check, :state => :open), :method => :put, :confirm => "Are you sure to reopen the check '#{curr_check.description}' ?", :class => "button" if curr_check.state != 'open' && true %>
-			<%= link_to 'Recheck', god_rechecks_path, :class => 'button' %>
-		<% else %>
-			<%= link_to 'Start New One', new_god_check_path, :class => "button" %>
-		<% end %>
-	</div>
 </article>
 <% end %>
 

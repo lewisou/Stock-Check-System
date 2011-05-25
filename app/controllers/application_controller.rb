@@ -96,8 +96,7 @@ class ApplicationController < ActionController::Base
   
   def get_all_string_values hash
     return {} unless hash
-    
-    hash = rm_values(hash)
+
     rs = {}
     hash.each do |key, value|
       case value
@@ -112,7 +111,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    rs
+    rm_values(rs)
   end
   
 end

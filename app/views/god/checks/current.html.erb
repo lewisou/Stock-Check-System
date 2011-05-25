@@ -2,11 +2,14 @@
 
 <% if allow_check_control? %>
 <article>
+	<%= render :partial => "shared/flash" %>
+	<h1>Status</h1>
+
 	<h2>Actions</h2>
 
 	<div class="actions">
 		
-		<% if curr_check %>
+		<% if has_curr_check? %>
 		<table class='infos'>
 			<tr>
 				<td>
@@ -58,7 +61,7 @@
 					<%= action_link (curr_check.state != 'open'), 'Reopen', change_state_god_check_path(curr_check, :state => :open), :method => :put, :confirm => "Are you sure to reopen the check '#{curr_check.description}' ?", :class => "button" %>
 				</td>
 				<td>
-					<%= "(You can not archive the check now.)" unless (curr_check.state != 'open') %> Reopen a completed or canceled stock check. You might forget to input something.
+					<%= "(You can not reopen the check now.)" unless (curr_check.state != 'open') %> Reopen a completed or canceled stock check in the case you might forget to input some tickets.
 				</td>
 			</tr>
 
@@ -74,19 +77,8 @@
 
 		</table>
 		<% end %>
-		
-		
-		<% if curr_check &&  %>
-			
-			
-			<%=  %>
-		<% else %>
-			<a href="#">Archive</a>
-			<a href="#">Re-open</a>
-			<a href='#'>Re-check</a>
-		<% end %>
 
-		<% unless curr_check %>
+		<% unless has_curr_check? %>
 			<%= link_to 'Start New One', new_god_check_path, :class => "button" %>
 		<% end %>
 	</div>
@@ -95,9 +87,7 @@
 
 <% if has_curr_check? %>
 <article>
-<%= render :partial => "shared/flash" %>
-
-<h1>Status</h1>
+<h2>Common</h2>
 <%= render :partial => 'shared/curr_check', :locals => {:curr_check => @check} %>
 </article>
 
@@ -115,9 +105,8 @@
 	</tr>
 </table>
 </article>
-<% end %>
 
-<% if curr_check && curr_check.state == 'complete' %>
+<% if curr_check.state == 'complete' %>
 <article>
 	<h2>Download</h2>
 
@@ -136,4 +125,5 @@
 	</tbody>
 	</table>
 </article>
+<% end %>
 <% end %>

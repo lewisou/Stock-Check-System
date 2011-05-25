@@ -32,22 +32,18 @@
 	<table class="gtable">
 		<thead>
 			<tr>
-				<th>Method</th>
-				<th><%= sort_link @search, :user_id, 'Account' %></th>
-				<th><%= sort_link @search, :description %></th>
 				<th><%= sort_link @search, :created_at, 'Time' %></th>
-				<th><%= sort_link @search, :finish %></th>
+				<th><%= sort_link @search, :description %></th>
+				<th><%= sort_link @search, :user_id, 'Account' %></th>
 			</tr>
 		</thead>
 		
 		<tbody>
 			<% @activities.each do |log| %>
 			<tr>
-				<td><%= log.met %></td>
-				<td><%= log.admin.try(:username) %></td>
-				<td><%= log.description %></td>
 				<td><%=l(log.created_at, :format => :long) unless log.created_at.nil? %></td>
-				<td><%= log.finish %></td>
+				<td><%= log.description %></td>
+				<td><%= log.admin.try(:username) %></td>
 			</tr>
 			<% end %>
 		</tbody>

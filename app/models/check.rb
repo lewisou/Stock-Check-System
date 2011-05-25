@@ -174,14 +174,14 @@ class Check < ActiveRecord::Base
 
   private unless 'test' == Rails.env
   def refresh_re_export_qtys
-    refresh_qtys_from_xls @re_export_qtys_xls, :re_export_qty
+    refresh_qtys_from_xls @re_export_qtys_xls, :re_export_qty, :from_al => :keep
   end
   
   def refresh_inventories
     refresh_qtys_from_xls @inventories_xls
   end
 
-  def refresh_qtys_from_xls xls, sym = :quantity
+  def refresh_qtys_from_xls xls, sym = :quantity, options={}
     return if xls.nil?
     
     Inventory.in_check(self.id).each do |inv|
@@ -193,7 +193,7 @@ class Check < ActiveRecord::Base
 
     @sheet0.each_with_index do |row, index|
       next if (index == 0 || row[0].blank?)
-      create_update_from_row row, :quantity_sym => sym
+      create_update_from_row row, {:quantity_sym => sym}.merge(options)
     end
   end
 
@@ -274,16 +274,18 @@ class Check < ActiveRecord::Base
 
     qty_sym = options[:quantity_sym].blank? ? :quantity : options[:quantity_sym]
 
+    al_map = options[:from_al] == :keep ? {} : {:from_al => true}
+
     if inv
-      inv.update_attributes(qty_sym => (row[7].try(:to_i) || 0), :from_al => true)
+      inv.update_attributes(({qty_sym => (row[7].try(:to_i) || 0)}).merge(al_map))
     else
       inv = Inventory.create(
-        :item => item,
+        ({:item => item,
         :location => location,
-        qty_sym => row[7],
-        :from_al => true
+        qty_sym => row[7]}).merge(al_map)
       )
     end
+    inv
   end
 
 end

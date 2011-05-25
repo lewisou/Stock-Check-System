@@ -26,6 +26,11 @@
 			<th>Missing cost</th>
 			<td><strong><%= curr_check.items.missing_cost.count %></strong></td>
 		</tr>
+		<tr>
+			<th>Remote Warehouse</th>
+			<td><strong><%= Inventory.in_check(curr_check.id).remote_s.where(:inputed_qty.eq => nil).count %></strong></td>
+		</tr>
+		
 
 		<tr>
 			<th>Recheck (Number of Discrepancy)</th>
@@ -76,8 +81,8 @@
 			<td class="number"><%= Tag.in_check(curr_check.id).countable.finish(3).count %></td>
 			<td class="number">0</td>
 		</tr>
-		<tr>
-			<th>Remote Warehouse</th>
+		<!--tr>
+			<th></th>
 			<td class="number"><%= all_wh = Inventory.in_check(curr_check.id).remote_s.count %></td>
 			<td class="number">0</td>
 			<td class="number"><%= fi_wh = Inventory.in_check(curr_check.id).remote_s.where(:inputed_qty.not_eq => nil).count %></td>
@@ -86,15 +91,13 @@
 			<%= all_wh - fi_wh %>
 			</strong>
 			</td>
-		</tr>
-
-
+		</tr-->
 		<tr>
 			<th>Audit check</th>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
+			<td class="number"><%= Tag.in_check(curr_check.id).count %></td>
+			<td class="number"><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
+			<td class="number"><%= Tag.in_check(curr_check.id).countable.where(:audit.not_eq => nil).count %></td>
+			<td class="number">0</td>
 		</tr>
 
 	</tbody>

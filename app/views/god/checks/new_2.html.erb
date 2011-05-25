@@ -12,8 +12,9 @@
 			<table class="infos">
 				<tr>
 					<% @check.locations.order("code ASC").each_with_index do |location, index| %>
-						<th><%= check_box_tag("remote_ids[]", location.id, false, :id => "location_#{location.id}") %></th>
-						<td><%= label_tag "location_#{location.id}", location.code %></td>
+						<td style="width: 30%">
+						<%= check_box_tag("remote_ids[]", location.id, false, :id => "location_#{location.id}") %>
+						<%= label_tag "location_#{location.id}", location.code %></td>
 						<%=raw("</tr><tr>") if (index + 1) % 3 == 0 %>
 					<% end %>
 				</tr>

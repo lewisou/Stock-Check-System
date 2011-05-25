@@ -311,16 +311,30 @@ class CheckTest < ActiveSupport::TestCase
     item = c.item_groups.create.items.create(:code => '1.300')
     loc = c.locations.create(:code => 'CA')
     c.locations.create(:code => 'CD')
-    
+    c.locations.create(:code => 'CX')
+
     inv = c.inventories.create(:item => item, :location => loc, :quantity => 30)
-    
+    assert inv.reload.from_al == false
+
+    c.create_update_from_row ["1.300", "CA"] + [""] * 5 + [60], :from_al => :keep
+    assert c.inventories.count == 1
+    assert inv.reload.quantity == 60
+    assert inv.reload.from_al == false
+
     c.create_update_from_row ["1.300", "CA"] + [""] * 5 + [60]
     assert c.inventories.count == 1
     assert inv.reload.quantity == 60
+    assert inv.reload.from_al == true
 
-    c.create_update_from_row ["1.300", "CD"] + [""] * 5 + [60]
+    inv = c.create_update_from_row ["1.300", "CD"] + [""] * 5 + [60], :from_al => :keep
     assert c.inventories.count == 2
     assert c.import_time == 1
+    assert inv.reload.from_al == false
+    
+    inv = c.create_update_from_row ["1.300", "CX"] + [""] * 5 + [60]
+    assert c.inventories.count == 3
+    assert c.import_time == 1
+    assert inv.reload.from_al == true
   end
 
   test "switch_inv! 2" do
@@ -463,8 +477,10 @@ class CheckTest < ActiveSupport::TestCase
     c = new_blank_check
     assert !c.can_complete?
     c.update_attributes(:final_inv => true)
+    assert !c.can_complete?
+    c.update_attributes(:state => 'open')
     assert c.can_complete?
-    
+
     t = c.locations.create(:is_remote => false).inventories.create.tags.create
     assert !c.can_complete?
     t.update_attributes(:count_1 => 2)
@@ -502,6 +518,29 @@ class CheckTest < ActiveSupport::TestCase
       assert c.duration == 0
 
     end
+  end
+  
+  test "refresh_qtys_from_xls" do
+    c = new_check
+    c.save(:validate => false)
+    c.inventories.update_all(:from_al => false)
+
+    c.refresh_qtys_from_xls reimport_file, :re_export_qty, :from_al => :keep
+    assert c.inventories.count == 23
+    assert c.inventories.map(&:from_al).uniq == [false]
+    assert c.inventories.where(:re_export_qty.gt => 0).count > 0
+    assert c.inventories.where(:quantity.gt => 0).count > 0
+
+    c = new_check
+    c.save(:validate => false)
+    c.inventories.update_all(:from_al => false)
+
+    c.inventories.update_all(:quantity => 0)
+    c.refresh_qtys_from_xls reimport_file
+    assert c.inventories.count == 23
+    assert c.inventories.map(&:from_al).uniq == [true]
+    assert c.inventories.where(:re_export_qty.gt => 0).count == 0
+    assert c.inventories.where(:quantity.gt => 0).count > 0
   end
 end
 

@@ -80,11 +80,25 @@ class ApplicationController < ActionController::Base
   end
   
   private
+  def rm_values rs
+    rs.delete('authenticity_token')
+    rs.delete("utf8")
+    rs.delete_if {|key, value| !(key.to_s =~ /.*password.*/).nil? }
+    
+    rs.each do |key, value|
+      case value
+      when Hash
+        rm_values value
+      end
+    end
+    rs
+  end
+  
   def get_all_string_values hash
     return {} unless hash
-
+    
+    hash = rm_values(hash)
     rs = {}
-
     hash.each do |key, value|
       case value
       when String

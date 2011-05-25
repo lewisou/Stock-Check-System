@@ -68,23 +68,7 @@ class Activity < ActiveRecord::Base
   end
 
   def get_rs
-    rs = JSON.parse(self.request || "{}")
-    rm_values rs
-    rs
-  end
-
-  def rm_values rs
-    rs.delete('authenticity_token')
-    rs.delete("utf8")
-    rs.delete_if {|key, value| !(key.to_s =~ /.*password.*/).nil? }
-    
-    rs.each do |key, value|
-      case value
-      when Hash
-        rm_values value
-      end
-    end
-    rs
+    JSON.parse(self.request || "{}")
   end
 
 end

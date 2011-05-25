@@ -80,7 +80,7 @@ jQuery(function($) {
 						<%= link_to 'Status', current_god_checks_path %>
 					</li>
 				
-					<% if has_curr_check? %>
+					<% if has_curr_check? && allow_data_entry? %>
 					<li <%= "class='current'" if @nav == :setting %>>
 						<%= link_to 'Setup', edit_god_check_path(curr_check) %>
 						<%= render :partial => 'shared/settings_ul' %>

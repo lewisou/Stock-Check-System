@@ -29,7 +29,7 @@
 
 <article>
 	<h1><%= @search.count %> Logs</h1>
-	<table class="gtable">
+	<table class="gtable detailtable">
 		<thead>
 			<tr>
 				<th><%= sort_link @search, :created_at, 'Time' %></th>
@@ -42,8 +42,19 @@
 			<% @activities.each do |log| %>
 			<tr>
 				<td><%=l(log.created_at, :format => :long) unless log.created_at.nil? %></td>
-				<td><%= log.description %></td>
+				<td><a href="#" class="detail-link"><%= log.description %></a></td>
 				<td><%= log.admin.try(:username) %></td>
+			</tr>
+			<tr class="detail">
+				<td colspan="3">
+					<table>
+						<tbody>
+							<tr>
+								<td><%= log.request %></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
 			</tr>
 			<% end %>
 		</tbody>

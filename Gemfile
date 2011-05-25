@@ -12,6 +12,7 @@ gem 'pg', '0.11.0'
 gem 'prawn', '0.11.1'
 gem 'spreadsheet', '0.6.5.3'
 gem 'will_paginate', '3.0.pre2'
+gem 'json', '1.5.1'
 
 group :development, :test do
 	gem 'sqlite3-ruby', '~> 1.3.3', :require => 'sqlite3'

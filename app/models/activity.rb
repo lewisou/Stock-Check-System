@@ -1,5 +1,3 @@
-require 'json'
-
 class Activity < ActiveRecord::Base
   @@lambdas = {
     "god/checks" => {

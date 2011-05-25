@@ -29,11 +29,13 @@ class Activity < ActiveRecord::Base
       "update" => lambda {|act| "[Account Update] #{act.get_rs["admin"]['username']}"}
     },
     "adm/tags" => {
-      "update" => lambda {|act| "[Tag Change] Tag # #{act.get_rs['id']} Values #{act.get_rs['tag'].to_json}"},
-      "destroy" => lambda {|act| "[Tag Delete] Tag # #{act.get_rs['id']}"}
+      "create" => lambda {|act| "[Create Tag] Values #{act.get_rs['tag'].to_json}"},
+      "update" => lambda {|act| "[UPdate Tag] Tag # #{act.get_rs['id']} Values #{act.get_rs['tag'].to_json}"},
+      "destroy" => lambda {|act| "[Delete Tag] Tag # #{act.get_rs['id']}"}
     },
     "adm/counters" => {
-      "update" => lambda {|act| "[Counter Assign] Counter #{act.get_rs['counter']['name']}"}
+      "update" => lambda {|act| "[Update Participant] #{act.get_rs['counter']['name']}"},
+      "create" => lambda {|act| "[Create Participant] #{act.get_rs['counter']['name']}"}
     },
     "adm/items" => {
       "update_price" => lambda {|act| "[Cost Update] Part Number #{Item.find(act.get_rs['id']).try(:code)} Cost #{act.get_rs['item']['cost']}"}
@@ -43,6 +45,9 @@ class Activity < ActiveRecord::Base
     },
     "devise/sessions" => {
       "create" => lambda {|act| "[Log in]"}
+    },
+    "adm/inventories" => {
+      "update" => lambda {|act| "[Remote Warehouse Input] Part Number #{Inventory.find(act.get_rs['id']).try(:item).try(:code)} Warehouse #{Inventory.find(act.get_rs['id']).try(:location).try(:code)} Input #{act.get_rs['inventory']['inputed_qty']}"}
     }
   }
 

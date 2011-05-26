@@ -13,6 +13,7 @@ two:
   ended_at: 2011-05-24 13:00:50
 
 
+
 # == Schema Information
 #
 # Table name: activities
@@ -26,5 +27,7 @@ two:
 #  created_at  :datetime
 #  updated_at  :datetime
 #  description :text
+#  met         :string(255)
+#  check_id    :integer
 #
 

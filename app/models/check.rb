@@ -221,11 +221,14 @@ class Check < ActiveRecord::Base
       next if (index == 0 || row[0].blank?)
 
       is_active = row[34].nil? ? false : (row[34] == 1 || row[34] == '1' || row[34] == true)
+      is_lotted = row[36].nil? ? false : (row[36] == 1 || row[36] == '1' || row[36] == true)
+      
       Item.create(:description => row[1],
       :item_group => (self.item_groups.select {|g| g.name == row[6]}).first,
       :cost => row[20],
       :al_cost => row[20],
       :is_active => is_active,
+      :is_lotted => is_lotted,
       :inittags => row[41],
       :max_quantity => row[72],
       :code => row[74],

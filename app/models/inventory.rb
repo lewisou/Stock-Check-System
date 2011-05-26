@@ -2,9 +2,9 @@ class Inventory < ActiveRecord::Base
   scope :in_check, lambda {|check_id| includes(:location => :check).where(:checks => {:id => check_id}) }
   scope :report_valid, where({:his_max.gt => 0, :from_al => true} | {:from_al => false})
   scope :need_adjustment, includes(:item).includes(:location)\
-    .where(:ao_adj.not_eq => 0).where(:items => {:from_al => true}).where(:locations => {:from_al => true}).report_valid.order([{:locations => :code.asc}, {:items => :code.asc}])
+    .where(:ao_adj.not_eq => 0).where(:items => {:from_al => true, :is_lotted => false}).where(:locations => {:from_al => true}).report_valid.order([{:locations => :code.asc}, {:items => :code.asc}])
   scope :need_manually_adj, includes(:item).includes(:location)\
-    .where({:items => {:from_al => false}} | {:locations => {:from_al => false}}).where(:result_qty.gt => 0).report_valid
+    .where({:items => (:from_al.eq % false | :is_lotted.eq % true)} | {:locations => {:from_al => false}}).where(:result_qty.gt => 0).report_valid
   scope :remote_s, includes(:location).where(:locations => {:is_remote => true}).report_valid
   scope :onsite_s, includes(:location).where(:locations => {:is_remote => false}).report_valid
 

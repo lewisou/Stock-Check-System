@@ -74,6 +74,7 @@ class Activity < ActiveRecord::Base
 end
 
 
+
 # == Schema Information
 #
 # Table name: activities
@@ -87,5 +88,7 @@ end
 #  created_at  :datetime
 #  updated_at  :datetime
 #  description :text
+#  met         :string(255)
+#  check_id    :integer
 #
 

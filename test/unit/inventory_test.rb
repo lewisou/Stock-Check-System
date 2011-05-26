@@ -317,12 +317,15 @@ class InventoryTest < ActiveSupport::TestCase
     not_al_l.inventories.create(:item => al_i)
 
     not_al_l.inventories.create(:item => not_al_i, :inputed_qty => 10)
-    not_al_l.inventories.create(:item => not_al_i, :inputed_qty => 20)
+    in3 = not_al_l.inventories.create(:item => not_al_i, :inputed_qty => 20)
     not_al_l.inventories.create(:item => not_al_i)
 
     assert Inventory.need_manually_adj.count == 6
     assert !Inventory.need_manually_adj.include?(in1)
     assert !Inventory.need_manually_adj.include?(in2)
+
+    al_i.update_attributes(:is_lotted => true)
+    assert Inventory.need_manually_adj.count == 8
   end
 
   test "need_adjustment" do

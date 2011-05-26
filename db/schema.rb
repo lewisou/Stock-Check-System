@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110524073708) do
+ActiveRecord::Schema.define(:version => 20110526111820) do
 
   create_table "activities", :force => true do |t|
     t.integer  "admin_id"
@@ -189,6 +189,7 @@ ActiveRecord::Schema.define(:version => 20110524073708) do
     t.boolean  "data_changed",  :default => false
     t.boolean  "is_active"
     t.text     "inittags"
+    t.boolean  "is_lotted",     :default => false
   end
 
   add_index "items", ["code"], :name => "index_items_on_code"

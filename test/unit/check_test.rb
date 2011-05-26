@@ -132,6 +132,8 @@ class CheckTest < ActiveSupport::TestCase
     assert Item.count == 22
     assert !Item.all.map(&:is_active).include?(nil)
     assert Item.all.map(&:is_active).include?(true)
+    assert Item.all.map(&:is_lotted).include?(true)
+    assert Item.all.map(&:is_lotted).include?(false)
   end
   
   test "refresh_item_and_group will load shelf locations" do

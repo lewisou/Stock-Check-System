@@ -4,7 +4,7 @@ class Inventory < ActiveRecord::Base
   scope :need_adjustment, includes(:item).includes(:location)\
     .where(:ao_adj.not_eq => 0).where(:items => (:max_quantity.eq % nil | :max_quantity.eq % 0)).where(:items => {:is_active => true, :cost.gt => 0, :from_al => true, :is_lotted => false}).where(:locations => {:from_al => true}).report_valid.order([{:locations => :code.asc}, {:items => :code.asc}])
   scope :need_manually_adj, includes(:item).includes(:location)\
-    .where({:items => (:is_active.eq % false | :cost.eq % 0 | :cost.eq % nil | :max_quantity.gt % 0 | :from_al.eq % false | :is_lotted.eq % true)} | {:locations => {:from_al => false}}).where(:result_qty.gt => 0).report_valid
+    .where({:items => (:is_active.eq % false | :cost.eq % 0 | :cost.eq % nil | :max_quantity.gt % 0 | :from_al.eq % false | :is_lotted.eq % true)} | {:locations => {:from_al => false}}).where(:ao_adj.not_eq => 0).report_valid
   scope :remote_s, includes(:location).where(:locations => {:is_remote => true}).report_valid
   scope :onsite_s, includes(:location).where(:locations => {:is_remote => false}).report_valid
 

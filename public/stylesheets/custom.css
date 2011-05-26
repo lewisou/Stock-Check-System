@@ -1,3 +1,7 @@
 table td.number {
 	text-align: right;
 }
+
+.gtable a {
+	text-decoration: underline;
+}

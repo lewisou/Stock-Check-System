@@ -41,9 +41,9 @@
 				<td><%= item.is_active %></td>
 				<td>
 					<% if allow_data_entry? %>
-					<%= link_to "Change_Cost", input_price_adm_item_path(item) %><br />
-					<%= link_to 'New_Ticket', new_adm_item_tag_path(item) %><br />
-					<%= link_to('New_Remote_Input', new_adm_item_inventory_path(item)) if item.is_active %>
+					<%= link_to "Change Cost", input_price_adm_item_path(item) %><br />
+					<%= link_to 'New Ticket', new_adm_item_tag_path(item) %><br />
+					<%= link_to('New Remote Input', new_adm_item_inventory_path(item)) if item.is_active %>
 					<% end %>
 				</td>
 			</tr>

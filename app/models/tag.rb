@@ -77,13 +77,21 @@ class Tag < ActiveRecord::Base
     return nil if self.count_2.nil? || self.count_1.nil?
 
     bas = [self.count_1, self.count_2].min
-    return (((count_2 - count_1).to_f / bas.to_f).abs * 100).to_f.abs if bas > 0
+    return (((count_2 - count_1).to_f / bas.to_f).abs * 100).to_f.round(3).abs if bas > 0
+  end
+
+  def value_1
+    ((self.count_1 || 0) * (self.inventory.item.try(:cost) || 0)).round(3)
+  end
+  
+  def value_2
+    ((self.count_2 || 0) * (self.inventory.item.try(:cost) || 0)).round(3)
   end
 
   def value_differ
     return nil if self.count_2.nil? || self.count_1.nil? || self.inventory.item.try(:cost).nil? || self.inventory.item.try(:cost) == 0
 
-    return ((self.count_2 - self.count_1) * self.inventory.item.try(:cost)).abs
+    return ((self.count_2 - self.count_1) * self.inventory.item.try(:cost)).round(3).abs
   end
 end
 

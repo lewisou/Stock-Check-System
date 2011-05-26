@@ -10,6 +10,7 @@
 		</fieldset>
 		<div class='buttons'>
 			<%= f.submit 'Search', :class => 'button' %>
+			<%= link_to 'Reset', missing_tag_adm_counts_path(:count => @c_i), :class => 'button' %>
 		</div>
 
 	<% end %>
@@ -18,8 +19,8 @@
 <article>
 	<h1><%= @search.count %> Missing Tickets</h1>
 	
-	<%= link_to 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
-	<%= link_to 'Export to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
+	<%= loading_link 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
+	<%= loading_link 'Export to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 	<table id="table1" class="gtable">
 		<thead>
 			<tr>

@@ -59,18 +59,23 @@ class Adm::ItemsController < Adm::BaseController
   end
 
   def missing_cost
-    # curr_check.cache_counted!
     @search = curr_check.items.missing_cost.search(params[:search])
 
     respond_to do |format|
-      format.html {
-        @items = @search.paginate(:page => params[:page])
-      }
+      format.html { @items = @search.paginate(:page => params[:page]) }
       format.xls {
         @items = @search.all
-        send_data Spreadsheet::Workbook.new.render_missing_cost(@items), 
-        :filename => "Missing Cost.xls", :disposition => 'attachment'
+        book = Spreadsheet::Workbook.new
+        
+        data = book.generate_xls(
+        "Missing Cost", @items,        
+        %w{ItemNumber Desc. Cost},
+        [:code, :description, :cost]
+        )
+
+        send_data data, :filename => "Missing Cost.xls", :disposition => 'attachment'
       }
     end
+
   end
 end

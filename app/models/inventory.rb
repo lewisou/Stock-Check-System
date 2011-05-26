@@ -44,7 +44,7 @@ class Inventory < ActiveRecord::Base
     cod = self.location.try(:code).try(:upcase)
     return 0 if cod.blank?
 
-    rs = (self.item.try(:inittags) || '').split(/[,\s]/).delete_if {|ing| ing.blank? || !ing.upcase.start_with?(cod)}
+    rs = (self.item.try(:inittags) || '').split(/[, ]/).delete_if {|ing| ing.blank? || !ing.upcase.start_with?(cod)}
 
     (rs.collect {|el| el.upcase.delete(cod) }).each do |sloc|
       self.tags.create(:sloc => sloc)

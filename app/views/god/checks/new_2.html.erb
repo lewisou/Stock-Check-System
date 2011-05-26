@@ -1,13 +1,13 @@
 <% @sub_menu = :current %>
 <article>
-	<h1>Select Remote warehouses</h1>
+	<h1>New check step 2</h1>
 	
 	<%= render :partial => 'shared/errors', :locals => {:object => @check} %>
 	
 	<%= form_for Check.new, :url => god_checks_path, :html => {:class => 'uniform'} do |f| %>
 		<%= hidden_field_tag :step, @step %>
 		<fieldset>
-			<legend>New check step 2</legend>
+			<legend>Check the boxes below to set remote warehouses</legend>
 			
 			<table class="infos">
 				<tr>

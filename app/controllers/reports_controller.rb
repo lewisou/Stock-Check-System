@@ -20,10 +20,18 @@ class ReportsController < Adm::BaseController
         @tags = @search.paginate(:page => params[:page])
         render :layout => "tags"
       }
+
       format.xls {
         @tags = @search.all
         book = Spreadsheet::Workbook.new
-        send_data book.render_tags(@tags, "Tags Need Count 3"), :filename => "Tags_need_Count_3.xls", :disposition => 'attachment'
+
+        data = book.generate_xls(
+        "Variance Count 1 VS 2", @tags,        
+        ['Tag #', 'Count 1', 'Count 2', 'Differ', 'Value 1', 'Value 2', 'Differ', 'Count 3'],
+        [:id, :count_1, :count_2, :count_differ, :value_1, :value_2, :value_differ, :count_3]
+        )
+
+        send_data data, :filename => "Variance Count 1 VS 2.xls", :disposition => 'attachment'
       }
     end
   end

@@ -6,7 +6,7 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 unless Role.find_by_code("controller")
-  Role.create(:code => "controller", :description => "Organizer")
+  Role.create(:code => "controller", :description => "Controller")
 end
 
 unless Role.find_by_code("organizer")

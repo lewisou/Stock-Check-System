@@ -23,8 +23,16 @@ class Adm::CountsController < Adm::BaseController
       format.xls {
         @tags = @search.all
         book = Spreadsheet::Workbook.new
-        send_data book.render_missing_tags(@tags), :filename => "Missing Tags Count #{@c_i}.xls", :disposition => 'attachment'
+
+        data = book.generate_xls(
+        "Missing Tags Count #{@c_i}", @tags,        
+        ['Tag #', 'Item #', 'Warehouse', 'Shelf Location', @c_s.to_s],
+        [:id, [:inventory, :item, :code], [:inventory, :location, :code], :sloc, @c_s]
+        )
+
+        send_data data, :filename => "Missing Tags Count #{@c_i}.xls", :disposition => 'attachment'
       }
+
     end
   end
 

@@ -252,6 +252,19 @@ class TagTest < ActiveSupport::TestCase
     assert tag.reload.adj_final_count == 1
   end
   
+  test "value_1 value_2" do
+    inv = 
+
+    t1 = Item.create(:cost => 2.1).inventories.create(:location => Location.create).tags.create(:count_1 => 3, :count_2 => 4)
+    t2 = Item.create(:cost => 2.1).inventories.create(:location => Location.create).tags.create
+
+    assert t1.value_1 == 6.3
+    assert t1.value_2 == 8.4
+    
+    assert t2.value_1 == 0
+    assert t2.value_2 == 0
+  end
+  
 end
 
 

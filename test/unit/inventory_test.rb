@@ -332,7 +332,6 @@ class InventoryTest < ActiveSupport::TestCase
     
     al_i.update_attributes(:is_active => false)
     assert Inventory.need_manually_adj.count == 8
-
     al_i.update_attributes(:is_lotted => false, :is_active => true)
     assert Inventory.need_manually_adj.count == 6
 

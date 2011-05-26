@@ -51,7 +51,7 @@ class Check < ActiveRecord::Base
 
     self.manual_adj_xls = ::Attachment.new(:data => Spreadsheet::Workbook.new.generate_xls_file(
     "All Order Manual Adj", (self.inventories.need_manually_adj || []),
-    %w{Warehouse Desc1 Desc2 Desc3 Part# Desc. Cost MaxQty IsActive ShelfLoc. SCS_Result_Qty},
+    %w{Warehouse Desc1 Desc2 Desc3 Part# Desc. Cost MaxQty IsActive HasLotSer. ShelfLoc. SCS_Result_Qty},
     [[:location, :code],
       [:location, :desc1],
       [:location, :desc2],
@@ -61,6 +61,7 @@ class Check < ActiveRecord::Base
       [:item, :cost],
       [:item, :max_quantity],
       [:item, :is_active],
+      [:item, :is_lotted],
       [:item, :inittags],
       :result_qty]
     ))
@@ -220,8 +221,8 @@ class Check < ActiveRecord::Base
     @sheet0.each_with_index do |row, index|
       next if (index == 0 || row[0].blank?)
 
-      is_active = row[34].nil? ? false : (row[34] == 1 || row[34] == '1' || row[34] == true)
-      is_lotted = row[36].nil? ? false : (row[36] == 1 || row[36] == '1' || row[36] == true)
+      is_active = (row[34] || 0) == 0 ? false : true
+      is_lotted = (row[36] || 0) == 0 ? false : true
       
       Item.create(:description => row[1],
       :item_group => (self.item_groups.select {|g| g.name == row[6]}).first,

@@ -301,8 +301,8 @@ class InventoryTest < ActiveSupport::TestCase
     al_l = Location.create(:is_remote => true, :from_al => true)
     not_al_l = Location.create(:is_remote => true, :from_al => false)
 
-    al_i = Item.create(:from_al => true)
-    not_al_i = Item.create(:from_al => false)
+    al_i = Item.create(:from_al => true, :cost => 2)
+    not_al_i = Item.create(:from_al => false, :cost => 2)
 
     in1 = al_l.inventories.create(:item => al_i, :inputed_qty => 10)
     in2 = al_l.inventories.create(:item => al_i, :inputed_qty => 20)
@@ -338,15 +338,27 @@ class InventoryTest < ActiveSupport::TestCase
 
     al_i.update_attributes(:max_quantity => 1)
     assert Inventory.need_manually_adj.count == 8
+    al_i.update_attributes(:max_quantity => 0)
+    assert Inventory.need_manually_adj.count == 6
+    
+    al_i.update_attributes(:cost => nil)
+    assert Inventory.need_manually_adj.count == 8
+    al_i.update_attributes(:cost => 2)
+    assert Inventory.need_manually_adj.count == 6
 
+
+    al_i.update_attributes(:cost => 0)
+    assert Inventory.need_manually_adj.count == 8
+    al_i.update_attributes(:cost => 2)
+    assert Inventory.need_manually_adj.count == 6
   end
 
   test "need_adjustment" do
     al_l = Location.create(:is_remote => true, :from_al => true)
     not_al_l = Location.create(:is_remote => true, :from_al => false)
 
-    al_i = Item.create(:from_al => true, :is_active => true)
-    not_al_i = Item.create(:from_al => false, :is_active => true)
+    al_i = Item.create(:from_al => true, :is_active => true, :cost => 1)
+    not_al_i = Item.create(:from_al => false, :is_active => true, :cost => 1)
 
     in1 = al_l.inventories.create(:item => al_i, :inputed_qty => 10)
     in2 = al_l.inventories.create(:item => al_i, :inputed_qty => 20)
@@ -383,6 +395,15 @@ class InventoryTest < ActiveSupport::TestCase
     al_i.update_attributes(:is_active => true)
     assert Inventory.need_adjustment.count == 2
 
+    al_i.update_attributes(:cost => 0)
+    assert Inventory.need_adjustment.count == 0
+    al_i.update_attributes(:cost => 2)
+    assert Inventory.need_adjustment.count == 2
+
+    al_i.update_attributes(:cost => nil)
+    assert Inventory.need_adjustment.count == 0
+    al_i.update_attributes(:cost => 2)
+    assert Inventory.need_adjustment.count == 2
   end
 
   test "his_max" do

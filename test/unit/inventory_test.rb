@@ -332,7 +332,13 @@ class InventoryTest < ActiveSupport::TestCase
     
     al_i.update_attributes(:is_active => false)
     assert Inventory.need_manually_adj.count == 8
-    
+
+    al_i.update_attributes(:is_lotted => false, :is_active => true)
+    assert Inventory.need_manually_adj.count == 6
+
+    al_i.update_attributes(:max_quantity => 1)
+    assert Inventory.need_manually_adj.count == 8
+
   end
 
   test "need_adjustment" do
@@ -361,6 +367,21 @@ class InventoryTest < ActiveSupport::TestCase
     assert Inventory.need_adjustment.count == 2
     assert Inventory.need_adjustment.include?(in1)
     assert Inventory.need_adjustment.include?(in2)
+    
+    al_i.update_attributes(:max_quantity => 1)
+    assert Inventory.need_adjustment.count == 0
+    al_i.update_attributes(:max_quantity => 0)
+    assert Inventory.need_adjustment.count == 2
+
+    al_i.update_attributes(:is_lotted => true)
+    assert Inventory.need_adjustment.count == 0
+    al_i.update_attributes(:is_lotted => false)
+    assert Inventory.need_adjustment.count == 2
+
+    al_i.update_attributes(:is_active => false)
+    assert Inventory.need_adjustment.count == 0
+    al_i.update_attributes(:is_active => true)
+    assert Inventory.need_adjustment.count == 2
 
   end
 

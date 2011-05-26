@@ -24,7 +24,7 @@
 			<dl class="inline">
 				<dt><%= f.label :item_code_like, 'Item' %></dt>
 				<dd><%= f.text_field :item_code_like, :class => "small", :tabindex => 1 %></dd>
-				<dt><%= f.label :location_id_eq, 'Onsite Location' %></dt>
+				<dt><%= f.label :location_id_eq, 'Onsite Warehouse' %></dt>
 				<dd>
 					<%= hidden_field_tag :count, @c_i %>
 					<%= f.collection_select(:location_id_eq, curr_check.locations.tagable, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => 2})  %>

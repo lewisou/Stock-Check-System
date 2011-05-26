@@ -63,6 +63,8 @@ class InventoryTest < ActiveSupport::TestCase
   end
 
   test "create init tags!" do
+    "CA1-A, CA1-C, CA1-D, CA2-A,  CA3-A, CA3-B, FGFLOOR"
+    
     l = Location.create(:code => 'CA', :is_remote => false)
     
     i1 = Item.create(:inittags => 'CA75H, CA74H')
@@ -80,7 +82,11 @@ class InventoryTest < ActiveSupport::TestCase
     assert in2.tags.count == 0
     assert in3.tags.count == 0
     assert Tag.count == 2
-
+    
+    
+    al_i = Item.create(:inittags => "CA1-A, CA1-C, CA1-D, CA2-A,  CA3-A, CA3-B, FGFLOOR")
+    inv_al_i = Inventory.create(:location => l, :item => al_i)
+    assert inv_al_i.create_init_tags! == 6
   end
   
   test "counted_qty" do
@@ -139,46 +145,6 @@ class InventoryTest < ActiveSupport::TestCase
     assert l2.value == nil
     assert l2.from_al == false
 
-    
-    # c.switch_inv(2)
-    #     inv1.reload.update_attributes(:quantity => 4, :from_al => true)
-    #     inv2 = scope.create(:quantity => 3, :from_al => true)
-    #     inv2.update_attributes(:quantity => 3)
-    # 
-    #     c.switch_inv(3)
-    #     inv2.reload.update_attributes(:quantity => 3, :from_al => true)
-    # 
-    #     c.switch_inv(4)
-    #     inv1.reload.update_attributes(:quantity => 3, :from_al => true)
-    #     inv3 = scope.create(:quantity => 3, :from_al => true)
-    #     inv3.update_attributes(:quantity => 3)
-    #     
-    #     c.switch_inv(4)
-    
-
-    # c.update_attributes(:import_time => 2)
-    # inv.update_attributes(:quantity => 4, :from_al => true)
-    # 
-    # inv.attributes = {:quantity => 8}
-    # inv.save
-    # 
-    # c.update_attributes(:import_time => 3)
-    # inv.update_attributes(:quantity => 4, :from_al => false)
-    # inv.update_attributes(:quantity => 2)
-    # inv.update_attributes(:quantity => nil, :from_al => true)
-    # 
-    # assert inv.quantities.count == 3
-    # assert inv.quantities.where(:time => 1).count == 1
-    # assert inv.quantities.where(:time => 1).first.value == 3
-    # assert inv.quantities.where(:time => 1).first.from_al == false
-    # 
-    # assert inv.quantities.where(:time => 2).count == 1
-    # assert inv.quantities.where(:time => 2).first.value == 8
-    # assert inv.quantities.where(:time => 2).first.from_al == true
-    # 
-    # assert inv.quantities.where(:time => 3).count == 1
-    # assert inv.quantities.where(:time => 3).first.value == nil
-    # assert inv.quantities.where(:time => 3).first.from_al == true
   end
 
   test "adj_check" do

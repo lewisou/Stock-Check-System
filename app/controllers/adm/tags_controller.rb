@@ -15,7 +15,7 @@ class Adm::TagsController < Adm::BaseController
         @tags = @search.all
 
         pdf = Prawn::Document.generate_tags @tags
-        send_data pdf.render, :filename => "tags.pdf", :disposition => 'attachment'
+        send_data pdf.render, :filename => "tickets.pdf", :disposition => 'attachment'
       }
     end
   end
@@ -60,7 +60,7 @@ class Adm::TagsController < Adm::BaseController
 
     respond_to do |format|
       if @tag.save
-        format.html { redirect_to adm_tag_path(@tag), :notice => 'Tag was successfully created.' }
+        format.html { redirect_to adm_tag_path(@tag), :notice => 'Ticket was successfully created.' }
         format.xml  { render :xml => @tag, :status => :created, :location => @tag }
       else
         format.html { render :action => "new" }
@@ -76,7 +76,7 @@ class Adm::TagsController < Adm::BaseController
     
     respond_to do |format|
       if @tag.update_attributes(params[:tag])
-        format.html { redirect_to( adm_tag_path(@tag), :notice => 'Tag was successfully updated.') }
+        format.html { redirect_to( adm_tag_path(@tag), :notice => 'Ticket was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

@@ -6,11 +6,25 @@ class TagTest < ActiveSupport::TestCase
     scope = c.locations.create(:is_remote => false).inventories.create.tags
 
     3.times {scope.create}
+    scope.create(:state => "deleted")
     Tag.create
 
-    assert Tag.count == 4
+    assert Tag.count == 5
     assert Tag.in_check(c.id).count == 3
   end
+  
+  test "raw_in_chk scope" do
+    c = new_blank_check
+    scope = c.locations.create(:is_remote => false).inventories.create.tags
+
+    3.times {scope.create}
+    scope.create(:state => "deleted")
+    Tag.create
+
+    assert Tag.count == 5
+    assert Tag.raw_in_chk(c.id).count == 4
+  end
+  
   
   test "deleted scope" do
     Tag.create(:state => "deleted")

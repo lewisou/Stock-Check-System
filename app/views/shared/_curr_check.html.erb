@@ -54,8 +54,8 @@
 	<tbody>
 		<tr>
 			<th>Count 1</th>
-			<td class="number"><%= Tag.in_check(curr_check.id).count %></td>
-			<td class="number"><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
+			<td class="number"><%= Tag.raw_in_chk(curr_check.id).count %></td>
+			<td class="number"><%= Tag.raw_in_chk(curr_check.id).deleted_s.count %></td>
 			<td class="number"><%= Tag.in_check(curr_check.id).finish(1).count %></td>
 			<td class="number">
 			<strong>
@@ -65,8 +65,8 @@
 		</tr>
 		<tr>
 			<th>Count 2</th>
-			<td class="number"><%= Tag.in_check(curr_check.id).count %></td>
-			<td class="number"><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
+			<td class="number"><%= Tag.raw_in_chk(curr_check.id).count %></td>
+			<td class="number"><%= Tag.raw_in_chk(curr_check.id).deleted_s.count %></td>
 			<td class="number"><%= Tag.in_check(curr_check.id).finish(2).count %></td>
 			<td class="number">
 			<strong>
@@ -76,8 +76,8 @@
 		</tr>
 		<tr>
 			<th>Count 3</th>
-			<td class="number"><%= Tag.in_check(curr_check.id).count %></td>
-			<td class="number"><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
+			<td class="number"><%= Tag.raw_in_chk(curr_check.id).count %></td>
+			<td class="number"><%= Tag.raw_in_chk(curr_check.id).deleted_s.count %></td>
 			<td class="number"><%= Tag.in_check(curr_check.id).countable.finish(3).count %></td>
 			<td class="number">0</td>
 		</tr>
@@ -94,8 +94,8 @@
 		</tr-->
 		<tr>
 			<th>Audit check</th>
-			<td class="number"><%= Tag.in_check(curr_check.id).count %></td>
-			<td class="number"><%= Tag.in_check(curr_check.id).deleted_s.count %></td>
+			<td class="number"><%= Tag.raw_in_chk(curr_check.id).count %></td>
+			<td class="number"><%= Tag.raw_in_chk(curr_check.id).deleted_s.count %></td>
 			<td class="number"><%= Tag.in_check(curr_check.id).countable.where(:audit.not_eq => nil).count %></td>
 			<td class="number">0</td>
 		</tr>

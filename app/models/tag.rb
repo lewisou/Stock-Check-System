@@ -1,9 +1,10 @@
 class Tag < ActiveRecord::Base
-  scope :in_check, lambda {|check_id| includes(:inventory => {:location => :check}).where(:checks => {:id => check_id}).countable }
+  scope :raw_in_chk, lambda { |check_id| includes(:inventory => {:location => :check}).where(:checks => {:id => check_id}) }
+  scope :countable, includes(:inventory => :location).where(:locations => {:is_remote => false}).where(:state.not_eq % "deleted" | :state.eq % nil)
+  scope :in_check, lambda { |check_id| raw_in_chk(check_id).countable }
   scope :not_finish, lambda{|count| where("count_#{count}".to_sym.eq % nil).countable}
   scope :finish, lambda{|count| where("count_#{count}".to_sym.not_eq % nil).countable}
   scope :deleted_s, where(:state => "deleted")
-  scope :countable, includes(:inventory => :location).where(:locations => {:is_remote => false}).where(:state.not_eq % "deleted" | :state.eq % nil)
 
   belongs_to :inventory
 

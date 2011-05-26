@@ -9,7 +9,7 @@
 		<fieldset>
 			<legend>Search</legend>
 			<dl class="inline">
-				<dt><label for="name">Tag Number</label></dt>
+				<dt><label for="name">Ticket Number</label></dt>
 				<dd>
 					<%= f.text_field :id_eq, :class => "small required", :size => "50", :tabindex => 2 %>
 					<% if @c_i < 3 %>
@@ -32,10 +32,10 @@
 		<fieldset style="background-color: white">
 			
 			<dl class="inline">
-				<dt><label>Tag Number</label></dt>
+				<dt><label>Ticket Number</label></dt>
 				<dd><label><%= @tag.id %></label></dd>
 			
-				<dt><label>Location</label></dt>
+				<dt><label>Warehouse</label></dt>
 				<dd><label><%= @tag.inventory.location.try(:code) %> <%= @tag.inventory.location.try(:description) %></label></dd>
 				
 				

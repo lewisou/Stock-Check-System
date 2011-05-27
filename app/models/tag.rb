@@ -31,8 +31,13 @@ class Tag < ActiveRecord::Base
 
 
   after_save :launch_inv_save
-  after_destroy :launch_inv_save
+  after_destroy :launch_inv_save_with_out_reload
   def launch_inv_save
+    self.inventory.try(:save)
+    self.reload
+  end
+  
+  def launch_inv_save_with_out_reload
     self.inventory.try(:save)
   end
 

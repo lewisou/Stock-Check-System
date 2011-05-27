@@ -82,6 +82,7 @@ class ItemTest < ActiveSupport::TestCase
 end
 
 
+
 # == Schema Information
 #
 # Table name: items
@@ -100,6 +101,6 @@ end
 #  data_changed  :boolean         default(FALSE)
 #  is_active     :boolean
 #  inittags      :text
-#  is_lotted     :boolean
+#  is_lotted     :boolean         default(FALSE)
 #
 

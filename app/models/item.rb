@@ -4,30 +4,39 @@ class Item < ActiveRecord::Base
   
   belongs_to :item_group
   has_many :inventories
-  
+  has_one :item_info
+
   before_update :mark_flag
   def mark_flag
     self.data_changed = true
   end
-  
+
+  after_create :crt_item_info
   after_save :launch_inv_save
   def launch_inv_save
     self.inventories.each {|inv| inv.try(:save)}
+    self.reload
   end
-  
-  
+
+
   def group_name
     self.item_group.try(:name)
   end
-  
+
   def counted_total_qty
     self.inventories.map(&:result_qty).sum
   end
-  
+
   def adj_max_quantity
     (self.max_quantity && self.max_quantity > 0 && counted_total_qty > self.max_quantity) ? counted_total_qty : nil
   end
+  
+  def crt_item_info
+    self.create_item_info
+    self.reload
+  end
 end
+
 
 
 
@@ -58,6 +67,6 @@ end
 #  data_changed  :boolean         default(FALSE)
 #  is_active     :boolean
 #  inittags      :text
-#  is_lotted     :boolean
+#  is_lotted     :boolean         default(FALSE)
 #
 

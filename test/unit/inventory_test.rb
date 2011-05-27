@@ -298,111 +298,149 @@ class InventoryTest < ActiveSupport::TestCase
   end
   
   test "need_manually_adj" do
-    al_l = Location.create(:is_remote => true, :from_al => true)
-    not_al_l = Location.create(:is_remote => true, :from_al => false)
+    # is_active, max_quantity, from_al, is_lotted, cost
+    item = Item.create(:is_active => true, :max_quantity => nil, :from_al => true, :is_lotted => false, :cost => 2)
 
-    al_i = Item.create(:from_al => true, :cost => 2)
-    not_al_i = Item.create(:from_al => false, :cost => 2)
+    # is_active, from_al
+    location = Location.create(:is_active => true, :from_al => true)
+    location.update_attributes(:is_remote => true)
 
-    in1 = al_l.inventories.create(:item => al_i, :inputed_qty => 10)
-    in2 = al_l.inventories.create(:item => al_i, :inputed_qty => 20)
-    al_l.inventories.create(:item => al_i)
+    # ao_adj
+    inv = Inventory.create(:item => item, :location => location)
+    inv.update_attributes(:quantity => 1, :inputed_qty => 10)
 
-    al_l.inventories.create(:item => not_al_i, :inputed_qty => 10)
-    al_l.inventories.create(:item => not_al_i, :inputed_qty => 20)
-    al_l.inventories.create(:item => not_al_i)
+    item.reload
+    inv.reload
+    location.reload
 
-    not_al_l.inventories.create(:item => al_i, :inputed_qty => 10)
-    not_al_l.inventories.create(:item => al_i, :inputed_qty => 20)
-    not_al_l.inventories.create(:item => al_i)
-
-    not_al_l.inventories.create(:item => not_al_i, :inputed_qty => 10)
-    in3 = not_al_l.inventories.create(:item => not_al_i, :inputed_qty => 20)
-    not_al_l.inventories.create(:item => not_al_i)
-
-    assert Inventory.need_manually_adj.count == 6
-    assert !Inventory.need_manually_adj.include?(in1)
-    assert !Inventory.need_manually_adj.include?(in2)
-
-    al_i.update_attributes(:is_lotted => true)
-    assert Inventory.need_manually_adj.count == 8
-
-    al_i.update_attributes(:is_lotted => false, :is_active => true)
-    assert Inventory.need_manually_adj.count == 6
+    # begin test ---------------------------------------------------
+    # test ao_adj
+    inv.update_attributes(:quantity => 1, :inputed_qty => 1)
+    assert !Inventory.need_manually_adj.include?(inv)
     
-    al_i.update_attributes(:is_active => false)
-    assert Inventory.need_manually_adj.count == 8
-    al_i.update_attributes(:is_lotted => false, :is_active => true)
-    assert Inventory.need_manually_adj.count == 6
-
-    al_i.update_attributes(:max_quantity => 1)
-    assert Inventory.need_manually_adj.count == 8
-    al_i.update_attributes(:max_quantity => 0)
-    assert Inventory.need_manually_adj.count == 6
+    inv.update_attributes(:quantity => 0, :inputed_qty => 0)
+    assert !Inventory.need_manually_adj.include?(inv)
+    inv.update_attributes(:quantity => 1, :inputed_qty => 10)
     
-    al_i.update_attributes(:cost => nil)
-    assert Inventory.need_manually_adj.count == 8
-    al_i.update_attributes(:cost => 2)
-    assert Inventory.need_manually_adj.count == 6
+    # test location is_active
+    location.update_attributes(:is_active => false)
+    assert Inventory.need_manually_adj.include?(inv)
+    location.update_attributes(:is_active => true)
+    assert !Inventory.need_manually_adj.include?(inv)
 
-
-    al_i.update_attributes(:cost => 0)
-    assert Inventory.need_manually_adj.count == 8
-    al_i.update_attributes(:cost => 2)
-    assert Inventory.need_manually_adj.count == 6
+    # test location from_al
+    location.update_attributes(:from_al => false)
+    assert Inventory.need_manually_adj.include?(inv)
+    location.update_attributes(:from_al => true)
+    assert !Inventory.need_manually_adj.include?(inv)
+    
+    # test item is_active
+    item.update_attributes(:is_active => false)
+    assert Inventory.need_manually_adj.include?(inv)
+    item.update_attributes(:is_active => true)
+    assert !Inventory.need_manually_adj.include?(inv)
+    
+    # test item max_quantity
+    item.update_attributes(:max_quantity => 1)
+    assert Inventory.need_manually_adj.include?(inv)
+    item.update_attributes(:max_quantity => 0)
+    assert !Inventory.need_manually_adj.include?(inv)
+    item.update_attributes(:max_quantity => nil)
+    assert !Inventory.need_manually_adj.include?(inv)
+    item.update_attributes(:max_quantity => 11)
+    assert !Inventory.need_manually_adj.include?(inv)
+    
+    item.update_attributes(:from_al => false)
+    assert Inventory.need_manually_adj.include?(inv)
+    item.update_attributes(:from_al => true)
+    assert !Inventory.need_manually_adj.include?(inv)
+    
+    item.update_attributes(:is_lotted => true)
+    assert Inventory.need_manually_adj.include?(inv)
+    item.update_attributes(:is_lotted => false)
+    assert !Inventory.need_manually_adj.include?(inv)
+    
+    item.update_attributes(:cost => nil)
+    assert Inventory.need_manually_adj.include?(inv)
+    item.update_attributes(:cost => 0)
+    assert Inventory.need_manually_adj.include?(inv)
+    item.update_attributes(:cost => 1)
+    assert !Inventory.need_manually_adj.include?(inv)
   end
 
   test "need_adjustment" do
-    al_l = Location.create(:is_remote => true, :from_al => true)
-    not_al_l = Location.create(:is_remote => true, :from_al => false)
+    # is_active, max_quantity, from_al, is_lotted, cost
+    item = Item.create(:is_active => true, :max_quantity => nil, :from_al => true, :is_lotted => false, :cost => 2)
 
-    al_i = Item.create(:from_al => true, :is_active => true, :cost => 1)
-    not_al_i = Item.create(:from_al => false, :is_active => true, :cost => 1)
+    # is_active, from_al
+    location = Location.create(:is_active => true, :from_al => true)
+    location.update_attributes(:is_remote => true)
 
-    in1 = al_l.inventories.create(:item => al_i, :inputed_qty => 10)
-    in2 = al_l.inventories.create(:item => al_i, :inputed_qty => 20)
-    al_l.inventories.create(:item => al_i)
+    # ao_adj
+    inv = Inventory.create(:item => item, :location => location)
+    inv.update_attributes(:quantity => 1, :inputed_qty => 10)
 
-    al_l.inventories.create(:item => not_al_i, :inputed_qty => 10)
-    al_l.inventories.create(:item => not_al_i, :inputed_qty => 20)
-    al_l.inventories.create(:item => not_al_i)
+    item.reload
+    inv.reload
+    location.reload
 
-    not_al_l.inventories.create(:item => al_i, :inputed_qty => 10)
-    not_al_l.inventories.create(:item => al_i, :inputed_qty => 20)
-    not_al_l.inventories.create(:item => al_i)
+    # begin test ---------------------------------------------------
+    # test ao_adj
+    inv.update_attributes(:quantity => 1, :inputed_qty => 10)
+    assert Inventory.need_adjustment.include?(inv)
 
-    not_al_l.inventories.create(:item => not_al_i, :inputed_qty => 10)
-    not_al_l.inventories.create(:item => not_al_i, :inputed_qty => 20)
-    not_al_l.inventories.create(:item => not_al_i)
+    inv.update_attributes(:quantity => 1, :inputed_qty => 1)
+    assert !Inventory.need_adjustment.include?(inv)
 
-    assert Inventory.need_adjustment.count == 2
-    assert Inventory.need_adjustment.include?(in1)
-    assert Inventory.need_adjustment.include?(in2)
-    
-    al_i.update_attributes(:max_quantity => 1)
-    assert Inventory.need_adjustment.count == 0
-    al_i.update_attributes(:max_quantity => 0)
-    assert Inventory.need_adjustment.count == 2
+    inv.update_attributes(:quantity => 0, :inputed_qty => 0)
+    assert !Inventory.need_adjustment.include?(inv)
+    inv.update_attributes(:quantity => 1, :inputed_qty => 10)
 
-    al_i.update_attributes(:is_lotted => true)
-    assert Inventory.need_adjustment.count == 0
-    al_i.update_attributes(:is_lotted => false)
-    assert Inventory.need_adjustment.count == 2
+    # test location is_active
+    location.update_attributes(:is_active => false)
+    assert !Inventory.need_adjustment.include?(inv)
+    location.update_attributes(:is_active => true)
+    assert Inventory.need_adjustment.include?(inv)
 
-    al_i.update_attributes(:is_active => false)
-    assert Inventory.need_adjustment.count == 0
-    al_i.update_attributes(:is_active => true)
-    assert Inventory.need_adjustment.count == 2
+    # test location from_al
+    location.update_attributes(:from_al => false)
+    assert !Inventory.need_adjustment.include?(inv)
+    location.update_attributes(:from_al => true)
+    assert Inventory.need_adjustment.include?(inv)
 
-    al_i.update_attributes(:cost => 0)
-    assert Inventory.need_adjustment.count == 0
-    al_i.update_attributes(:cost => 2)
-    assert Inventory.need_adjustment.count == 2
+    # test item is_active
+    item.update_attributes(:is_active => false)
+    assert !Inventory.need_adjustment.include?(inv)
+    item.update_attributes(:is_active => true)
+    assert Inventory.need_adjustment.include?(inv)
 
-    al_i.update_attributes(:cost => nil)
-    assert Inventory.need_adjustment.count == 0
-    al_i.update_attributes(:cost => 2)
-    assert Inventory.need_adjustment.count == 2
+    # test item max_quantity
+    item.update_attributes(:max_quantity => 1)
+    assert !Inventory.need_adjustment.include?(inv)
+    item.update_attributes(:max_quantity => 0)
+    assert Inventory.need_adjustment.include?(inv)
+    item.update_attributes(:max_quantity => nil)
+    assert Inventory.need_adjustment.include?(inv)
+    item.update_attributes(:max_quantity => 11)
+    assert Inventory.need_adjustment.include?(inv)
+
+    item.update_attributes(:from_al => false)
+    assert !Inventory.need_adjustment.include?(inv)
+    item.update_attributes(:from_al => true)
+    assert Inventory.need_adjustment.include?(inv)
+
+    item.update_attributes(:is_lotted => true)
+    assert !Inventory.need_adjustment.include?(inv)
+    item.update_attributes(:is_lotted => false)
+    assert Inventory.need_adjustment.include?(inv)
+
+    item.update_attributes(:cost => nil)
+    assert !Inventory.need_adjustment.include?(inv)
+    item.update_attributes(:cost => 0)
+    assert !Inventory.need_adjustment.include?(inv)
+    item.update_attributes(:cost => 1)
+    assert Inventory.need_adjustment.include?(inv)
+
   end
 
   test "his_max" do
@@ -432,7 +470,34 @@ class InventoryTest < ActiveSupport::TestCase
 
     assert Inventory.report_valid.count == 2
     assert !Inventory.report_valid.all.include?(inv3)
+  end
 
+  test "refresh_item_res_qty" do
+    i = Item.create
+    i.inventories.create(:location => Location.create(:is_remote => true), :inputed_qty => 2)
+    assert i.item_info.res_qty == 2
+    
+    i2 = Item.create
+    i2.inventories.create(:location => Location.create(:is_remote => true), :inputed_qty => 2)
+    i2.inventories.create(:location => Location.create(:is_remote => true), :inputed_qty => 3)
+    i2.inventories.create(:location => Location.create(:is_remote => true), :inputed_qty => 4)
+    
+    i2.reload
+    assert i2.item_info.res_qty == 9
+    assert i2.item_info.remaining.nil?
+
+    i3 = Item.create(:max_quantity => 10)
+    i3.inventories.create(:location => Location.create(:is_remote => true), :inputed_qty => 2)
+    i3.inventories.create(:location => Location.create(:is_remote => true), :inputed_qty => 3)
+    inv = i3.inventories.create(:location => Location.create(:is_remote => true), :inputed_qty => 4)
+    
+    i3.reload
+    assert i3.item_info.res_qty == 9
+    assert i3.item_info.remaining == 1
+    
+    inv.update_attributes(:inputed_qty => inv.inputed_qty + 2)
+    i3.reload
+    assert i3.item_info.remaining == -1
   end
 end
 

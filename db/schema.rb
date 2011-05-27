@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110526111820) do
+ActiveRecord::Schema.define(:version => 20110527062806) do
 
   create_table "activities", :force => true do |t|
     t.integer  "admin_id"
@@ -174,6 +174,14 @@ ActiveRecord::Schema.define(:version => 20110526111820) do
   end
 
   add_index "item_groups", ["check_id"], :name => "index_item_groups_on_check_id"
+
+  create_table "item_infos", :force => true do |t|
+    t.integer  "res_qty"
+    t.integer  "item_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "remaining"
+  end
 
   create_table "items", :force => true do |t|
     t.string   "code"

@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  res_qty: 1
+  item_id: 1
+
+two:
+  res_qty: 1
+  item_id: 1
+
+# == Schema Information
+#
+# Table name: item_infos
+#
+#  id         :integer         not null, primary key
+#  res_qty    :integer
+#  item_id    :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+

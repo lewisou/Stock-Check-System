@@ -37,6 +37,7 @@ class Location < ActiveRecord::Base
   after_save :launch_inv_save
   def launch_inv_save
     self.inventories.each {|inv| inv.try(:save)}
+    self.reload
   end
 
   def description

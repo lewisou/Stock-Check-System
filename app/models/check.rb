@@ -84,7 +84,7 @@ class Check < ActiveRecord::Base
     self.generated = true
     self.save
   end
-  
+
   # repeated code for speed
   def inputed_value
     Inventory.in_check(self.id).remote_s.sum("result_value").to_f
@@ -109,7 +109,7 @@ class Check < ActiveRecord::Base
   def frozen_value
     Inventory.in_check(self.id).sum("frozen_value").to_f
   end
-  
+
   def final_value
     Inventory.in_check(self.id).sum("result_value").to_f
   end
@@ -121,7 +121,6 @@ class Check < ActiveRecord::Base
   def ao_adj_abs_value
     Inventory.in_check(self.id).sum("abs(ao_adj_value)").to_f
   end
-
 
   def archive!
     self.update_attributes(:state => "archive", :current => false)
@@ -177,7 +176,7 @@ class Check < ActiveRecord::Base
   def refresh_re_export_qtys
     refresh_qtys_from_xls @re_export_qtys_xls, :re_export_qty, :from_al => :keep
   end
-  
+
   def refresh_inventories
     refresh_qtys_from_xls @inventories_xls
   end

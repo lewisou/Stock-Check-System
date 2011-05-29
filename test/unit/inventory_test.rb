@@ -87,6 +87,16 @@ class InventoryTest < ActiveSupport::TestCase
     al_i = Item.create(:inittags => "CA1-A, CA1-C, CA1-D, CA2-A,  CA3-A, CA3-B, FGFLOOR")
     inv_al_i = Inventory.create(:location => l, :item => al_i)
     assert inv_al_i.create_init_tags! == 6
+    
+    item = Item.create(:inittags => "CA74-E, CA74-F")
+    inv = Inventory.create(:location => Location.create(:code => "CA", :is_remote => false), :item => item)
+    inv.create_init_tags! == 2
+    require "pp"
+    pp inv.tags.map(&:sloc)
+    
+    inv = Inventory.create(:location => Location.create(:code => "RS", :is_remote => false), :item => item)
+    inv.create_init_tags! == 2
+    pp inv.tags.map(&:sloc)    
   end
   
   test "counted_qty" do

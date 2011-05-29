@@ -41,7 +41,7 @@ module Prawn
           end
 
           table([tables], :width => TAG_TABLE_WIDTH * 4, :cell_style => {:borders => [], :padding => 0})
-          puts "#{index} finished"
+          # puts "#{index} finished"
         end
       end
 

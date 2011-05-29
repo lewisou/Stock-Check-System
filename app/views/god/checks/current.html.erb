@@ -49,6 +49,15 @@
 
 			<tr>
 				<td>
+					<%= action_link (curr_check.state == 'complete'), 'Recheck', god_rechecks_path, :class => 'button' %>
+				</td>
+				<td>
+					<%= "(You can not Recheck the check now.)" unless (curr_check.state == 'complete') %> You must complete the stock check first and export all adjustment excels back to ALL ORDER.
+				</td>
+			</tr>
+
+			<tr>
+				<td>
 					<%= action_link ['complete', 'cancel'].include?(curr_check.state), 'Archive', change_state_god_check_path(curr_check, :state => :archive), :method => :put, :confirm => "Are you sure to archive the check '#{curr_check.description}' ?", :class => "button" %>
 				</td>
 				<td>
@@ -64,17 +73,6 @@
 					<%= "(You can not reopen the check now.)" unless (curr_check.state != 'open') %> Reopen a completed or canceled stock check in the case you might forget to input some tickets.
 				</td>
 			</tr>
-
-
-			<tr>
-				<td>
-					<%= action_link (curr_check.state == 'complete'), 'Recheck', god_rechecks_path, :class => 'button' %>
-				</td>
-				<td>
-					<%= "(You can not Recheck the check now.)" unless (curr_check.state == 'complete') %> You must complete the stock check first and export all adjustment excels back to ALL ORDER.
-				</td>
-			</tr>
-
 		</table>
 		<% end %>
 

@@ -13,17 +13,17 @@
 			<dd>
 				<%= f.label :item_description, @item.description %>
 			</dd>
-			<dt><%= f.label :location_id, 'Onsite Location' %></dt>
+			<dt><%= f.label :location_id, 'Onsite Warehouse' %></dt>
 			<dd>
 				<%= f.collection_select(:location_id, curr_check.locations.tagable, :id, :code, {:include_blank => false}, {:class => "small", :tabindex => 1})  %>
-				<%= link_to "New Onsite location", new_adm_location_path %>
+				<%= link_to "New Onsite Warehouse", new_adm_location_path %>
 			</dd>
 			<dt><%= f.label :sloc, 'Shelf Location' %></dt>
 			<dd><%= f.text_field :sloc, :tabindex => 2, :class => 'small' %></dd>
 		</dl>
 	</fieldset>
 	<div class="buttons">
-		<%= f.submit :class => 'button' %>
+		<%= f.submit "Save", :class => 'button' %>
 	</div>
 
 <% end %>

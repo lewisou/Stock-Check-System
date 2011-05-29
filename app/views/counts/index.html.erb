@@ -45,10 +45,10 @@
 				<dt><label>Description</label></dt>
 				<dd><label><%= @tag.inventory.item.try(:description) %></label></dd>
 
-				<% if true %>
 				<dt><%= f.label :sloc, 'Shelf Location' %></dt>
-				<dd><label><%= @tag.sloc || '' %></label> <%= link_to image_tag('icons/edit.png'), edit_adm_tag_path(@tag) %></dd>
-				<% end %>
+				<dd><label><%= @tag.sloc || raw('&nbsp;') %></label>
+				</dd>
+
 				
 				<% if @c_i == 3 %>
 				<!--dt><%= f.label :count_1 %></dt>

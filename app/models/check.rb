@@ -51,7 +51,7 @@ class Check < ActiveRecord::Base
 
     self.manual_adj_xls = ::Attachment.new(:data => Spreadsheet::Workbook.new.generate_xls_file(
     "All Order Manual Adj", (self.inventories.need_manually_adj || []),
-    %w{Warehouse Desc1 Desc2 Desc3 Part# Desc. Cost MaxQty IsActive HasLotSer. ShelfLoc. SCS_Result_Qty},
+    %w{Warehouse Desc1 Desc2 Desc3 Part# Desc. Cost MaxQty TotalScsQty IsActive HasLotSer. ShelfLoc. SCS_Result_Qty},
     [[:location, :code],
       [:location, :desc1],
       [:location, :desc2],
@@ -60,6 +60,7 @@ class Check < ActiveRecord::Base
       [:item, :description],
       [:item, :cost],
       [:item, :max_quantity],
+      [:item, :item_info, :res_qty],
       [:item, :is_active],
       [:item, :is_lotted],
       [:item, :inittags],

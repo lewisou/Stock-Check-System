@@ -14,7 +14,7 @@
 
 <dt><%= f.label :inventory_location_id_eq, 'Warehouse' %></dt>
 <dd>
-	<%= f.collection_select(:inventory_location_id_eq, check.locations, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => bg_ind + 4})  %>
+	<%= f.collection_select(:inventory_location_id_eq, check.locations.tagable, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => bg_ind + 4})  %>
 </dd>
 
 <!--dt><%= f.label :counted_by %></dt>

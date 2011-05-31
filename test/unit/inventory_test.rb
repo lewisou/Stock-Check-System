@@ -91,9 +91,7 @@ class InventoryTest < ActiveSupport::TestCase
     item = Item.create(:inittags => "CA74-E, CA74-F")
     inv = Inventory.create(:location => Location.create(:code => "CA", :is_remote => false), :item => item)
     inv.create_init_tags! == 2
-    require "pp"
-    pp inv.tags.map(&:sloc)
-    
+
     inv = Inventory.create(:location => Location.create(:code => "RS", :is_remote => false), :item => item)
     inv.create_init_tags! == 2
     pp inv.tags.map(&:sloc)    

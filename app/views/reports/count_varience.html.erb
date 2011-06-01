@@ -25,10 +25,18 @@
 			<legend>Filter</legend>
 			<dl class="inline">
 				<dt><label for="name">Tolerance</label></dt>
+				<!--dd>
+					< f.text_field :tolerance_v, :class => "small", :tabindex => 1 > ($ in value)
+					< f.text_field :tolerance_q, :class => "small", :tabindex => 2 > (% in quantity)
+				</dd-->
 				<dd>
-					<%= f.text_field :tolerance_v, :class => "small", :tabindex => 1 %> ($ in value)
-					<%= f.text_field :tolerance_q, :class => "small", :tabindex => 2 %> (% in quantity)
+
+					<%= text_field_tag :tole_value, @tole[:tole_value], :class => "small", :tabindex => 1 %> ($ in value)
+					or
+					<%= text_field_tag :tole_quantity, @tole[:tole_quantity], :class => "small", :tabindex => 2 %> (% in quantity)
 				</dd>
+				
+				
 				<dt>
 					<%= f.label :count_3_is_null, 'Count 3 not finished' %>
 				</dt>
@@ -54,7 +62,7 @@
 	<table id="table1" class="gtable detailtable">
 		<thead>
 			<tr>
-				<th>TAG #</th>
+				<th>Ticket #</th>
 				<th>Count 1</th>
 				<th>Count 2</th>
 				<th>Differ</th>
@@ -67,7 +75,11 @@
 		<tbody>
 			<% @tags.each do |tag| %>
 			<tr>
-				<td><%= tag.id %></td>
+				<td>
+				<a href="#" class="detail-link">
+				<%= tag.id %>
+				</a>
+				</td>
 				<td class='number'><%= tag.count_1 %></td>
 				<td class='number'><%= tag.count_2 %></td>
 				<td class="number"><%= tag.count_differ %> %</td>
@@ -78,12 +90,12 @@
 			</tr>
 			
 			<tr class="detail">
-				<td colspan="6">
+				<td colspan="8">
 					<table>
 						<tbody>
 							<tr>
-								<td><%= tag.inventory.item.try(:code) %></td>
 								<td><%= tag.inventory.location.try(:code) %></td>
+								<td><%= tag.inventory.item.try(:code) %></td>
 								<td><%= tag.inventory.item.try(:description) %></td>
 							</tr>
 						</tbody>

@@ -8,12 +8,13 @@ class ReportsController < Adm::BaseController
 
   def count_varience
 
-    # @tole = {:tole_quantity => (params[:tole_quantity] || 5), :tole_value => (params[:tole_value] || 25)}
+    @tole = {:tole_quantity => (params[:tole_quantity] || curr_check.credit_q), :tole_value => (params[:tole_value] || curr_check.credit_v)}
 
-    @search = Tag.in_check(curr_check.id).finish(1).finish(2).search(
-    ({"tolerance_q" => curr_check.credit_q, "tolerance_v" => curr_check.credit_v}).merge((params[:search] || {}).delete_if {|key, value| value.blank? })
-    )
-    # tole_q_or_v(@tole[:tole_quantity], @tole[:tole_value]).search(params[:search])
+    @search = Tag.in_check(curr_check.id).finish(1).finish(2)\
+    .tole_q_or_v(@tole[:tole_quantity], @tole[:tole_value]).search(params[:search])\
+    # .search(params[:search])
+    # ({"tolerance_q" => curr_check.credit_q, "tolerance_v" => curr_check.credit_v}).merge((params[:search] || {}).delete_if {|key, value| value.blank? })
+    # )
 
     respond_to do |format|
       format.html { 
@@ -27,8 +28,8 @@ class ReportsController < Adm::BaseController
 
         data = book.generate_xls(
         "Variance Count 1 VS 2", @tags,        
-        ['Tag #', 'Count 1', 'Count 2', 'Differ', 'Value 1', 'Value 2', 'Differ', 'Count 3'],
-        [:id, :count_1, :count_2, :count_differ, :value_1, :value_2, :value_differ, :count_3]
+        ['Tag #', 'Desc.', 'Warehouse', 'Shelf Loc', 'Count 1', 'Count 2', 'Differ', 'Value 1', 'Value 2', 'Differ', 'Count 3'],
+        [:id, [:inventory, :item, :description], [:inventory, :location, :code], :sloc, :count_1, :count_2, :count_differ, :value_1, :value_2, :value_differ, :count_3]
         )
 
         send_data data, :filename => "Variance Count 1 VS 2.xls", :disposition => 'attachment'

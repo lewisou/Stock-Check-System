@@ -9,7 +9,7 @@ module Prawn
     # include Vivax::Barcode
     
     TAG_TABLE_WIDTH = 8.9.cm 
-    PADDING = [0.84.cm, 0.5.cm, 0.14.cm, 0.5.cm] #top right buttom left
+    PADDING = [0.5.cm, 0.5.cm, 0.48.cm, 0.5.cm] #top right buttom left
     
     def self.generate_tags tags
       #, tag_colors = ['db4653', '009f6e', '418bb9', 'b89466']
@@ -60,7 +60,7 @@ module Prawn
     def make_tag_table(tag)
       # Prawn::ImageWrapper.new(barcode(tag.id.to_s), TAG_TABLE_WIDTH / 3, TAG_TABLE_WIDTH / 10
       item = tag.inventory.item.try(:code) || "No content"
-      description = (tag.inventory.item.try(:description) || "No descrption")[0, 20] + "..."
+      description = (tag.inventory.item.try(:description) || "No descrption")[0, 30] + "..."
       data = [
         # [make_tag_sub_table(["\n#{tag.id}", image_wrapper(tag.id.to_s)], tag_color)],
         [make_tag_sub_table(["#{tag.id}", " "], :font_style => :bold)],

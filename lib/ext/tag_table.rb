@@ -66,8 +66,8 @@ module Prawn
         [make_tag_sub_table(["#{tag.id}", " "], :font_style => :bold)],
         ["#{item} "],
         ["#{description} "],
-        ["#{tag.sloc} "], #image_wrapper(item)
-        [make_tag_sub_table(["#{tag.inventory.location.code} ", "#{tag.created_at.to_date} ", " "])]
+        ["(#{tag.inventory.location.code}) #{tag.sloc}"], #image_wrapper(item)
+        [make_tag_sub_table([" ", "#{tag.created_at.to_date} ", " "])]
       ]
 
       t = make_table(data) do |table|

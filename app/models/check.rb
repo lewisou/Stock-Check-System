@@ -226,8 +226,8 @@ class Check < ActiveRecord::Base
       
       Item.create(:description => row[1],
       :item_group => (self.item_groups.select {|g| g.name == row[6]}).first,
-      :cost => row[20],
-      :al_cost => row[20],
+      :cost => row[18],
+      :al_cost => row[18],
       :is_active => is_active,
       :is_lotted => is_lotted,
       :inittags => row[41],

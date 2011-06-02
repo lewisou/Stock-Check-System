@@ -11,6 +11,11 @@ class God::ChecksController < God::BaseController
 
   # Status page
   def current
+    if Check.curr_s.where(:state => 'init').count > 0
+      redirect_to new_god_check_path(:step => 2)
+      return
+    end
+
     @check = Check.opt_s.first
   end
 
@@ -22,7 +27,7 @@ class God::ChecksController < God::BaseController
     @check = @step == 1 ? Check.new : Check.curr_s.first
     render "new_#{@step}"
   end
-  
+
   def create
     if send "create_step_#{@step}"
       if @step < 2

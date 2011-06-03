@@ -8,14 +8,13 @@
 
 <% if allow_data_entry? %>
 <% @item = curr_check.items.where(:code.eq => params[:search][:inventory_item_code_like]).first if params[:search] && params[:search][:inventory_item_code_like] %>
-<small>
+
 <% if @item %>
-	<%= link_to "Create Ticket with Item # #{@item.code}", new_adm_item_tag_path(@item) %>
+	<%= link_to "Create New Ticket with this Item # #{@item.code}", new_adm_item_tag_path(@item) %>
 <% else %>
 	<% @new_item_params = (params[:search] && params[:search][:inventory_item_code_like]) ? {:item => {:code => params[:search][:inventory_item_code_like]}} : {} %>
-	<%= link_to "New Item with Item # #{params[:search][:inventory_item_code_like]}", new_adm_item_path(({:sub_menu => @sub_menu}).merge @new_item_params) if params[:search] && !params[:search][:inventory_item_code_like].blank? %>
+	<%= link_to "Item not found! Click here to create new item # #{params[:search][:inventory_item_code_like]}", new_adm_item_path(({:sub_menu => @sub_menu}).merge @new_item_params) if params[:search] && !params[:search][:inventory_item_code_like].blank? %>
 <% end %>
-</small>
 <% end %>
 
 </dd>

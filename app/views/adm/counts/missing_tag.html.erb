@@ -18,8 +18,7 @@
 
 <article>
 	<h1><%= @search.count %> Missing Tickets</h1>
-	
-	<%= loading_link 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
+
 	<%= loading_link 'Export to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 	<table id="table1" class="gtable">
 		<thead>

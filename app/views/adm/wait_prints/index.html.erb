@@ -26,6 +26,7 @@
 				<th><%= sort_link @search, :inventory_location_code, 'Location' %></th>
 				<th><%= sort_link @search, :inventory_item_cost, 'Cost' %></th>
 				<th><%= sort_link @search, :sloc, 'Shelf Loc' %></th>
+				<th><%= sort_link @search, :printed_time, 'Printed Times' %></th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -39,6 +40,7 @@
 				<td><%= tag.inventory.location.try(:code) %></td>
 				<td class='number'><%=number_to_currency (tag.inventory.item.try(:cost) || 0) %></td>
 				<td><%= tag.sloc %></td>
+				<td><%= tag.printed_time %></td>
 				<td>
 					<% if allow_data_entry? %>
 					<%= link_to "remove", adm_wait_print_path(tag), :method => :delete, :confirm => "Are you sure to remove Ticket #{tag.id} from the print list?", :title => 'Delete' %>
@@ -46,7 +48,7 @@
 				</td>
 			</tr>
 			<tr class="detail">
-				<td colspan="6">
+				<td colspan="7">
 					<table>
 						<tbody>
 							<tr>

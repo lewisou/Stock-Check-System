@@ -18,12 +18,12 @@
 				<dd><%= f.submit 'Search', :class => 'button' %></dd>
 			</dl>
 		</fieldset>
-		<%= link_to "New Item", new_adm_item_path(:sub_menu => @sub_menu), :class => 'button' %>
 	<% end %>
 </article>
 
 <article>
 	<h1><%= @search.count %> Items</h1>
+	<%= link_to "New Item", new_adm_item_path(:sub_menu => @sub_menu), :class => 'button' %>
 	<table id="table2" class="gtable detailtable">
 		<thead>
 			<tr>

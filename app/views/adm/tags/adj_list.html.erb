@@ -1,3 +1,4 @@
+<% @sub_menu = :final_qty %>
 <article>
 	<%= render :partial => 'shared/flash' %>
 	<%= form_for @search, :url => adj_list_adm_tags_path do |f| %>
@@ -20,11 +21,11 @@
 	<table class="gtable detailtable">
 		<thead>
 			<tr>
-				<th><%= sort_link @search, :id, 'Tag' %></th>
+				<th><%= sort_link @search, :id, 'Ticket #' %></th>
 				<th><%= sort_link @search, :count_1 %></th>
 				<th><%= sort_link @search, :count_2 %></th>
 				<th><%= sort_link @search, :count_3 %></th>
-				<th><%= sort_link @search, :adjustment %></th>
+				<th><%= sort_link @search, :adjustment, 'Setup Final' %></th>
 				<th><%= sort_link @search, :final_count, 'Final' %></th>
 				<th>Action</th>
 			</tr>
@@ -43,7 +44,7 @@
 				<td><%= tag.adjustment %></td>
 				<td><%= tag.final_count %></td>
 				<td>
-					<%= link_to 'adjustment', to_adj_adm_tag_path(tag) if allow_data_entry? %>
+					<%= link_to image_tag('icons/edit.png'), to_adj_adm_tag_path(tag), :title => 'Setup Final' if allow_data_entry? %>
 				</td>
 			</tr>
 			<tr class="detail">
@@ -51,9 +52,9 @@
 					<table>
 						<tbody>
 							<tr>
+								<td><%= tag.inventory.location.try(:code) %></td>
 								<td><%= tag.inventory.item.try(:code) %></td>
 								<td><%= tag.inventory.item.try(:description) %></td>
-								<td><%= tag.inventory.location.try(:code) %> <%= tag.sloc %></td>
 							</tr>
 						</tbody>
 					</table>

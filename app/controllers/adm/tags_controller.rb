@@ -100,12 +100,10 @@ class Adm::TagsController < Adm::BaseController
   def adj_list
     @search = Tag.in_check(curr_check.id).countable.includes(:inventory => :item, :inventory => :location).search(params[:search])
     @tags = @search.paginate(:page => params[:page])
-    @nav = :archive
-    render :layout => "application"
   end
 
   def to_adj
-    @check = Check.find(params[:check_id])
+    @check = curr_check
 
     @tag = Tag.in_check(@check.id).find(params[:id])
   end
@@ -114,7 +112,7 @@ class Adm::TagsController < Adm::BaseController
     @tag = Tag.in_check(curr_check.id).find(params[:id])
     
     if @tag.update_attributes(:adjustment => (params[:tag] || {})[:adjustment])
-      redirect_to adj_list_adm_tags_path, :notice => "Adjustment updated."
+      redirect_to adj_list_adm_tags_path, :notice => "Updated."
     else
       render :adj_list
     end

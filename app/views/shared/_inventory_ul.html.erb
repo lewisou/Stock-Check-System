@@ -18,6 +18,6 @@
 		<li <%= "class='current'" if @sub_menu == :result_count_3 %>><%= link_to "Count 3 Result (#{Tag.in_check(curr_check.id).finish(3).countable.count})", result_adm_counts_path(:count => 3) %></li>
 		</ul>
 	</li>
-	<li <%= "class='current'" if @sub_menu == :remote %>><%= link_to "Remote Warehouse Input (#{curr_check.inventories.remote_s.where(:inputed_qty => nil).count})", adm_inventories_path %></li>
+	<li <%= "class='current'" if @sub_menu == :remote %>><%= link_to "Remote Warehouses (#{curr_check.inventories.remote_s.where(:inputed_qty => nil).count})", adm_inventories_path %></li>
 	<li <%= "class='current'" if @sub_menu == :counters %>><%= link_to "Participants (#{Counter.count})", adm_counters_path %></li>
 </ul>

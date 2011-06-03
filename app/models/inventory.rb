@@ -65,6 +65,16 @@ class Inventory < ActiveRecord::Base
     return rs.size
   end
 
+  def remote_ticket_id
+    return if self.location.nil?
+
+    if self.location.is_remote
+      "R-#{self.id}"
+    else
+      nil
+    end
+  end
+
   private unless 'test' == Rails.env
   def adj_count_qtys
     if !self.location.try(:is_remote)

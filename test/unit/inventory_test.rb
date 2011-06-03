@@ -507,6 +507,22 @@ class InventoryTest < ActiveSupport::TestCase
     i3.reload
     assert i3.item_info.remaining == -1
   end
+  
+  test "remote_ticket_id" do
+    onsite = Location.create(:is_remote => false)
+    inv = onsite.inventories.create
+
+    assert inv.remote_ticket_id.nil?
+    onsite.update_attributes(:is_remote => true)
+    assert inv.reload.remote_ticket_id == "R-#{inv.id}"
+    
+    remote = Location.create(:is_remote => true)
+    inv = remote.inventories.create
+    assert inv.remote_ticket_id == "R-#{inv.id}"
+
+    remote.update_attributes(:is_remote => false)
+    assert inv.remote_ticket_id.nil?
+  end
 end
 
 

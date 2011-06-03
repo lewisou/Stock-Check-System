@@ -1,0 +1,18 @@
+<dt><%= f.label :id_eq, 'Ticket #' %></dt>
+<dd>
+<input type="text" value="R" disabled="disabled" style="width: 1em" /> - <%= f.text_field :id_eq, :class => "small", :tabindex => 1, :style => "width: 8em" %>
+</dd>
+
+<dt><%= f.label :item_code_like, 'Item Number contains' %></dt>
+<dd>
+<%= f.text_field :item_code_like, :class => "small", :tabindex => 2 %>
+</dd>
+
+<dt><%= f.label :item_is_active_not_eq, 'inActive' %></dt>
+<dd><%= f.check_box :item_is_active_not_eq, {:tabindex => 3}, true, false %></dd>
+
+<dt><%= f.label :location_id_eq, 'Remote Warehouse' %></dt>
+<dd>
+	<%= f.collection_select(:location_id_eq, curr_check.locations.not_tagable, :id, :code, {:include_blank => true}, {:class => "small", :tabindex => 4})  %>
+	<%= f.submit 'Search', :class => 'button' %>
+</dd>

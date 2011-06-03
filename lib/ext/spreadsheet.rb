@@ -81,17 +81,19 @@ module Spreadsheet
 
       sheet1 = self.create_worksheet :name => title
 
+      sheet1.row(0).default_format = title_format
+      sheet1.row(0).concat [title]
       if options[:summary]
-        sheet1.row(0).default_format = title_format
-        sheet1.row(0).concat ["Summary"]
+        sheet1.row(1).default_format = title_format
+        sheet1.row(1).concat ["Summary"]
         
         options[:summary].each_with_index do |sum, index|
-          sheet1[index + 1, 0] = sum[0]
-          sheet1[index + 1, 1] = sum[1]
+          sheet1[index + 2, 0] = sum[0]
+          sheet1[index + 2, 1] = sum[1]
         end
       end
 
-      start_row = options[:summary].nil? ? 0 : options[:summary].size + 2
+      start_row = options[:summary].nil? ? 1 : options[:summary].size + 3
       sheet1.row(start_row).default_format = title_format
       sheet1.row(start_row).concat titles
 

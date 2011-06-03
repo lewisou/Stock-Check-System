@@ -1,0 +1,28 @@
+<% @sub_menu = :remote %>
+
+<article>
+<%= render :partial => "shared/flash" %>
+<h1>Remote Warehouse Ticket</h1>
+<table class="infos">
+	<tr>
+		<th>Ticket #</th>
+		<td>R-<%= @inventory.id %></td>
+	</tr>
+	<tr>
+		<th>Item #</th>
+		<td><%= @inventory.item.try(:code) %></td>
+	</tr>
+	<tr>
+		<th>Desc.</th>
+		<td><%= @inventory.item.try(:description) %></td>
+	</tr>
+	<tr>
+		<th>Remote Warehouse</th>
+		<td><%= @inventory.location.try(:code) %></td>
+	</tr>
+	<tr>
+		<th>Created Date</th>
+		<td><%= @inventory.created_at.to_date %></td>
+	</tr>
+</table>
+</article>

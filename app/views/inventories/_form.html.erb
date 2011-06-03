@@ -1,0 +1,14 @@
+<dt><%= f.label :id, "Ticket #" %></dt>
+<dd><%= f.label :id, "R-#{@inventory.id}" %></dd>
+
+<dt><%= f.label :item_code, "Item #" %></dt>
+<dd><%= f.label :item_code, @inventory.item.code %></dd>
+
+<dt><%= f.label :item_description, "Desc." %></dt>
+<dd><%= f.label :item_description, @inventory.item.description %></dd>
+
+<dt><%= f.label :inputed_qty, 'Qty' %></dt>
+<dd>
+<%= f.text_field :inputed_qty, :class => 'small', :tabindex => 1 %>
+<%= f.submit "Save", :class => 'button' %>
+</dd>

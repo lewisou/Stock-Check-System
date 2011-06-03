@@ -119,9 +119,15 @@ jQuery(function($) {
 						<%= link_to 'Count 3', counts_path(:count => 3) %>
 					</li>
 					<% end %>
+					
+					<% if has_role?(:dataentry) && allow_data_entry? %>
+					<li <%= "class='current'" if @nav == :remote_input %>>
+						<%= link_to 'Remote Warehouse Input', dataentry_inventories_path %>
+					</li>
+					<% end %>
 				<% end %>
-				
-				
+
+
 				<% if has_role? [:controller, :mgt] %>
 				<li <%= "class='current'" if @nav == :archive %>>
 					<%= link_to 'Archived', history_god_checks_path %>

@@ -1,10 +1,8 @@
-<% @sub_menu = :remote %>
-
 <article>
 	<%= render :partial => "shared/flash" %>
 	<h1>Remote warehouse input</h1>
 
-	<%= form_for @inventory, :url => adm_inventory_path(@inventory) do |f| %>
+	<%= form_for @inventory, :url => dataentry_inventory_path(@inventory) do |f| %>
 	<fieldset>
 		<dl class='inline'>
 			<%= render :partial => "inventories/form", :locals => {:f => f} %>

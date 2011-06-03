@@ -41,7 +41,7 @@ module Prawn
           end
 
           table([tables], :width => TAG_TABLE_WIDTH * 4, :cell_style => {:borders => [], :padding => 0})
-          tag.update_attributes(:wait_for_print => false)
+          tag.update_attributes(:wait_for_print => false, :printed_time => (tag.printed_time + 1))
           # puts "#{index} finished"
         end
       end

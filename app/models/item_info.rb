@@ -10,6 +10,7 @@ class ItemInfo < ActiveRecord::Base
   end
 end
 
+
 # == Schema Information
 #
 # Table name: item_infos
@@ -19,5 +20,6 @@ end
 #  item_id    :integer
 #  created_at :datetime
 #  updated_at :datetime
+#  remaining  :integer
 #
 

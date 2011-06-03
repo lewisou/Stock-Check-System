@@ -285,21 +285,23 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: tags
 #
-#  id           :integer         not null, primary key
-#  count_1      :integer
-#  count_2      :integer
-#  count_3      :integer
-#  created_at   :datetime
-#  updated_at   :datetime
-#  inventory_id :integer
-#  sloc         :string(255)
-#  final_count  :integer
-#  state        :string(255)
-#  adjustment   :integer
-#  audit        :integer
+#  id             :integer         not null, primary key
+#  count_1        :integer
+#  count_2        :integer
+#  count_3        :integer
+#  created_at     :datetime
+#  updated_at     :datetime
+#  inventory_id   :integer
+#  sloc           :string(255)
+#  final_count    :integer
+#  state          :string(255)
+#  adjustment     :integer
+#  audit          :integer
+#  wait_for_print :boolean         default(TRUE)
 #
 

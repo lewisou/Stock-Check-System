@@ -60,7 +60,7 @@ class Adm::TagsController < Adm::BaseController
 
     respond_to do |format|
       if @tag.save
-        format.html { redirect_to adm_tag_path(@tag), :notice => 'Ticket was successfully created.' }
+        format.html { redirect_to adm_tags_path, :notice => "Ticket #{@tag.id} was successfully created." }
         format.xml  { render :xml => @tag, :status => :created, :location => @tag }
       else
         format.html { render :action => "new" }

@@ -112,6 +112,8 @@ Scs::Application.routes.draw do
   namespace :adm do
     # Directs /admin/products/* to Admin::ProductsController
     # (app/controllers/admin/products_controller.rb)
+    resources :wait_prints
+
     resources :items do
       resources :tags
 

@@ -5,3 +5,7 @@ table td.number, table th.number {
 .gtable a {
 	text-decoration: underline;
 }
+
+table td ul.actions li{
+	float: left;
+}

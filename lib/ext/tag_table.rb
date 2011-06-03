@@ -41,6 +41,7 @@ module Prawn
           end
 
           table([tables], :width => TAG_TABLE_WIDTH * 4, :cell_style => {:borders => [], :padding => 0})
+          tag.update_attributes(:wait_for_print => false)
           # puts "#{index} finished"
         end
       end
@@ -59,14 +60,14 @@ module Prawn
     
     def make_tag_table(tag)
       # Prawn::ImageWrapper.new(barcode(tag.id.to_s), TAG_TABLE_WIDTH / 3, TAG_TABLE_WIDTH / 10
-      item = tag.inventory.item.try(:code) || "No content"
+      item = (tag.inventory.item.try(:code) || "No content")[0, 30]
       description = (tag.inventory.item.try(:description) || "No descrption")[0, 30] + "..."
       data = [
         # [make_tag_sub_table(["\n#{tag.id}", image_wrapper(tag.id.to_s)], tag_color)],
         [make_tag_sub_table(["#{tag.id}", " "], :font_style => :bold)],
         ["#{item} "],
         ["#{description} "],
-        ["(#{tag.inventory.location.code}) #{tag.sloc}"], #image_wrapper(item)
+        ["(#{tag.inventory.location.code[0, 20]}) #{tag.sloc}"], #image_wrapper(item)
         [make_tag_sub_table([" ", "#{tag.created_at.to_date} ", " "])]
       ]
 

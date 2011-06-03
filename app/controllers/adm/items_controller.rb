@@ -2,7 +2,7 @@ class Adm::ItemsController < Adm::BaseController
   layout "tags"
 
   def new
-    @item = curr_check.items.new
+    @item = curr_check.items.new(params[:item])
   end
   
   def edit

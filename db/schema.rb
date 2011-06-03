@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110527062806) do
+ActiveRecord::Schema.define(:version => 20110603195634) do
 
   create_table "activities", :force => true do |t|
     t.integer  "admin_id"
@@ -254,6 +254,7 @@ ActiveRecord::Schema.define(:version => 20110527062806) do
     t.string   "state"
     t.integer  "adjustment"
     t.integer  "audit"
+    t.boolean  "wait_for_print", :default => true
   end
 
   add_index "tags", ["inventory_id"], :name => "index_tags_on_inventory_id"

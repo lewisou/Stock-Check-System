@@ -1,8 +1,6 @@
-<% @sub_menu = :tags %>
-
 <article>
 	<%= render :partial => 'shared/flash' %>
-	<%= form_for @search, :url => adm_tags_path do |f| %>
+	<%= form_for @search, :url => adm_wait_prints_path do |f| %>
 		<fieldset>
 			<legend>Search</legend>
 			<dl class="inline">
@@ -43,18 +41,7 @@
 				<td><%= tag.sloc %></td>
 				<td>
 					<% if allow_data_entry? %>
-					<ul class="actions">
-						<li>
-							<%= link_to image_tag('icons/cross.png'), adm_tag_path(tag), :method => :delete, :confirm => "Are you sure to delete Ticket #{tag.id}?", :title => 'Delete' %>
-						</li>
-						<li>
-							<%= link_to image_tag('icons/edit.png'), edit_adm_tag_path(tag), :title => 'Edit' %>
-						</li>
-						<li>
-							<%= link_to image_tag('icons/printer.png'), adm_wait_print_path(tag), :method => :put, :confirm => "Are you sure to add Ticket #{tag.id} to print list?" unless tag.wait_for_print %>
-						</li>
-					</ul>
-
+					<%= link_to "remove", adm_wait_print_path(tag), :method => :delete, :confirm => "Are you sure to remove Ticket #{tag.id} from the print list?", :title => 'Delete' %>
 					<% end %>
 				</td>
 			</tr>

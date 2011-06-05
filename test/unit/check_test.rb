@@ -254,8 +254,8 @@ class CheckTest < ActiveSupport::TestCase
   
   test "frozen_value" do
     c = new_blank_check
-    c.item_groups.create.items.create(:al_cost => 1).inventories.create(:location => c.locations.create, :quantity => 1)
-    c.item_groups.create.items.create(:al_cost => 1).inventories.create(:location => c.locations.create, :quantity => 2)
+    c.item_groups.create.items.create(:cost => 1).inventories.create(:location => c.locations.create, :quantity => 1)
+    c.item_groups.create.items.create(:cost => 1).inventories.create(:location => c.locations.create, :quantity => 2)
 
     assert c.reload.frozen_value == 3
   end
@@ -396,16 +396,16 @@ class CheckTest < ActiveSupport::TestCase
 
   test "remote_frozen_value" do
     c = new_blank_check
-    c.item_groups.create.items.create(:al_cost => 2.1).inventories.create(:location => c.locations.create(:is_remote => false), :quantity => 2)
-    c.item_groups.create.items.create(:al_cost => 4.1).inventories.create(:location => c.locations.create(:is_remote => true), :quantity => 3)
+    c.item_groups.create.items.create(:cost => 2.1).inventories.create(:location => c.locations.create(:is_remote => false), :quantity => 2)
+    c.item_groups.create.items.create(:cost => 4.1).inventories.create(:location => c.locations.create(:is_remote => true), :quantity => 3)
 
     assert c.reload.remote_frozen_value == 12.3
   end
   
   test "onsite_frozen_value" do
     c = new_blank_check
-    c.item_groups.create.items.create(:al_cost => 2.1).inventories.create(:location => c.locations.create(:is_remote => false), :quantity => 2)
-    c.item_groups.create.items.create(:al_cost => 4).inventories.create(:location => c.locations.create(:is_remote => true), :quantity => 3)
+    c.item_groups.create.items.create(:cost => 2.1).inventories.create(:location => c.locations.create(:is_remote => false), :quantity => 2)
+    c.item_groups.create.items.create(:cost => 4).inventories.create(:location => c.locations.create(:is_remote => true), :quantity => 3)
 
     assert c.reload.onsite_frozen_value == 4.2
   end

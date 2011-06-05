@@ -25,7 +25,7 @@ class InventoryTest < ActiveSupport::TestCase
   end
 
   test "frozen_value" do
-    i = Item.create(:al_cost => 10)
+    i = Item.create(:cost => 10)
     inv = i.inventories.create(:quantity => 9, :location => Location.create(:is_remote => false))
     
     assert inv.reload.frozen_value == 90
@@ -94,7 +94,6 @@ class InventoryTest < ActiveSupport::TestCase
 
     inv = Inventory.create(:location => Location.create(:code => "RS", :is_remote => false), :item => item)
     inv.create_init_tags! == 2
-    pp inv.tags.map(&:sloc)    
   end
   
   test "counted_qty" do
@@ -244,6 +243,23 @@ class InventoryTest < ActiveSupport::TestCase
     assert inv.counted_2_value == 100
   end
 
+  test "adj_count_qtys with counted_differ" do
+    item = Item.create(:cost => 30)
+    inv = Inventory.create(:location => Location.create(:is_remote => false), :item => item, :quantity => 4)
+
+    inv.tags.create(:count_1 => 1, :count_2 => 2)
+    inv.tags.create(:count_1 => 1, :count_2 => 2)
+    inv.tags.create(:count_1 => 1, :count_2 => 2)
+
+    inv.reload
+    assert inv.counted_1_value == 90
+    assert inv.counted_2_value == 180
+
+    assert inv.counted_1_value_differ == -1 * 30
+    assert inv.counted_2_value_differ == 2 * 30
+    assert inv.result_value_differ ==  -1 * 30
+  end
+
   test "adj_count_qtys" do
     inv = Inventory.create(:location => Location.create(:is_remote => false))
 
@@ -282,17 +298,17 @@ class InventoryTest < ActiveSupport::TestCase
     inv = item.inventories.create(:quantity => 2, :inputed_qty => 3, :location => Location.create(:is_remote => true))
 
     inv.reload
-    assert inv.frozen_value == 40
+    assert inv.frozen_value == 60
     assert inv.result_value == 90
-    
+
     inv.update_attributes(:quantity => 4, :inputed_qty => 6)
     item.reload.update_attributes(:cost => 40, :al_cost => 50)
-    
+
     inv.reload
-    assert inv.frozen_value == 200
+    assert inv.frozen_value == 160
     assert inv.result_value == 240
   end
-  
+
   test "ao_adj" do
     item = Item.create(:cost => 30, :al_cost => 2)
     inv = item.inventories.create(:quantity => 4, :inputed_qty => 14, :location => Location.create(:is_remote => true))
@@ -540,32 +556,37 @@ end
 
 
 
+
+
 # == Schema Information
 #
 # Table name: inventories
 #
-#  id               :integer         not null, primary key
-#  item_id          :integer
-#  location_id      :integer
-#  quantity         :integer         default(0)
-#  created_at       :datetime
-#  updated_at       :datetime
-#  from_al          :boolean         default(FALSE)
-#  inputed_qty      :integer
-#  counted_qty      :integer
-#  result_qty       :integer
-#  check_id         :integer
-#  tag_inited       :boolean         default(FALSE)
-#  counted_1_qty    :integer
-#  counted_2_qty    :integer
-#  counted_1_value  :float
-#  counted_2_value  :float
-#  result_value     :float
-#  frozen_value     :float
-#  ao_adj           :integer
-#  ao_adj_value     :float
-#  re_export_qty    :integer
-#  re_export_offset :integer
-#  his_max          :integer
+#  id                     :integer         not null, primary key
+#  item_id                :integer
+#  location_id            :integer
+#  quantity               :integer         default(0)
+#  created_at             :datetime
+#  updated_at             :datetime
+#  from_al                :boolean         default(FALSE)
+#  inputed_qty            :integer
+#  counted_qty            :integer
+#  result_qty             :integer
+#  check_id               :integer
+#  tag_inited             :boolean         default(FALSE)
+#  counted_1_qty          :integer
+#  counted_2_qty          :integer
+#  counted_1_value        :float
+#  counted_2_value        :float
+#  result_value           :float
+#  frozen_value           :float
+#  ao_adj                 :integer
+#  ao_adj_value           :float
+#  re_export_qty          :integer
+#  re_export_offset       :integer
+#  his_max                :integer
+#  counted_1_value_differ :float
+#  counted_2_value_differ :float
+#  result_value_differ    :float
 #
 

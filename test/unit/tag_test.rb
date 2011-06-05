@@ -249,11 +249,11 @@ class TagTest < ActiveSupport::TestCase
 
     assert scope.create(:count_1 => 1, :count_2 => 2).count_differ == 100
     assert scope.create(:count_1 => 5, :count_2 => 2).count_differ == 150
-    assert scope.create.count_differ == nil
+    assert scope.create.count_differ == 0
 
     assert scope.create(:count_1 => 1, :count_2 => 2).value_differ == 2
     assert scope.create(:count_1 => 5, :count_2 => 2).value_differ == 6
-    assert scope.create.count_differ == nil
+    assert scope.create.count_differ == 0
 
   end
   
@@ -267,8 +267,6 @@ class TagTest < ActiveSupport::TestCase
   end
   
   test "value_1 value_2" do
-    inv = 
-
     t1 = Item.create(:cost => 2.1).inventories.create(:location => Location.create).tags.create(:count_1 => 3, :count_2 => 4)
     t2 = Item.create(:cost => 2.1).inventories.create(:location => Location.create).tags.create
 
@@ -280,6 +278,7 @@ class TagTest < ActiveSupport::TestCase
   end
   
 end
+
 
 
 
@@ -303,5 +302,6 @@ end
 #  adjustment     :integer
 #  audit          :integer
 #  wait_for_print :boolean         default(TRUE)
+#  printed_time   :integer         default(0)
 #
 

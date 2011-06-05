@@ -12,14 +12,19 @@
 		<% end %>
 		<li <%= "class='current'" if @sub_menu == :missing_count_1 %>><%= link_to "Count 1 Missing Tickets (#{Tag.in_check(curr_check.id).not_finish(1).countable.count})", missing_tag_adm_counts_path(:count => 1) %></li>
 		<li <%= "class='current'" if @sub_menu == :result_count_1 %>><%= link_to "Count 1 Result (#{Tag.in_check(curr_check.id).finish(1).countable.count})", result_adm_counts_path(:count => 1) %></li>
-		<li <%= "class='current'" if @sub_menu == :count_1_frozen %>><%= link_to 'Count 1 with Frozen QTY', count_frozen_reports_path(:count => 1) %></li>
 		<li <%= "class='current'" if @sub_menu == :missing_count_2 %>><%= link_to "Count 2 Missing Tickets (#{Tag.in_check(curr_check.id).not_finish(2).countable.count})", missing_tag_adm_counts_path(:count => 2) %></li>
 		<li <%= "class='current'" if @sub_menu == :result_count_2 %>><%= link_to "Count 2 Result (#{Tag.in_check(curr_check.id).finish(2).countable.count})", result_adm_counts_path(:count => 2) %></li>
-		<li <%= "class='current'" if @sub_menu == :variance %>><%= link_to 'Variance Count 1 VS 2', count_varience_reports_path %></li>
 		<li <%= "class='current'" if @sub_menu == :result_count_3 %>><%= link_to "Count 3 Result (#{Tag.in_check(curr_check.id).finish(3).countable.count})", result_adm_counts_path(:count => 3) %></li>
 		<li <%= "class='current'" if @sub_menu == :final_qty %>><%= link_to "Final Qty", adj_list_adm_tags_path %></li>
 		</ul>
 	</li>
 	<li <%= "class='current'" if @sub_menu == :remote %>><%= link_to "Remote Warehouses Tickets (#{curr_check.inventories.remote_s.where(:inputed_qty => nil).count})", adm_inventories_path %></li>
 	<li <%= "class='current'" if @sub_menu == :counters %>><%= link_to "Participants (#{Counter.count})", adm_counters_path %></li>
+	<li>
+		<a href='#'>Reports</a>
+		<ul>
+			<li <%= "class='current'" if @sub_menu == :count_1_frozen %>><%= link_to 'Count Result VS Frozen QTY', count_frozen_reports_path(:count => 1) %></li>
+			<li <%= "class='current'" if @sub_menu == :variance %>><%= link_to 'Variance Count 1 VS 2', count_varience_reports_path %></li>
+		</ul>
+	</li>
 </ul>

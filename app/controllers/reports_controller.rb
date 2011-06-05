@@ -83,10 +83,14 @@ class ReportsController < Adm::BaseController
       format.xls {
         @inventories = @search.all
         book = Spreadsheet::Workbook.new
-        data = book.generate_xls("Count #{@c_i} Report", @inventories, %w{Location Item Description FrozenCost Cost FrozenQTY Counted FrozenValue CountedValue}, 
-        [[:location, :code], [:item, :code], [:item, :description], [:item, :al_cost], [:item, :cost], :quantity, "counted_#{@c_i}_qty".to_sym,
-        :frozen_value, "counted_#{@c_i}_value".to_sym])
-        send_data data, :filename => "Count #{@c_i} Report with Frozen QTY.xls", :disposition => 'attachment'
+        data = book.generate_xls("Count Result VS Frozen", @inventories, %w{Location Item Description FrozenCost Cost FrozenQTY counted_1_qty counted_2_qty result_qty counted_1_value_differ counted_2_value_differ result_value_differ},
+        [[:location, :code],
+        [:item, :code], 
+        [:item, :description],
+        [:item, :al_cost], [:item, :cost], 
+        :quantity, :counted_1_qty, :counted_2_qty, :result_qty, :counted_1_value_differ, :counted_2_value_differ, :result_value_differ
+        ])
+        send_data data, :filename => "Count Result VS Frozen.xls", :disposition => 'attachment'
       }
     end
   end

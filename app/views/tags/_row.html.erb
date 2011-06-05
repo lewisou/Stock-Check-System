@@ -1,0 +1,22 @@
+<% if defined?(show_header) && show_header %>
+<tr>
+	<th>Tag #</th>
+	<th>Shelf Loc.</th>
+	<th>Count 1</th>
+	<th>Count 2</th>
+	<th>Count 3</th>
+	<th>Final Adj.</th>
+	<th>Audit</th>
+	<th>Final Qty</th>
+</tr>
+<% end %>
+<tr>
+	<td><%= tag.id %></td>
+	<td><%= tag.sloc %></td>
+	<td><%= tag.count_1 %></td>
+	<td><%= tag.count_2 %></td>
+	<td><%= tag.count_3 %></td>
+	<td><%= tag.adjustment %></td>
+	<td><%= tag.audit %></td>
+	<td><%= tag.final_count %></td>
+</tr>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110603221205) do
+ActiveRecord::Schema.define(:version => 20110605185203) do
 
   create_table "activities", :force => true do |t|
     t.integer  "admin_id"
@@ -134,15 +134,15 @@ ActiveRecord::Schema.define(:version => 20110603221205) do
   create_table "inventories", :force => true do |t|
     t.integer  "item_id"
     t.integer  "location_id"
-    t.integer  "quantity",         :default => 0
+    t.integer  "quantity",               :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "from_al",          :default => false
+    t.boolean  "from_al",                :default => false
     t.integer  "inputed_qty"
     t.integer  "counted_qty"
     t.integer  "result_qty"
     t.integer  "check_id"
-    t.boolean  "tag_inited",       :default => false
+    t.boolean  "tag_inited",             :default => false
     t.integer  "counted_1_qty"
     t.integer  "counted_2_qty"
     t.float    "counted_1_value"
@@ -154,6 +154,9 @@ ActiveRecord::Schema.define(:version => 20110603221205) do
     t.integer  "re_export_qty"
     t.integer  "re_export_offset"
     t.integer  "his_max"
+    t.float    "counted_1_value_differ"
+    t.float    "counted_2_value_differ"
+    t.float    "result_value_differ"
   end
 
   add_index "inventories", ["check_id"], :name => "index_inventories_on_check_id"

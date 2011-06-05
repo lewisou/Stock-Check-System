@@ -23,11 +23,11 @@
 	<table id="table1" class="gtable">
 		<thead>
 			<tr>
-				<th><%= sort_link @search, :id, 'Tag Number' %></th>
-				<th><%= sort_link @search, :inventory_item_code, 'Item Number' %></th>
-				<th><%= sort_link @search, :inventory_location_code, 'Warehouse' %></th>
-				<th><%= sort_link @search, :sloc, 'Shelf Loc' %></th>
-				<th><%= sort_link @search, @c_s, "Count #{@c_i}" %></th>
+				<th><%= sort_link @search, :id, 'Tag Number', :count => @c_i %></th>
+				<th><%= sort_link @search, :inventory_item_code, 'Item Number', :count => @c_i %></th>
+				<th><%= sort_link @search, :inventory_location_code, 'Warehouse', :count => @c_i %></th>
+				<th><%= sort_link @search, :sloc, 'Shelf Loc', :count => @c_i %></th>
+				<th><%= sort_link @search, @c_s, "Count #{@c_i}", :count => @c_i %></th>
 				<th>Action</th>
 			</tr>
 		</thead>

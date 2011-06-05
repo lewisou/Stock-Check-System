@@ -1,28 +1,12 @@
 <% @sub_menu = :count_1_frozen %>
 
 <article>
-	<h1>Count <%= @c_i %> VS Frozen QTY's</h1>
-	<h2>Summary</h2>
-	<table class="infos">
-		<tr>
-			<th>Total Onsite Frozen Value</th>
-			<td class="number"><%=number_to_currency curr_check.onsite_frozen_value %></td>
-		</tr>
-		<tr>
-			<th>Counted <%= @c_i %> Value</th>
-			<td class="number"><%=number_to_currency curr_check.count_time_value(@c_i) %></td>
-		</tr>
-	</table>
-</article>
-
-<article>
-	<h2>Details</h2>
-	
+	<h1>Count Result VS Frozen QTY's</h1>
 	<%= form_for @search, :url => count_frozen_reports_path, :method => :get do |f| %>
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
-				<dt><%= f.label :item_code_like, 'Item' %></dt>
+				<dt><%= f.label :item_code_like, 'Item #' %></dt>
 				<dd><%= f.text_field :item_code_like, :class => "small", :tabindex => 1 %></dd>
 				<dt><%= f.label :location_id_eq, 'Onsite Warehouse' %></dt>
 				<dd>
@@ -38,20 +22,85 @@
 	<% end %>
 </article>
 
+<article>
+	<h2>Total Summary</h2>
+	<table class="gtable">
+		<thead>
+		<tr>
+			<th>Frozen</th>
+			<th>Count 1</th>
+			<th>Count 1 Diff.</th>
+			<th>Count 2</th>
+			<th>Count 2 Diff.</th>
+			<th>Final</th>
+			<th>Final Diff.</th>
+			<th>Absolute Diff.</th>
+		</tr>
+		</thead>
+
+		<tr>
+			<tr>
+				<td class='number'><%=number_to_currency @search.sum("inventories.frozen_value") %></td>
+				<td class='number'><%=number_to_currency @search.sum("inventories.counted_1_value") %></td>
+				<td class='number'><%=number_to_currency @search.sum("inventories.counted_1_value_differ") %></td>
+				<td class='number'><%=number_to_currency @search.sum("inventories.counted_2_value") %></td>
+				<td class='number'><%=number_to_currency @search.sum("inventories.counted_2_value_differ") %></td>
+				<td class='number'><%=number_to_currency @search.sum("inventories.result_value") %></td>
+				<td class='number'><%=number_to_currency @search.sum("inventories.result_value_differ") %></td>
+				<td class='number'><%=number_to_currency @search.sum("abs(inventories.result_value_differ)") %></td>
+			</tr>
+		</tr>
+	</table>
+	
+	<h2>Summary by onsite warehouse</h2>
+	<table class="gtable">
+		<thead>
+		<tr>
+			<th>Warehouse</th>
+			<th>Frozen</th>
+			<th>Count 1</th>
+			<th>Count 1 Diff.</th>
+			<th>Count 2</th>
+			<th>Count 2 Diff.</th>
+			<th>Final</th>
+			<th>Final Diff.</th>
+			<th>Absolute Diff.</th>
+		</tr>
+		</thead>
+
+		<% curr_check.locations.tagable.order("code ASC").each do |loc| %>
+		<tr>
+			<td><%= loc.code %></td>
+			<td class='number'><%=number_to_currency @search.where(:locations => {:id => loc.id}).sum("inventories.frozen_value") %></td>
+			<td class='number'><%=number_to_currency @search.where(:locations => {:id => loc.id}).sum("inventories.counted_1_value") %></td>
+			<td class='number'><%=number_to_currency @search.where(:locations => {:id => loc.id}).sum("inventories.counted_1_value_differ") %></td>
+			<td class='number'><%=number_to_currency @search.where(:locations => {:id => loc.id}).sum("inventories.counted_2_value") %></td>
+			<td class='number'><%=number_to_currency @search.where(:locations => {:id => loc.id}).sum("inventories.counted_2_value_differ") %></td>
+			<td class='number'><%=number_to_currency @search.where(:locations => {:id => loc.id}).sum("inventories.result_value") %></td>
+			<td class='number'><%=number_to_currency @search.where(:locations => {:id => loc.id}).sum("inventories.result_value_differ") %></td>
+			<td class='number'><%=number_to_currency @search.where(:locations => {:id => loc.id}).sum("abs(inventories.result_value_differ)") %></td>
+		</tr>
+		<% end %>
+	</table>
+</article>
 
 <article>
+	<h2>Details</h2>
+	
 	<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 	<table id="table1" class="gtable detailtable">
 		<thead>
 			<tr>
-				<th><%= sort_link @search, :location_id_and_item_id, 'Location' %></th>
-				<th><%= sort_link @search, :item_id_and_location_id, 'Item' %></th>
-				<th><%= sort_link @search, :item_al_cost, 'Frozen Cost' %></th>
-				<th><%= sort_link @search, :item_cost, 'Changed Cost' %></th>
-				<th><%= sort_link @search, :quantity, 'Frozen QTY' %></th>
-				<th><%= sort_link @search, "#{@c_s.to_s}_qty".to_sym, "Count #{@c_i}" %></th>
-				<th><%= sort_link @search, :frozen_value, "Frozen Value" %></th>
-				<th><%= sort_link @search, "#{@c_s.to_s}_value".to_sym, "Counted #{@c_i} Value" %></th>
+				<th><%= sort_link @search, :location_id_and_item_id, 'Warehouse' %></th>
+				<th><%= sort_link @search, :item_id_and_location_id, 'Item #' %></th>
+				<th><%= sort_link @search, :item_cost, 'Cost' %></th>
+				<th><%= sort_link @search, :quantity, 'Froz.' %></th>
+				<th><%= sort_link @search, :counted_1_qty, "Con.1" %></th>
+				<th><%= sort_link @search, :counted_2_qty, "Con.2" %></th>
+				<th><%= sort_link @search, :result_qty, "Final" %></th>
+				<th><%= sort_link @search, :counted_1_value_differ, 'Con.1 Diff.' %></th>
+				<th><%= sort_link @search, :counted_2_value_differ, 'Con.2 Diff.' %></th>
+				<th><%= sort_link @search, :result_value_differ, 'Final Diff.' %></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -59,21 +108,33 @@
 			<tr>
 				<td><%= inventory.location.try(:code) %></td>
 				<td><a href="#" class="detail-link"><%= inventory.item.try(:code) %></a></td>
-				<td class='number'><%=number_to_currency inventory.item.try(:al_cost) %></td>
-				<td class='number'><%=number_to_currency inventory.item.try(:cost) %></td>
+				<td class='number'>
+					<%=number_to_currency inventory.item.try(:cost) %>
+					<% if inventory.item.try(:al_cost) != inventory.item.try(:cost) %>
+					/
+					<%=number_to_currency(inventory.item.try(:al_cost) || 0) %>
+					<% end %>
+				</td>
 				<td class='number'><%= (inventory.quantity || 0) %></td>
-				<td class='number'><%= inventory.send("counted_#{@c_i.to_s}_qty".to_sym) %></td>
-				<td class='number'><%=number_to_currency inventory.frozen_value %></td>
-				<td class='number'><%=number_to_currency inventory.send("counted_#{@c_i.to_s}_value".to_sym) %></td>
+				<td class='number'><%= inventory.counted_1_qty %></td>
+				<td class='number'><%= inventory.counted_2_qty %></td>
+				<td class='number'><%= inventory.result_qty %></td>
+				<td class='number'><%=number_to_currency inventory.counted_1_value_differ %></td>
+				<td class='number'><%=number_to_currency inventory.counted_2_value_differ %></td>
+				<td class='number'><%=number_to_currency inventory.result_value_differ %></td>
 			</tr>
 
 			<tr class="detail">
-				<td colspan="8">
+				<td colspan="10">
 					<table>
 						<tbody>
 							<tr>
-								<td><%= inventory.item.try(:description) %></td>
+								<th>Item Desc.</th>
+								<td colspan="7"><%= inventory.item.try(:description) %></td>
 							</tr>
+							<% inventory.tags.countable.order("tags.id ASC").each_with_index do |tag, index| %>
+								<%= render :partial => "tags/row", :locals => {:tag => tag, :show_header => (index == 0)} %>
+							<% end %>
 						</tbody>
 					</table>
 				</td>

@@ -26,7 +26,7 @@ class Tag < ActiveRecord::Base
   scope :tolerance_v, lambda {|value| includes(:inventory => :item).where(["abs(tags.count_1 * items.cost - tags.count_2 * items.cost) > ?", value.to_f.abs]).countable}
 
   scope :tole_q_or_v, lambda {|quantity, value| includes(:inventory => :item) \
-    .where("(abs((tags.count_1 - tags.count_2) / least(cast(tags.count_1 as float), cast(tags.count_2 as float))) * 100 >= ? and least(cast(tags.count_1 as float), cast(tags.count_2 as float)) <> 0) or (abs(tags.count_1 * items.cost - tags.count_2 * items.cost) >= ?)", 
+    .where("(least(cast(tags.count_1 as float), cast(tags.count_2 as float)) <> 0 and abs((tags.count_1 - tags.count_2) / least(cast(tags.count_1 as float), cast(tags.count_2 as float))) * 100 >= ?) or (abs(tags.count_1 * items.cost - tags.count_2 * items.cost) >= ?)", 
       (quantity || 0).to_f.abs, (value || 0).to_f.abs).countable}
 
 
@@ -80,9 +80,11 @@ class Tag < ActiveRecord::Base
   end
   
   def count_differ
-    return nil if self.count_2.nil? || self.count_1.nil?
+    return 0 if self.count_2.nil? || self.count_1.nil?
 
     bas = [self.count_1, self.count_2].min
+    return 0 if bas == 0
+
     return (((count_2 - count_1).to_f / bas.to_f).abs * 100).to_f.round(3).abs if bas > 0
   end
 
@@ -110,6 +112,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: tags
@@ -127,5 +130,6 @@ end
 #  adjustment     :integer
 #  audit          :integer
 #  wait_for_print :boolean         default(TRUE)
+#  printed_time   :integer         default(0)
 #
 

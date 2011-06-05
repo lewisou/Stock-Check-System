@@ -28,7 +28,7 @@ class Inventory < ActiveRecord::Base
   validates_presence_of :location
 
   after_save :log_qty_and_flag, :refresh_item_res_qty
-  before_save :adj_check, :adj_qtys, :adj_count_qtys
+  before_save :adj_check, :adj_qtys
 
   def item_full_name
     self.item.nil? ? "" : self.item.try(:code)
@@ -76,29 +76,36 @@ class Inventory < ActiveRecord::Base
   end
 
   private unless 'test' == Rails.env
-  def adj_count_qtys
+  def adj_qtys
+    # onsite qty
     if !self.location.try(:is_remote)
       self.counted_1_qty = (self.tags.countable.map(&:count_1).delete_if {|t| t.nil?}).sum
       self.counted_2_qty = (self.tags.countable.map(&:count_2).delete_if {|t| t.nil?}).sum
-      
-      self.counted_1_value = (self.counted_1_qty || 0) * (self.item.try(:cost) || 0)
-      self.counted_2_value = (self.counted_2_qty || 0) * (self.item.try(:cost) || 0)
-    end
-  end
-
-  def adj_qtys
-    if !self.location.try(:is_remote)
       self.counted_qty = (self.tags.countable.map(&:final_count).delete_if {|t| t.nil?}).sum
     end
 
+    # all warehouse qty
     self.result_qty = self.location.try(:is_remote) ? (self.inputed_qty || 0) : self.counted_qty
     self.ao_adj = (self.result_qty || 0) - (self.quantity || 0)
     self.re_export_offset = self.re_export_qty - self.result_qty if self.re_export_qty
 
+    # all warehouse value
     self.result_value = (self.result_qty || 0) * (self.item.try(:cost) || 0)
-    self.frozen_value = (self.quantity || 0) * (self.item.try(:al_cost) || 0)
+    self.frozen_value = (self.quantity || 0) * (self.item.try(:cost) || 0)
     self.ao_adj_value = (self.ao_adj || 0) * (self.item.try(:cost) || 0)
-    
+
+    # onsite value differ
+    if !self.location.try(:is_remote)
+      self.counted_1_value = (self.counted_1_qty || 0) * (self.item.try(:cost) || 0)
+      self.counted_2_value = (self.counted_2_qty || 0) * (self.item.try(:cost) || 0)
+      
+      self.counted_1_value_differ = self.counted_1_value - self.frozen_value
+      self.counted_2_value_differ = self.counted_2_value - self.frozen_value
+    end
+
+    # all warehouse value differ
+    self.result_value_differ = self.result_value - self.frozen_value
+
     self.his_max = [self.quantities.map(&:value).map(&:to_i).map(&:abs).max.to_i, self.quantity.to_i].max
   end
 
@@ -148,32 +155,37 @@ end
 
 
 
+
+
 # == Schema Information
 #
 # Table name: inventories
 #
-#  id               :integer         not null, primary key
-#  item_id          :integer
-#  location_id      :integer
-#  quantity         :integer         default(0)
-#  created_at       :datetime
-#  updated_at       :datetime
-#  from_al          :boolean         default(FALSE)
-#  inputed_qty      :integer
-#  counted_qty      :integer
-#  result_qty       :integer
-#  check_id         :integer
-#  tag_inited       :boolean         default(FALSE)
-#  counted_1_qty    :integer
-#  counted_2_qty    :integer
-#  counted_1_value  :float
-#  counted_2_value  :float
-#  result_value     :float
-#  frozen_value     :float
-#  ao_adj           :integer
-#  ao_adj_value     :float
-#  re_export_qty    :integer
-#  re_export_offset :integer
-#  his_max          :integer
+#  id                     :integer         not null, primary key
+#  item_id                :integer
+#  location_id            :integer
+#  quantity               :integer         default(0)
+#  created_at             :datetime
+#  updated_at             :datetime
+#  from_al                :boolean         default(FALSE)
+#  inputed_qty            :integer
+#  counted_qty            :integer
+#  result_qty             :integer
+#  check_id               :integer
+#  tag_inited             :boolean         default(FALSE)
+#  counted_1_qty          :integer
+#  counted_2_qty          :integer
+#  counted_1_value        :float
+#  counted_2_value        :float
+#  result_value           :float
+#  frozen_value           :float
+#  ao_adj                 :integer
+#  ao_adj_value           :float
+#  re_export_qty          :integer
+#  re_export_offset       :integer
+#  his_max                :integer
+#  counted_1_value_differ :float
+#  counted_2_value_differ :float
+#  result_value_differ    :float
 #
 

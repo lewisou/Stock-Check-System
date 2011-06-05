@@ -23,8 +23,8 @@
 	<li>
 		<a href='#'>Reports</a>
 		<ul>
-			<li <%= "class='current'" if @sub_menu == :count_1_frozen %>><%= link_to 'Count Result VS Frozen QTY', count_frozen_reports_path(:count => 1) %></li>
 			<li <%= "class='current'" if @sub_menu == :variance %>><%= link_to 'Variance Count 1 VS 2', count_varience_reports_path %></li>
+			<li <%= "class='current'" if @sub_menu == :count_1_frozen %>><%= link_to 'Count Result VS Frozen QTY', count_frozen_reports_path(:count => 1) %></li>
 		</ul>
 	</li>
 </ul>

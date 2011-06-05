@@ -61,24 +61,20 @@
 	<table id="table1" class="gtable detailtable">
 		<thead>
 			<tr>
-				<th>Ticket #</th>
-				<th>Count 1</th>
-				<th>Count 2</th>
+				<th><%= sort_link @search, :id, 'Ticket #' %></th>
+				<th><%= sort_link @search, :count_1 %></th>
+				<th><%= sort_link @search, :count_2 %></th>
 				<th>Differ</th>
-				<th>Value 1</th>
-				<th>Value 2</th>
+				<th>Count 1 Value</th>
+				<th>Count 2 Value</th>
 				<th>Differ</th>
-				<th>Count 3</th>
+				<th><%= sort_link @search, :count_3, 'Count 3' %></th>
 			</tr>
 		</thead>
 		<tbody>
 			<% @tags.each do |tag| %>
 			<tr>
-				<td>
-				<a href="#" class="detail-link">
-				<%= tag.id %>
-				</a>
-				</td>
+				<td><a href="#" class="detail-link"><%= tag.id %></a></td>
 				<td class='number'><%= tag.count_1 %></td>
 				<td class='number'><%= tag.count_2 %></td>
 				<td class="number"><%= tag.count_differ %> %</td>

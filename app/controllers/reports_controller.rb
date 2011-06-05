@@ -28,8 +28,8 @@ class ReportsController < Adm::BaseController
 
         data = book.generate_xls(
         "Variance Count 1 VS 2", @tags,        
-        ['Tag #', 'Desc.', 'Warehouse', 'Shelf Loc', 'Count 1', 'Count 2', 'Differ', 'Value 1', 'Value 2', 'Differ', 'Count 3'],
-        [:id, [:inventory, :item, :description], [:inventory, :location, :code], :sloc, :count_1, :count_2, :count_differ, :value_1, :value_2, :value_differ, :count_3]
+        ['Tag #', 'Item #', 'Desc.', 'Warehouse', 'Shelf Loc', 'Count 1', 'Count 2', 'Differ', 'Value 1', 'Value 2', 'Differ', 'Count 3'],
+        [:id, [:inventory, :item, :code], [:inventory, :item, :description], [:inventory, :location, :code], :sloc, :count_1, :count_2, :count_differ, :value_1, :value_2, :value_differ, :count_3]
         )
 
         send_data data, :filename => "Variance Count 1 VS 2.xls", :disposition => 'attachment'
@@ -79,7 +79,10 @@ class ReportsController < Adm::BaseController
     @search = Inventory.in_check(curr_check.id).onsite_s.search(params[:search])
 
     respond_to do |format|
-      format.html { @inventories = @search.paginate(:page => params[:page]) }
+      format.html { 
+        @inventories = @search.paginate(:page => params[:page])
+        render :layout => "application"
+      }
       format.xls {
         @inventories = @search.all
         book = Spreadsheet::Workbook.new

@@ -15,7 +15,7 @@ class Adm::InventoriesController < Adm::BaseController
     @inventory = @item.inventories.build(params[:inventory])
     
     if @inventory.save
-      redirect_to adm_inventory_path(@inventory), :notice => "Remote Ticket R-#{@inventory.id} Created."
+      redirect_to adm_inventories_path, :notice => "Remote Ticket R-#{@inventory.id} Created."
     else
       render :new
     end

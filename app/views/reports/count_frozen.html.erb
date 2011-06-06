@@ -40,14 +40,14 @@
 
 		<tr>
 			<tr>
-				<td class='number'><%=number_to_currency @search.sum("inventories.frozen_value") %></td>
-				<td class='number'><%=number_to_currency @search.sum("inventories.counted_1_value") %></td>
-				<td class='number'><%=number_to_currency @search.sum("inventories.counted_1_value_differ") %></td>
-				<td class='number'><%=number_to_currency @search.sum("inventories.counted_2_value") %></td>
-				<td class='number'><%=number_to_currency @search.sum("inventories.counted_2_value_differ") %></td>
-				<td class='number'><%=number_to_currency @search.sum("inventories.result_value") %></td>
-				<td class='number'><%=number_to_currency @search.sum("inventories.result_value_differ") %></td>
-				<td class='number'><%=number_to_currency @search.sum("abs(inventories.result_value_differ)") %></td>
+				<td><%=number_to_currency @search.sum("inventories.frozen_value") %></td>
+				<td><%=number_to_currency @search.sum("inventories.counted_1_value") %></td>
+				<td><%=number_to_currency @search.sum("inventories.counted_1_value_differ") %></td>
+				<td><%=number_to_currency @search.sum("inventories.counted_2_value") %></td>
+				<td><%=number_to_currency @search.sum("inventories.counted_2_value_differ") %></td>
+				<td><%=number_to_currency @search.sum("inventories.result_value") %></td>
+				<td><%=number_to_currency @search.sum("inventories.result_value_differ") %></td>
+				<td><%=number_to_currency @search.sum("abs(inventories.result_value_differ)") %></td>
 			</tr>
 		</tr>
 	</table>
@@ -57,14 +57,14 @@
 		<thead>
 		<tr>
 			<th>Warehouse</th>
-			<th>Frozen</th>
-			<th>Count 1</th>
-			<th>Count 1 Diff.</th>
-			<th>Count 2</th>
-			<th>Count 2 Diff.</th>
-			<th>Final</th>
-			<th>Final Diff.</th>
-			<th>Absolute Diff.</th>
+			<th class='number'>Frozen</th>
+			<th class='number'>Count 1</th>
+			<th class='number'>Count 1 Diff.</th>
+			<th class='number'>Count 2</th>
+			<th class='number'>Count 2 Diff.</th>
+			<th class='number'>Final</th>
+			<th class='number'>Final Diff.</th>
+			<th class='number'>Absolute Diff.</th>
 		</tr>
 		</thead>
 
@@ -93,15 +93,15 @@
 			<tr>
 				<th><%= sort_link @search, :location_id_and_item_id, 'Warehouse' %></th>
 				<th><%= sort_link @search, :item_id_and_location_id, 'Item #' %></th>
-				<th><%= sort_link @search, :item_cost, 'Cost' %></th>
-				<th><%= sort_link @search, :quantity, 'Froz.' %></th>
-				<th><%= sort_link @search, :counted_1_qty, "Con.1" %></th>
-				<th><%= sort_link @search, :counted_2_qty, "Con.2" %></th>
-				<th><%= sort_link @search, :result_qty, "Final" %></th>
-				<th><%= sort_link @search, :frozen_value %></th>
-				<th><%= sort_link @search, :counted_1_value_differ, 'Con.1 Diff.' %></th>
-				<th><%= sort_link @search, :counted_2_value_differ, 'Con.2 Diff.' %></th>
-				<th><%= sort_link @search, :result_value_differ, 'Final Diff.' %></th>
+				<th class='number'><%= sort_link @search, :item_cost, 'Cost' %></th>
+				<th class='number'><%= sort_link @search, :quantity, 'Froz.' %></th>
+				<th class='number'><%= sort_link @search, :counted_1_qty, "Con.1" %></th>
+				<th class='number'><%= sort_link @search, :counted_2_qty, "Con.2" %></th>
+				<th class='number'><%= sort_link @search, :result_qty, "Final" %></th>
+				<th class='number'><%= sort_link @search, :frozen_value %></th>
+				<th class='number'><%= sort_link @search, :counted_1_value_differ, 'Con.1 Diff.' %></th>
+				<th class='number'><%= sort_link @search, :counted_2_value_differ, 'Con.2 Diff.' %></th>
+				<th class='number'><%= sort_link @search, :result_value_differ, 'Final Diff.' %></th>
 			</tr>
 		</thead>
 		<tbody>

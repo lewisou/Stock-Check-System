@@ -98,6 +98,7 @@
 				<th><%= sort_link @search, :counted_1_qty, "Con.1" %></th>
 				<th><%= sort_link @search, :counted_2_qty, "Con.2" %></th>
 				<th><%= sort_link @search, :result_qty, "Final" %></th>
+				<th><%= sort_link @search, :frozen_value %></th>
 				<th><%= sort_link @search, :counted_1_value_differ, 'Con.1 Diff.' %></th>
 				<th><%= sort_link @search, :counted_2_value_differ, 'Con.2 Diff.' %></th>
 				<th><%= sort_link @search, :result_value_differ, 'Final Diff.' %></th>
@@ -119,13 +120,14 @@
 				<td class='number'><%= inventory.counted_1_qty %></td>
 				<td class='number'><%= inventory.counted_2_qty %></td>
 				<td class='number'><%= inventory.result_qty %></td>
+				<td class='number'><%=number_to_currency inventory.frozen_value %></td>
 				<td class='number'><%=number_to_currency inventory.counted_1_value_differ %></td>
 				<td class='number'><%=number_to_currency inventory.counted_2_value_differ %></td>
 				<td class='number'><%=number_to_currency inventory.result_value_differ %></td>
 			</tr>
 
 			<tr class="detail">
-				<td colspan="10">
+				<td colspan="11">
 					<table>
 						<tbody>
 							<tr>

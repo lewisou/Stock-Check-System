@@ -19,7 +19,7 @@ class Dataentry::InventoriesController < Dataentry::BaseController
     @inventory = curr_check.inventories.remote_s.find(params[:id])
 
     if @inventory.update_attributes(:inputed_qty => params[:inventory][:inputed_qty])
-      redirect_to edit_dataentry_inventory_path(@inventory), :notice => "Saved."
+      redirect_to dataentry_inventories_path, :notice => "Successfully Saved."
     else
       render :edit
     end

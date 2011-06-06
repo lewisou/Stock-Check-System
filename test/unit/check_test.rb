@@ -553,6 +553,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: checks
@@ -580,5 +581,6 @@ end
 #  al_account        :text
 #  manual_adj_xls_id :integer
 #  final_inv         :boolean         default(FALSE)
+#  ao_adjust_acc     :text            default("INVENTORY:INVENTORY ADJUSTMENTS")
 #
 

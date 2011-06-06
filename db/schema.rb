@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110605185203) do
+ActiveRecord::Schema.define(:version => 20110606221148) do
 
   create_table "activities", :force => true do |t|
     t.integer  "admin_id"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(:version => 20110605185203) do
     t.text     "al_account"
     t.integer  "manual_adj_xls_id"
     t.boolean  "final_inv",         :default => false
+    t.text     "ao_adjust_acc",     :default => "INVENTORY:INVENTORY ADJUSTMENTS"
   end
 
   add_index "checks", ["state"], :name => "index_checks_on_state"

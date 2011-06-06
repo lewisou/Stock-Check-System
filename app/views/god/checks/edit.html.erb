@@ -60,6 +60,18 @@
 		</dl>
 		</fieldset>
 		
+		<fieldset>
+		<legend>All Order Adjustment Account</legend>
+
+		<dl class='inline'>
+			<dt><%= f.label :ao_adjust_acc, 'AO Adjustment Account' %></dt>
+			<dd>
+				<%= f.text_field :ao_adjust_acc, :tabindex => 9 %>
+			</dd>
+		</dl>
+		</fieldset>
+		
+		
 		<%= f.submit 'Save', :class => 'button' %>
 	<% end %>
 </article>

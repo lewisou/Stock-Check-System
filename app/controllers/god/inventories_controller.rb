@@ -18,10 +18,11 @@ class God::InventoriesController < God::BaseController
         
         data = book.generate_xls(
         "Final Summary by value", @inventories,        
-        %w{Warehouse Part# Desc. Count_1_QTY Count_2_QTY RemoteWS_QTY Frozen_QTY Frozen_Val. Final_SCS_QTY Final_SCS_Val. Adjustment_to_QTY_frozen Adjustment_Value},
+        %w{Warehouse Part# Desc. Cost Count_1_QTY Count_2_QTY RemoteWS_QTY Frozen_QTY Frozen_Val. Final_SCS_QTY Final_SCS_Val. Adjustment_to_QTY_frozen Adjustment_Value},
         [[:location, :code], 
           [:item, :code],
           [:item, :description],
+          [:item, :cost],
           :counted_1_qty,
           :counted_2_qty,
           :inputed_qty,

@@ -52,6 +52,7 @@
 			<tr>
 				<th><%= sort_link @search, :location_id_and_item_id, 'Warehouse' %></th>
 				<th><%= sort_link @search, :item_id_and_location_id, 'Part #' %></th>
+				<th><%= sort_link @search, :item_cost, 'Cost' %></th>
 				<th><%= sort_link @search, :counted_1_qty, 'Count 1 QTY' %></th>
 				<th><%= sort_link @search, :counted_2_qty, 'Count 2 QTY' %></th>
 				<th><%= sort_link @search, :inputed_qty, 'RemoteWS QTY' %></th>
@@ -69,6 +70,7 @@
 			<tr>
 				<td><%= inventory.location.try(:code) %></td>
 				<td><a href="#" class="detail-link"><%= inventory.item.try(:code) %></a></td>
+				<td><%= inventory.item.try(:cost) %></td>
 				<td class='number'><%= inventory.counted_1_qty %></td>
 				<td class='number'><%= inventory.counted_2_qty %></td>
 				<td class='number'><%= inventory.inputed_qty %></td>

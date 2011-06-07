@@ -281,18 +281,19 @@ class Check < ActiveRecord::Base
     al_map = options[:from_al] == :keep ? {} : {:from_al => true}
 
     if inv
-      inv.update_attributes(({qty_sym => (row[7].try(:to_i) || 0)}).merge(al_map))
+      inv.update_attributes(({qty_sym => (row[15].try(:to_i) || 0)}).merge(al_map))
     else
       inv = Inventory.create(
         ({:item => item,
         :location => location,
-        qty_sym => row[7]}).merge(al_map)
+        qty_sym => row[15]}).merge(al_map)
       )
     end
     inv
   end
 
 end
+
 
 
 
@@ -336,6 +337,5 @@ end
 #  al_account        :text
 #  manual_adj_xls_id :integer
 #  final_inv         :boolean         default(FALSE)
-#  ao_adjust_acc     :text            default("INVENTORY:INVENTORY ADJUSTMENTS")
 #
 

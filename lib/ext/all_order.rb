@@ -6,7 +6,7 @@ module ALL_ORDER
     def self.inventory_adjustment check
       self.xls('InvAdjustment', [
         {:list => Inventory.in_check(check.id).need_adjustment.map(&:location).uniq, :symbols => [:id, (check.ao_adjust_acc || 'INVENTORY:INVENTORY ADJUSTMENTS'), :code]},
-        {:list => Inventory.in_check(check.id).need_adjustment, :symbols => [:location_id, :item_full_name, :adj_count, nil, nil, :adj_item_cost]}
+        {:list => Inventory.in_check(check.id).need_adjustment, :symbols => [:location_id, :item_full_name, :adj_count, nil, "Default", :adj_item_cost]}
         ])
     end
     

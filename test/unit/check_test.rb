@@ -47,8 +47,8 @@ class CheckTest < ActiveSupport::TestCase
 
     new_inv = c.inventories.includes(:item).includes(:location).where(:items => {:code => "104-102-011"}, :locations => {:code => "MR"}).first
     assert new_inv.try(:quantity) == 0
-    assert new_inv.try(:re_export_qty) == 30
-
+    assert new_inv.try(:re_export_qty) == 49
+    # 
     where = c.inventories.includes(:item).where(:items => (:code.eq % "04/CM002" | :code.eq % "04/CM003"))
     assert where.count == 2
     assert where.where(:items => {:code => '04/CM002'}).first.quantity == 1
@@ -66,7 +66,7 @@ class CheckTest < ActiveSupport::TestCase
     assert where.where(:items => {:code => '04/CM003'}).first.quantity == 15
     assert where.where(:items => {:code => '04/CM002'}).first.re_export_qty == 1
     assert where.where(:items => {:code => '04/CM003'}).first.re_export_qty == 15
-
+    
     new_inv = c.inventories.includes(:item).includes(:location).where(:items => {:code => "104-102-011"}, :locations => {:code => "MR"}).first
     assert new_inv.try(:quantity) == 0
     assert new_inv.try(:re_export_qty) == 0
@@ -99,13 +99,17 @@ class CheckTest < ActiveSupport::TestCase
     assert where.where(:items => {:code => '04/CM003'}).first.quantity == 14
 
     new_inv = c.inventories.includes(:item).includes(:location).where(:items => {:code => "104-102-011"}, :locations => {:code => "MR"}).first
-    assert new_inv.try(:quantity) == 30
+    assert new_inv.try(:quantity) == 49
     
     c.reimport_inv_xls = import_file
     c.switch_inv!(3)
     assert c.reload.import_time == 3
     assert c.inventories.count == 23
-    
+    where = c.inventories.includes(:item).where(:items => (:code.eq % "04/CM002" | :code.eq % "04/CM003"))
+    assert where.count == 2
+    assert where.where(:items => {:code => '04/CM002'}).first.quantity == 1
+    assert where.where(:items => {:code => '04/CM003'}).first.quantity == 15
+
     new_inv = c.inventories.includes(:item).includes(:location).where(:items => {:code => "104-102-011"}, :locations => {:code => "MR"}).first
     assert new_inv.try(:quantity) == 0
   end
@@ -318,22 +322,22 @@ class CheckTest < ActiveSupport::TestCase
     inv = c.inventories.create(:item => item, :location => loc, :quantity => 30)
     assert inv.reload.from_al == false
 
-    c.create_update_from_row ["1.300", "CA"] + [""] * 5 + [60], :from_al => :keep
+    c.create_update_from_row ["1.300", "CA"] + [""] * 13 + [60], :from_al => :keep
     assert c.inventories.count == 1
     assert inv.reload.quantity == 60
     assert inv.reload.from_al == false
 
-    c.create_update_from_row ["1.300", "CA"] + [""] * 5 + [60]
+    c.create_update_from_row ["1.300", "CA"] + [""] * 13 + [60]
     assert c.inventories.count == 1
     assert inv.reload.quantity == 60
     assert inv.reload.from_al == true
 
-    inv = c.create_update_from_row ["1.300", "CD"] + [""] * 5 + [60], :from_al => :keep
+    inv = c.create_update_from_row ["1.300", "CD"] + [""] * 13 + [60], :from_al => :keep
     assert c.inventories.count == 2
     assert c.import_time == 1
     assert inv.reload.from_al == false
     
-    inv = c.create_update_from_row ["1.300", "CX"] + [""] * 5 + [60]
+    inv = c.create_update_from_row ["1.300", "CX"] + [""] * 13 + [60]
     assert c.inventories.count == 3
     assert c.import_time == 1
     assert inv.reload.from_al == true
@@ -554,6 +558,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: checks
@@ -581,6 +586,5 @@ end
 #  al_account        :text
 #  manual_adj_xls_id :integer
 #  final_inv         :boolean         default(FALSE)
-#  ao_adjust_acc     :text            default("INVENTORY:INVENTORY ADJUSTMENTS")
 #
 

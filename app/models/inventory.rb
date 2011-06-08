@@ -76,6 +76,14 @@ class Inventory < ActiveRecord::Base
     end
   end
 
+  def manual_reason
+    return "Item is not active." unless self.item.is_active
+    return "Warehouse is not active." unless self.location.is_active
+    return "Item has no cost." if self.item.cost == 0 || self.item.cost.nil?
+    return "Item has lotted serials #." if self.item.is_lotted
+    return ""
+  end
+
   private unless 'test' == Rails.env
   def adj_qtys
     # onsite qty

@@ -31,7 +31,7 @@
 
 			<tr>
 				<td>
-					<%= action_link (curr_check.state == 'open' && !curr_check.final_inv), 'Re-import', reimport_checks_path, :class => "button" %>
+					<%= action_link (curr_check.state == 'open'), 'Re-import', reimport_checks_path, :class => "button" %>
 				</td>
 				<td>
 					<%= "(You can not reimport the check now.)" unless (curr_check.state == 'open' && !curr_check.final_inv) %> Re-import frozen quantities from ALL ORDER to Stock check system (SCS)

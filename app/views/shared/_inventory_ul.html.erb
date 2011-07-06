@@ -6,7 +6,7 @@
 		<%= link_to "Onsite Tickets", adm_tags_path %>
 		<ul>
 		<li <%= "class='current'" if @sub_menu == :tags %>><%= link_to "Tickets (Print / Edit / Delete)", adm_tags_path %></li>
-		<li <%= "class='current'" if @sub_menu == :print_list %>><%= link_to "Reprint / New Tickets", adm_wait_prints_path %></li>
+		<li <%= "class='current'" if @sub_menu == :print_list %>><%= link_to "Print list (Reprint / New Tickets)", adm_wait_prints_path %></li>
 		<% if allow_data_entry? %>
 		<li <%= "class='current'" if @sub_menu == :items %>><%= link_to "Create New Ticket", adm_items_path(:sub_menu => :items) %></li>
 		<% end %>
@@ -15,7 +15,7 @@
 		<li <%= "class='current'" if @sub_menu == :missing_count_2 %>><%= link_to "Count 2 Missing Tickets (#{Tag.in_check(curr_check.id).not_finish(2).countable.count})", missing_tag_adm_counts_path(:count => 2) %></li>
 		<li <%= "class='current'" if @sub_menu == :result_count_2 %>><%= link_to "Count 2 Result (#{Tag.in_check(curr_check.id).finish(2).countable.count})", result_adm_counts_path(:count => 2) %></li>
 		<li <%= "class='current'" if @sub_menu == :result_count_3 %>><%= link_to "Count 3 Result (#{Tag.in_check(curr_check.id).finish(3).countable.count})", result_adm_counts_path(:count => 3) %></li>
-		<li <%= "class='current'" if @sub_menu == :final_qty %>><%= link_to "Final Qty", adj_list_adm_tags_path %></li>
+		<li <%= "class='current'" if @sub_menu == :final_qty %>><%= link_to "Final adjustment input", adj_list_adm_tags_path %></li>
 		</ul>
 	</li>
 	<li <%= "class='current'" if @sub_menu == :remote %>><%= link_to "Remote Warehouses Tickets (#{curr_check.inventories.remote_s.where(:inputed_qty => nil).count})", adm_inventories_path %></li>

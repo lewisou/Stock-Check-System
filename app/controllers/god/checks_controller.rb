@@ -73,14 +73,15 @@ class God::ChecksController < God::BaseController
   private
   def create_step_1
     @check = Check.new(params[:check])
-    @check.save && @check.make_current!
+    @check.save && @check.make_current! && @check.refresh_location
   end
 
   def create_step_2
     @check = Check.curr_s.first
     
     @check.set_remotes(params["remote_ids"])
-    @check.reload.update_attributes(:state => "open", :admin => current_admin) && @check.generate!
+    
+    @check.refresh_item_and_group && @check.refresh_inventories && @check.reload.update_attributes(:state => "open", :admin => current_admin) && @check.generate!
   end
   
   def choose_lay

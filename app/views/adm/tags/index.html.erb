@@ -25,7 +25,7 @@
 			<tr>
 				<th><%= sort_link @search, :id, 'Ticket #' %></th>
 				<th><%= sort_link @search, :inventory_item_code, 'Item #' %></th>
-				<th><%= sort_link @search, :inventory_location_code, 'Location' %></th>
+				<th><%= sort_link @search, :inventory_location_code, 'Warehouse' %></th>
 				<th><%= sort_link @search, :inventory_item_cost, 'Cost' %></th>
 				<th><%= sort_link @search, :sloc, 'Shelf Loc' %></th>
 				<th><%= sort_link @search, :printed_time, 'Printed Times' %></th>
@@ -54,7 +54,7 @@
 							<%= link_to image_tag('icons/edit.png'), edit_adm_tag_path(tag), :title => 'Edit' %>
 						</li>
 						<li>
-							<%= link_to image_tag('icons/printer.png'), adm_wait_print_path(tag), :method => :put, :confirm => "Are you sure to add Ticket #{tag.id} to print list?" unless tag.wait_for_print %>
+							<%= link_to image_tag('icons/printer.png'), adm_wait_print_path(tag), :method => :put, :confirm => "Are you sure to add Ticket #{tag.id} to print list?", :title => 'Add to print list.' unless tag.wait_for_print %>
 						</li>
 					</ul>
 

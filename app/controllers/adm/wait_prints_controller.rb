@@ -21,7 +21,7 @@ class Adm::WaitPrintsController < Adm::BaseController
     @tag = Tag.in_check(curr_check.id).find(params[:id])
     
     if @tag.update_attributes(:wait_for_print => true)
-      redirect_to adm_tags_path, :notice => "Successfully added."
+      redirect_to adm_wait_prints_path, :notice => "Successfully added."
     else
       redirect_to adm_tags_path, :alert => "Failed to add."
     end

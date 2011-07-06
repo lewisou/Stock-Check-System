@@ -23,7 +23,7 @@
 			<tr>
 				<th><%= sort_link @search, :id, 'Ticket #' %></th>
 				<th><%= sort_link @search, :inventory_item_code, 'Item #' %></th>
-				<th><%= sort_link @search, :inventory_location_code, 'Location' %></th>
+				<th><%= sort_link @search, :inventory_location_code, 'Warehouse' %></th>
 				<th><%= sort_link @search, :inventory_item_cost, 'Cost' %></th>
 				<th><%= sort_link @search, :sloc, 'Shelf Loc' %></th>
 				<th><%= sort_link @search, :printed_time, 'Printed Times' %></th>
@@ -43,7 +43,7 @@
 				<td><%= tag.printed_time %></td>
 				<td>
 					<% if allow_data_entry? %>
-					<%= link_to "remove", adm_wait_print_path(tag), :method => :delete, :confirm => "Are you sure to remove Ticket #{tag.id} from the print list?", :title => 'Delete' %>
+					<%= link_to "remove", adm_wait_print_path(tag), :method => :delete, :confirm => "Are you sure to remove Ticket #{tag.id} from the print list?", :title => 'Remove from print list' %>
 					<% end %>
 				</td>
 			</tr>

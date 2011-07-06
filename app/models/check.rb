@@ -6,6 +6,8 @@ class Check < ActiveRecord::Base
   scope :opt_s, where(:state => ["open", "complete", "cancel"]).curr_s
   scope :history, where(:state => "archive").order("created_at DESC")
 
+  validates_uniqueness_of :description
+
   has_many :item_groups
   has_many :items, :through => :item_groups
   has_many :locations
@@ -13,19 +15,39 @@ class Check < ActiveRecord::Base
   has_many :assigns, :through => :locations
   has_many :activities
   belongs_to :admin
+
   belongs_to :inv_adj_xls, :class_name => "::Attachment"
   belongs_to :manual_adj_xls, :class_name => "::Attachment"
   belongs_to :instruction, :class_name => "::Attachment"
 
-  attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :reimport_inv_xls, :instruction_file, :re_export_qtys_xls
+  belongs_to :import_item_groups_xls, :class_name => "::Attachment"
+  belongs_to :import_items_xls, :class_name => "::Attachment"
+  belongs_to :import_locations_xls, :class_name => "::Attachment"
+  belongs_to :import_inventories_xls, :class_name => "::Attachment"
+  attr_accessor :item_groups_xls, :items_xls, :locations_xls, :inventories_xls
   validates_presence_of :item_groups_xls, :items_xls, :locations_xls, :inventories_xls, :on => :create
-  validates_uniqueness_of :description
 
-  before_create :refresh_location, :refresh_item_and_group, :init_colors
-  after_create :refresh_inventories
+  before_create :save_files
+  def save_files
+    self.import_item_groups_xls = ::Attachment.create(:data => @item_groups_xls) unless @item_groups_xls.blank?
+    self.import_items_xls = ::Attachment.create(:data => @items_xls) unless @items_xls.blank?
+    self.import_locations_xls = ::Attachment.create(:data => @locations_xls) unless @locations_xls.blank?
+    self.import_inventories_xls = ::Attachment.create(:data => @inventories_xls) unless @inventories_xls.blank?
+  end
+
+  attr_accessor :reimport_inv_xls, :instruction_file, :re_export_qtys_xls
+
+  # before_create :refresh_location, :refresh_item_and_group
+  before_create :init_colors
+  # after_create :refresh_inventories
 
   before_update :adj_instruction
   after_update :refresh_re_export_qtys
+
+  def refresh_all
+    self.refresh_location && self.refresh_item_and_group && self.refresh_inventories
+    self.reload
+  end
 
   def set_remotes ids=[]
     self.locations.each do |loc|
@@ -180,36 +202,31 @@ class Check < ActiveRecord::Base
     false
   end
 
-  private unless 'test' == Rails.env
-  def refresh_re_export_qtys
-    refresh_qtys_from_xls @re_export_qtys_xls, :re_export_qty, :from_al => :keep
-  end
+  def refresh_location
+    return if self.import_locations_xls.blank?
 
-  def refresh_inventories
-    refresh_qtys_from_xls @inventories_xls
-  end
-
-  def refresh_qtys_from_xls xls, sym = :quantity, options={}
-    return if xls.nil?
-    
-    Inventory.in_check(self.id).each do |inv|
-      inv.update_attributes(sym => 0)
-    end
-
-    @book = Spreadsheet.open xls.path
+    self.locations = []
+    @book = Spreadsheet.open self.import_locations_xls.data.path
     @sheet0 = @book.worksheet 0
-
+    
     @sheet0.each_with_index do |row, index|
       next if (index == 0 || row[0].blank?)
-      create_update_from_row row, {:quantity_sym => sym}.merge(options)
+
+      self.locations << Location.create(:code => row[0], 
+                      :desc1 => row[1],
+                      :desc2 => row[2],
+                      :desc3 => row[3],
+                      :is_active => (row[7].downcase == 'yes'),
+                      :is_available => (row[8]),
+                      :from_al => true)
     end
   end
 
   def refresh_item_and_group
-    return if @item_groups_xls.nil?
+    return if self.import_item_groups_xls.nil?
 
     self.item_groups = []
-    @book = Spreadsheet.open @item_groups_xls.path
+    @book = Spreadsheet.open self.import_item_groups_xls.data.path
     @sheet0 = @book.worksheet 0
     @sheet0.each_with_index do |row, index|
       next if (index == 0 || row[0].blank?)
@@ -223,7 +240,7 @@ class Check < ActiveRecord::Base
                       :is_active => (row[17]))
     end
 
-    @book = Spreadsheet.open @items_xls.path
+    @book = Spreadsheet.open self.import_items_xls.data.path
     @sheet0 = @book.worksheet 0
     @sheet0.each_with_index do |row, index|
       next if (index == 0 || row[0].blank?)
@@ -246,36 +263,39 @@ class Check < ActiveRecord::Base
     end
   end
 
+  def refresh_inventories
+    refresh_qtys_from_xls self.import_inventories_xls.data
+  end
+
+  private unless 'test' == Rails.env
+  def refresh_re_export_qtys
+    refresh_qtys_from_xls @re_export_qtys_xls, :re_export_qty, :from_al => :keep
+  end
+
+  def refresh_qtys_from_xls xls, sym = :quantity, options={}
+    return if xls.nil?
+    
+    Inventory.in_check(self.id).each do |inv|
+      inv.update_attributes(sym => 0)
+    end
+
+    @book = Spreadsheet.open xls.path
+    @sheet0 = @book.worksheet 0
+
+    @sheet0.each_with_index do |row, index|
+      next if (index == 0 || row[0].blank?)
+      create_update_from_row row, {:quantity_sym => sym}.merge(options)
+    end
+  end
+
   def init_colors
-    self.color_1 = 'B4E2D4'
-    self.color_2 = 'F3C4C8'
-    self.color_3 = 'EADFD2'
+    self.color_1, self.color_2, self.color_3 = 'B4E2D4', 'F3C4C8', 'EADFD2'
   end
 
   def adj_instruction
     return if @instruction_file.nil?
     
     self.instruction = ::Attachment.create(:data => @instruction_file)
-  end
-
-  def refresh_location
-    return if @locations_xls.nil?
-
-    self.locations = []
-    @book = Spreadsheet.open @locations_xls.path
-    @sheet0 = @book.worksheet 0
-    
-    @sheet0.each_with_index do |row, index|
-      next if (index == 0 || row[0].blank?)
-
-      self.locations << Location.create(:code => row[0], 
-                      :desc1 => row[1],
-                      :desc2 => row[2],
-                      :desc3 => row[3],
-                      :is_active => (row[7].downcase == 'yes'),
-                      :is_available => (row[8]),
-                      :from_al => true)
-    end
   end
 
   def create_update_from_row row, options={}
@@ -317,32 +337,39 @@ end
 
 
 
+
+
 # == Schema Information
 #
 # Table name: checks
 #
-#  id                :integer         not null, primary key
-#  state             :string(255)     default("init")
-#  created_at        :datetime
-#  updated_at        :datetime
-#  current           :boolean         default(FALSE)
-#  description       :text
-#  admin_id          :integer
-#  location_xls_id   :integer
-#  inv_adj_xls_id    :integer
-#  item_xls_id       :integer
-#  color_1           :string(255)
-#  color_2           :string(255)
-#  color_3           :string(255)
-#  generated         :boolean         default(FALSE)
-#  import_time       :integer         default(1)
-#  instruction_id    :integer
-#  start_time        :date
-#  end_time          :date
-#  credit_v          :float
-#  credit_q          :float
-#  al_account        :text
-#  manual_adj_xls_id :integer
-#  final_inv         :boolean         default(FALSE)
+#  id                        :integer         not null, primary key
+#  state                     :string(255)     default("init")
+#  created_at                :datetime
+#  updated_at                :datetime
+#  current                   :boolean         default(FALSE)
+#  description               :text
+#  admin_id                  :integer
+#  location_xls_id           :integer
+#  inv_adj_xls_id            :integer
+#  item_xls_id               :integer
+#  color_1                   :string(255)
+#  color_2                   :string(255)
+#  color_3                   :string(255)
+#  generated                 :boolean         default(FALSE)
+#  import_time               :integer         default(1)
+#  instruction_id            :integer
+#  start_time                :date
+#  end_time                  :date
+#  credit_v                  :float
+#  credit_q                  :float
+#  al_account                :text
+#  manual_adj_xls_id         :integer
+#  final_inv                 :boolean         default(FALSE)
+#  ao_adjust_acc             :text            default("INVENTORY:INVENTORY ADJUSTMENTS")
+#  import_item_groups_xls_id :integer
+#  import_items_xls_id       :integer
+#  import_locations_xls_id   :integer
+#  import_inventories_xls_id :integer
 #
 

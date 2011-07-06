@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110606221148) do
+ActiveRecord::Schema.define(:version => 20110704015627) do
 
   create_table "activities", :force => true do |t|
     t.integer  "admin_id"
@@ -77,10 +77,10 @@ ActiveRecord::Schema.define(:version => 20110606221148) do
   end
 
   create_table "checks", :force => true do |t|
-    t.string   "state",             :default => "init"
+    t.string   "state",                     :default => "init"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "current",           :default => false
+    t.boolean  "current",                   :default => false
     t.text     "description"
     t.integer  "admin_id"
     t.integer  "location_xls_id"
@@ -89,8 +89,8 @@ ActiveRecord::Schema.define(:version => 20110606221148) do
     t.string   "color_1"
     t.string   "color_2"
     t.string   "color_3"
-    t.boolean  "generated",         :default => false
-    t.integer  "import_time",       :default => 1
+    t.boolean  "generated",                 :default => false
+    t.integer  "import_time",               :default => 1
     t.integer  "instruction_id"
     t.date     "start_time"
     t.date     "end_time"
@@ -98,8 +98,12 @@ ActiveRecord::Schema.define(:version => 20110606221148) do
     t.float    "credit_q"
     t.text     "al_account"
     t.integer  "manual_adj_xls_id"
-    t.boolean  "final_inv",         :default => false
-    t.text     "ao_adjust_acc",     :default => "INVENTORY:INVENTORY ADJUSTMENTS"
+    t.boolean  "final_inv",                 :default => false
+    t.text     "ao_adjust_acc",             :default => "INVENTORY:INVENTORY ADJUSTMENTS"
+    t.integer  "import_item_groups_xls_id"
+    t.integer  "import_items_xls_id"
+    t.integer  "import_locations_xls_id"
+    t.integer  "import_inventories_xls_id"
   end
 
   add_index "checks", ["state"], :name => "index_checks_on_state"

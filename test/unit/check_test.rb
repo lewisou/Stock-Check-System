@@ -21,7 +21,8 @@ class CheckTest < ActiveSupport::TestCase
   test "generate!" do
     c = new_check
     c.save(:validate => false)
-    
+    c.refresh_all
+
     assert Tag.in_check(c.id).count == 0
     c.locations.update_all(:is_remote => false)
 
@@ -39,6 +40,8 @@ class CheckTest < ActiveSupport::TestCase
   test "refresh_re_export_qtys from mising inventory" do
     c = new_check
     c.save(:validate => false)
+    c.refresh_all
+
     assert c.inventories.count == 22
 
     c.re_export_qtys_xls = reimport_file
@@ -83,6 +86,7 @@ class CheckTest < ActiveSupport::TestCase
 
     c = new_check
     c.save(:validate => false)
+    c.refresh_all
     c.locations.update_all(:is_remote => false)
     
     assert c.inventories.count == 22
@@ -128,6 +132,8 @@ class CheckTest < ActiveSupport::TestCase
     # launch refresh_item_and_group in before filter
     c = new_check
     c.save(:validate => false)
+    c.refresh_all
+
     c.locations.update_all(:is_remote => false)
     
     assert c.item_groups.count == 33
@@ -143,7 +149,7 @@ class CheckTest < ActiveSupport::TestCase
   test "refresh_item_and_group will load shelf locations" do
     c = new_check
     c.save(:validate => false)
-    
+    c.refresh_all
 
     assert Item.where(:inittags.not_eq => nil).count > 0
   end
@@ -170,7 +176,8 @@ class CheckTest < ActiveSupport::TestCase
   test "refresh_location" do
     c = new_check
     c.save(:validate => false)
-    
+    c.refresh_all
+
     assert c.locations.count == 2
     assert Location.count == 2
   end
@@ -178,6 +185,7 @@ class CheckTest < ActiveSupport::TestCase
   test "refresh_inventories" do
     c = new_check
     c.save(:validate => false)
+    c.refresh_all
 
     assert Inventory.in_check(c.id).count == 22
   end
@@ -185,6 +193,8 @@ class CheckTest < ActiveSupport::TestCase
   test "refresh_inventories will not create default tags" do
     c = new_check
     c.save(:validate => false)
+    c.refresh_all
+
     c.locations.update_all(:is_remote => false)
         
     assert Tag.in_check(c.id).count == 0
@@ -193,6 +203,8 @@ class CheckTest < ActiveSupport::TestCase
   test "generate_xls" do
     c = new_check
     c.save(:validate => false)
+    c.refresh_all
+
     c.items.each {|i| i.from_al = false, i.save(:validate => false)}
     c.generate_xls
     c.save(:validate => false)
@@ -201,27 +213,31 @@ class CheckTest < ActiveSupport::TestCase
     assert c.inv_adj_xls.data_file_size > 0
     assert c.manual_adj_xls.data_file_size > 0
   end
-  
+
   test "finish_count?" do
     c = new_check
     c.save(:validate => false)
+    c.refresh_all
+
     c.locations.first.inventories.create.tags.create
     c.locations.each {|l| l.update_attributes(:is_remote => false)}
-    
+
     Tag.update_all(:count_1 => 1)
     Tag.update_all(:count_2 => 2)
 
     assert c.finish_count?
-    
+
     Tag.update_all(:count_1 => nil)
     Tag.update_all(:count_2 => nil)
 
     assert !c.finish_count?
   end
-  
+
   test "finish_count_in" do
     c = new_check
     c.save(:validate => false)
+    c.refresh_all
+
     c.locations.first.inventories.create.tags.create
     c.locations.each {|l| l.update_attributes(:is_remote => false)}
 
@@ -529,6 +545,8 @@ class CheckTest < ActiveSupport::TestCase
   test "refresh_qtys_from_xls" do
     c = new_check
     c.save(:validate => false)
+    c.refresh_all
+
     c.inventories.update_all(:from_al => false)
 
     c.refresh_qtys_from_xls reimport_file, :re_export_qty, :from_al => :keep
@@ -539,6 +557,8 @@ class CheckTest < ActiveSupport::TestCase
 
     c = new_check
     c.save(:validate => false)
+    c.refresh_all
+
     c.inventories.update_all(:from_al => false)
 
     c.inventories.update_all(:quantity => 0)
@@ -559,32 +579,39 @@ end
 
 
 
+
+
 # == Schema Information
 #
 # Table name: checks
 #
-#  id                :integer         not null, primary key
-#  state             :string(255)     default("init")
-#  created_at        :datetime
-#  updated_at        :datetime
-#  current           :boolean         default(FALSE)
-#  description       :text
-#  admin_id          :integer
-#  location_xls_id   :integer
-#  inv_adj_xls_id    :integer
-#  item_xls_id       :integer
-#  color_1           :string(255)
-#  color_2           :string(255)
-#  color_3           :string(255)
-#  generated         :boolean         default(FALSE)
-#  import_time       :integer         default(1)
-#  instruction_id    :integer
-#  start_time        :date
-#  end_time          :date
-#  credit_v          :float
-#  credit_q          :float
-#  al_account        :text
-#  manual_adj_xls_id :integer
-#  final_inv         :boolean         default(FALSE)
+#  id                        :integer         not null, primary key
+#  state                     :string(255)     default("init")
+#  created_at                :datetime
+#  updated_at                :datetime
+#  current                   :boolean         default(FALSE)
+#  description               :text
+#  admin_id                  :integer
+#  location_xls_id           :integer
+#  inv_adj_xls_id            :integer
+#  item_xls_id               :integer
+#  color_1                   :string(255)
+#  color_2                   :string(255)
+#  color_3                   :string(255)
+#  generated                 :boolean         default(FALSE)
+#  import_time               :integer         default(1)
+#  instruction_id            :integer
+#  start_time                :date
+#  end_time                  :date
+#  credit_v                  :float
+#  credit_q                  :float
+#  al_account                :text
+#  manual_adj_xls_id         :integer
+#  final_inv                 :boolean         default(FALSE)
+#  ao_adjust_acc             :text            default("INVENTORY:INVENTORY ADJUSTMENTS")
+#  import_item_groups_xls_id :integer
+#  import_items_xls_id       :integer
+#  import_locations_xls_id   :integer
+#  import_inventories_xls_id :integer
 #
 

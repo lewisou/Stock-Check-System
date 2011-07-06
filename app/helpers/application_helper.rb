@@ -1,7 +1,8 @@
 module ApplicationHelper
   def loading_submit(f, label=nil, options={})
     new_c = (options[:class] || "") + " once"
-    f.submit(label, options.merge(:class => new_c)) + notispan
+    message = options.delete(:message)
+    f.submit(label, options.merge(:class => new_c)) + notispan(message)
   end
 
   def loading_link label='', url='', options={}
@@ -17,7 +18,8 @@ module ApplicationHelper
   end
   
   private
-  def notispan
-    raw("<span style='display:none;'>#{image_tag('loader.gif')} Processing...</span>")
+  def notispan message=nil
+    message ||= 'Processing...'
+    raw("<span style='display:none;'>#{image_tag('loader.gif')} #{message}</span>")
   end
 end

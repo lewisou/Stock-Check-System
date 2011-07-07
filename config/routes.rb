@@ -101,7 +101,8 @@ Scs::Application.routes.draw do
       resources :inventories
       
       collection do
-        get 'current', 'history'
+        get 'current', 'history', 'import_cost'
+        put 'do_import_cost'
       end
       member do
         put 'change_state'

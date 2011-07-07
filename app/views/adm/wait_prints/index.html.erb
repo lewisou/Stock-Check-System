@@ -16,7 +16,7 @@
 
 <article>
 	<h1><%= @search.count %> Tickets</h1>
-	<%= loading_link 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
+	<%= loading_link 'Print tickets (PDF)', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
 
 	<table class="gtable detailtable">
 		<thead>

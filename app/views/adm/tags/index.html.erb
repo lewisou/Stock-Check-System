@@ -18,7 +18,7 @@
 
 <article>
 	<h1><%= @search.count %> Tickets</h1>
-	<%= loading_link 'Print Result', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
+	<%= loading_link 'Print tickets (PDF)', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
 
 	<table class="gtable detailtable">
 		<thead>
@@ -28,7 +28,7 @@
 				<th><%= sort_link @search, :inventory_location_code, 'Warehouse' %></th>
 				<th><%= sort_link @search, :inventory_item_cost, 'Cost' %></th>
 				<th><%= sort_link @search, :sloc, 'Shelf Loc' %></th>
-				<th><%= sort_link @search, :printed_time, 'Printed Times' %></th>
+				<th><%= sort_link @search, :printed_time, 'Printed' %></th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -42,7 +42,7 @@
 				<td><%= tag.inventory.location.try(:code) %></td>
 				<td class='number'><%=number_to_currency (tag.inventory.item.try(:cost) || 0) %></td>
 				<td><%= tag.sloc %></td>
-				<td><%= tag.printed_time %></td>
+				<td><%= tag.printed_time.to_i > 0 ? "√ (#{tag.printed_time.to_i})" : "X" %> </td>
 				<td>
 					<% if allow_data_entry? %>
 

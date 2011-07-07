@@ -568,6 +568,27 @@ class CheckTest < ActiveSupport::TestCase
     assert c.inventories.where(:re_export_qty.gt => 0).count == 0
     assert c.inventories.where(:quantity.gt => 0).count > 0
   end
+
+  test "first_row_eq" do
+    c = new_check
+    assert c.first_row_eq(import_file, ['Item', 'Location', 'UOM', 'PurchaseDesc', 'SalesDesc', 'AverageCost', 'IsActive', 'Qty', 'Committed', 'Allocated', 'InTransit', 'RMA', 'WIP', 'AvailableToSell', 'AvailableToShip', 'OnHand', 'Owned', 'Value', 'ItemCust1', 'ItemCust2', 'ItemCust3', 'ItemCust4', 'ItemCust5', 'ItemCust6', 'ItemCust7', 'ItemCust8', 'ItemCust9', 'ItemCust10', 'ItemCust11', 'ItemCust12', 'ItemCust13', 'ItemCust14', 'ItemCust15', 'AvailablePurchaseValue', 'PurchaseCost', 'OnHandPurchaseValue'])
+    assert !c.first_row_eq(import_file, ['1Item', 'Location', 'UOM', 'PurchaseDesc', 'SalesDesc', 'AverageCost', 'IsActive', 'Qty', 'Committed', 'Allocated', 'InTransit', 'RMA', 'WIP', 'AvailableToSell', 'AvailableToShip', 'OnHand', 'Owned', 'Value', 'ItemCust1', 'ItemCust2', 'ItemCust3', 'ItemCust4', 'ItemCust5', 'ItemCust6', 'ItemCust7', 'ItemCust8', 'ItemCust9', 'ItemCust10', 'ItemCust11', 'ItemCust12', 'ItemCust13', 'ItemCust14', 'ItemCust15', 'AvailablePurchaseValue', 'PurchaseCost', 'OnHandPurchaseValue'])
+    assert !c.first_row_eq(File.new(Rails.root.to_s + '/Capfile'), ['a'])
+  end
+
+  test "reimport_cost" do
+    c = new_check
+    c.save(:validate => false)
+    c.refresh_all
+
+    assert c.items.where(:code.eq => '104-103-101').first.cost == 876.5
+    assert c.items.where(:code.eq => '104-102-011').first.cost == 59.1
+
+    c.update_attributes(:reimport_cost_xls => reimport_cost_file)
+
+    assert c.items.where(:code.eq => '104-103-101').first.cost == 876.5
+    assert c.items.where(:code.eq => '104-102-011').first.cost == 20
+  end
 end
 
 

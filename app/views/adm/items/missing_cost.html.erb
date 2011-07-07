@@ -28,7 +28,7 @@
 			<th><%= sort_link @search, :code, 'Item Number' %></th>
 			<th>Description</th>
 			<th>Cost</th>
-			<th>Action</th>
+			<!--th>Action</th-->
 		</tr>
 	</thead>
 	<tbody>
@@ -37,9 +37,9 @@
 			<td><%= item.code %></td>
 			<td><%= item.description[0, 40] if item.description %> <%= "..." if item.description && item.description.size > 40 %></td>
 			<td><%= item.cost %></td>
-			<td>
-				<%= link_to image_tag('icons/edit.png', :alt => 'Edit'), input_price_adm_item_path(item), :title => "Input cost" if allow_data_entry? %>
-			</td>
+			<!--td>
+				< link_to image_tag('icons/edit.png', :alt => 'Edit'), input_price_adm_item_path(item), :title => "Input cost" if allow_data_entry? >
+			</td-->
 		</tr>
 		<% end %>
 	</tbody>

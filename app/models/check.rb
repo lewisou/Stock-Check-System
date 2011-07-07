@@ -35,13 +35,36 @@ class Check < ActiveRecord::Base
     self.import_inventories_xls = ::Attachment.create(:data => @inventories_xls) unless @inventories_xls.blank?
   end
 
-  attr_accessor :reimport_inv_xls, :instruction_file, :re_export_qtys_xls
+  attr_accessor :reimport_inv_xls, :reimport_cost_xls, :instruction_file, :re_export_qtys_xls
+
+  validate :file_format
+  def file_format
+    if !@item_groups_xls.blank? && !first_row_eq(@item_groups_xls, ['Name', 'ItemType', 'ItemTypeShort', 'ExpenseAcct', 'AssetAcct', 'COGSAcct', 'IncomeAcct', 'PrimaryUOM', 'PurchaseUOM', 'PurchaseFactor', 'SaleUOM', 'SaleFactor', 'UseUOM', 'UseFactor', 'IsPurchased', 'IsSold', 'IsUsed', 'IsActive'])
+      errors.add(:item_groups_xls, "Invalid format")
+    end
+    if !@locations_xls.blank? && !first_row_eq(@locations_xls, ['Location', 'Address 1', 'Address 2', 'Address 3', 'City', 'State', 'Zip', 'Active', 'Available'])
+      errors.add(:locations_xls, "Invalid format")
+    end
+    if !@items_xls.blank? && !first_row_eq(@items_xls, ['Item', 'SalesDesc', 'PurchaseDesc', 'ItemType', 'ItemTypeShort', 'QBType', 'MakeUseTypeName', 'MakeUseTypeShort', 'PrimaryUOM', 'PurchUOM', 'PurchaseFactor', 'SalesUOM', 'SaleFactor', 'UseUOM', 'UseFactor', 'QuantityOnHand', 'ReorderPoint', 'ReorderAmount', 'PurchaseCost', 'LastPurchaseCost', 'AverageCost', 'Price', 'BinName', 'LocLocation', 'COGSAccount', 'SalesAccount', 'AssetAccount', 'ExpenseAccount', 'SalesTaxCode', 'PriceLevelName', 'Weight', 'Manufacturer', 'MftgPartNumber', 'UPC', 'IsActive', 'VendorPartNo', 'HasLotSer', 'Proxy', 'ImageFile', 'ItemCust1', 'ItemCust2', 'ItemCust3', 'ItemCust4', 'ItemCust5', 'ItemCust6', 'ItemCust7', 'ItemCust8', 'ItemCust9', 'ItemCust10', 'ItemCust11', 'ItemCust12', 'ItemCust13', 'ItemCust14', 'ItemCust15', 'ItemCust16', 'ItemCust17', 'ItemCust18', 'ItemCust19', 'ItemCust20', 'ItemCust21', 'ItemCust22', 'ItemCust23', 'ItemCust24', 'ItemCust25', 'ItemCust26', 'ItemCust27', 'ItemCust28', 'ItemCust29', 'ItemCust30', 'TimeCreated', 'TimeModified', 'Vendor', 'MaxQty', 'Volume', 'FullItemName', 'ID'])
+      errors.add(:items_xls, "Invalid format")
+    end
+    if !@inventories_xls.blank? && !first_row_eq(@inventories_xls, ['Item', 'Location', 'UOM', 'PurchaseDesc', 'SalesDesc', 'AverageCost', 'IsActive', 'Qty', 'Committed', 'Allocated', 'InTransit', 'RMA', 'WIP', 'AvailableToSell', 'AvailableToShip', 'OnHand', 'Owned', 'Value', 'ItemCust1', 'ItemCust2', 'ItemCust3', 'ItemCust4', 'ItemCust5', 'ItemCust6', 'ItemCust7', 'ItemCust8', 'ItemCust9', 'ItemCust10', 'ItemCust11', 'ItemCust12', 'ItemCust13', 'ItemCust14', 'ItemCust15', 'AvailablePurchaseValue', 'PurchaseCost', 'OnHandPurchaseValue'])
+      errors.add(:inventories_xls, "Invalid format")
+    end
+    if !@reimport_inv_xls.blank? && !first_row_eq(@reimport_inv_xls, ['Item', 'Location', 'UOM', 'PurchaseDesc', 'SalesDesc', 'AverageCost', 'IsActive', 'Qty', 'Committed', 'Allocated', 'InTransit', 'RMA', 'WIP', 'AvailableToSell', 'AvailableToShip', 'OnHand', 'Owned', 'Value', 'ItemCust1', 'ItemCust2', 'ItemCust3', 'ItemCust4', 'ItemCust5', 'ItemCust6', 'ItemCust7', 'ItemCust8', 'ItemCust9', 'ItemCust10', 'ItemCust11', 'ItemCust12', 'ItemCust13', 'ItemCust14', 'ItemCust15', 'AvailablePurchaseValue', 'PurchaseCost', 'OnHandPurchaseValue'])
+      errors.add(:reimport_inv_xls, "Invalid format")
+    end
+
+    if !@reimport_cost_xls.blank? && !first_row_eq(@reimport_cost_xls, ['Item', 'SalesDesc', 'PurchaseDesc', 'ItemType', 'ItemTypeShort', 'QBType', 'MakeUseTypeName', 'MakeUseTypeShort', 'PrimaryUOM', 'PurchUOM', 'PurchaseFactor', 'SalesUOM', 'SaleFactor', 'UseUOM', 'UseFactor', 'QuantityOnHand', 'ReorderPoint', 'ReorderAmount', 'PurchaseCost', 'LastPurchaseCost', 'AverageCost', 'Price', 'BinName', 'LocLocation', 'COGSAccount', 'SalesAccount', 'AssetAccount', 'ExpenseAccount', 'SalesTaxCode', 'PriceLevelName', 'Weight', 'Manufacturer', 'MftgPartNumber', 'UPC', 'IsActive', 'VendorPartNo', 'HasLotSer', 'Proxy', 'ImageFile', 'ItemCust1', 'ItemCust2', 'ItemCust3', 'ItemCust4', 'ItemCust5', 'ItemCust6', 'ItemCust7', 'ItemCust8', 'ItemCust9', 'ItemCust10', 'ItemCust11', 'ItemCust12', 'ItemCust13', 'ItemCust14', 'ItemCust15', 'ItemCust16', 'ItemCust17', 'ItemCust18', 'ItemCust19', 'ItemCust20', 'ItemCust21', 'ItemCust22', 'ItemCust23', 'ItemCust24', 'ItemCust25', 'ItemCust26', 'ItemCust27', 'ItemCust28', 'ItemCust29', 'ItemCust30', 'TimeCreated', 'TimeModified', 'Vendor', 'MaxQty', 'Volume', 'FullItemName', 'ID'])
+      errors.add(:reimport_cost_xls, "Invalid format")
+    end
+  end
 
   # before_create :refresh_location, :refresh_item_and_group
   before_create :init_colors
   # after_create :refresh_inventories
 
-  before_update :adj_instruction
+  before_update :adj_instruction, :reimport_cost
   after_update :refresh_re_export_qtys
 
   def refresh_all
@@ -208,7 +231,7 @@ class Check < ActiveRecord::Base
     self.locations = []
     @book = Spreadsheet.open self.import_locations_xls.data.path
     @sheet0 = @book.worksheet 0
-    
+
     @sheet0.each_with_index do |row, index|
       next if (index == 0 || row[0].blank?)
 
@@ -317,6 +340,33 @@ class Check < ActiveRecord::Base
       )
     end
     inv
+  end
+
+  def first_row_eq file, arry
+    @book = Spreadsheet.open file.path
+    @sheet0 = @book.worksheet 0
+    @sheet0.row(0) == arry
+  rescue
+    false
+  end
+
+  def reimport_cost
+    return if @reimport_cost_xls.blank?
+
+    # self.items.each do |item|
+    #   item.update_attributes(:cost => 0)
+    # end
+
+    @book = Spreadsheet.open @reimport_cost_xls.path
+    @sheet0 = @book.worksheet 0
+    @sheet0.each_with_index do |row, index|
+      next if (index == 0 || row[0].blank?)
+
+      item = self.items.find_by_code(row[74])
+      next if item.nil?
+
+      item.update_attributes(:cost => row[18])
+    end
   end
 
 end

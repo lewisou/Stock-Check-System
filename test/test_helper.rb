@@ -3,6 +3,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'ext/ruby-ole'
 require "#{Rails.root}/db/seeds.rb"
+require 'pp'
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
@@ -21,14 +22,29 @@ class ActiveSupport::TestCase
     File.new("#{Rails.root.to_s}/test/files/inventories.xls")
   end
   
+  def group_file
+    File.new("#{Rails.root.to_s}/test/files/groups.xls")
+  end
   
+  def location_file
+    File.new("#{Rails.root.to_s}/test/files/locations.xls")
+  end
+  
+  def item_file
+    File.new("#{Rails.root.to_s}/test/files/items.xls")
+  end
+
+  def reimport_cost_file
+    File.new("#{Rails.root.to_s}/test/files/reimport_items.xls")
+  end
+
   def new_check
     Check.new(
       :description => Time.now.to_i,
       :inventories_xls => import_file,
-      :locations_xls => File.new("#{Rails.root.to_s}/test/files/locations.xls"),
-      :item_groups_xls => File.new("#{Rails.root.to_s}/test/files/groups.xls"),
-      :items_xls => File.new("#{Rails.root.to_s}/test/files/items.xls")
+      :locations_xls => location_file,
+      :item_groups_xls => group_file,
+      :items_xls => item_file
     )
   end
   

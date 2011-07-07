@@ -70,6 +70,22 @@ class God::ChecksController < God::BaseController
     @checks = Check.history.paginate(:page => params[:page])
   end
 
+  def import_cost
+    @nav = :control
+    @check = curr_check
+  end
+
+  def do_import_cost
+    @nav = :control
+    @check = curr_check
+
+    if @check.update_attributes(params[:check])
+      redirect_to current_god_checks_path, :notice => 'Cost import finish.'
+    else
+      render :import_cost
+    end
+  end
+
   private
   def create_step_1
     @check = Check.new(params[:check])

@@ -3,6 +3,12 @@ class ApplicationController < ActionController::Base
 
   before_filter :authenticate_admin!
 
+  after_filter :setup_menu
+  def setup_menu
+    @sub_menu = params[:sub_menu].to_sym unless params[:sub_menu].blank?
+    @nav = params[:nav].to_sym unless params[:nav].blank?
+  end
+
   around_filter :log_activities
   def log_activities
     

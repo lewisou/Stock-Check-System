@@ -22,15 +22,6 @@ Scs::Application.routes.draw do
 
   resources :settings
 
-  resources :reports, :only => [] do
-    collection do
-      get 'count_varience', 'count_frozen', 'final_result'
-    end
-    member do
-      get 'final_frozen'
-    end
-  end
-
   resources :counts
 
   resources :checks do
@@ -41,6 +32,12 @@ Scs::Application.routes.draw do
 
     member do
       put 'make_current'
+    end
+
+    resources :reports, :only => [] do
+      collection do
+        get 'count_varience', 'count_frozen', 'tags', 'inventories'
+      end
     end
   end
 

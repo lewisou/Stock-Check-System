@@ -18,9 +18,9 @@
 			<td><%=l check.created_at, :format => :long %></td>
 			<td><%= check.admin.try(:username) %></td>
 			<td>
-				<%= link_to "Final - Summary of counts by location", god_check_tags_path(check) %>
+				<%= link_to "Final - Summary of counts by location", tags_check_reports_path(check, :nav => :archive) %>
 				<br />
-				<%= link_to "Final - Summary of counts by value", god_check_inventories_path(check) %>
+				<%= link_to "Final - Summary of counts by value", inventories_check_reports_path(check, :nav => :archive) %>
 				<br />
 				<%= link_to "Log", god_check_activities_path(check) %>
 				

@@ -1,6 +1,8 @@
+<% @sub_menu = :report_tags %>
+
 <article>
 	<%= render :partial => 'shared/flash' %>
-	<%= form_for @search, :url => god_check_tags_path(@check) do |f| %>
+	<%= form_for @search, :url => tags_check_reports_path(@check) do |f| %>
 		<fieldset>
 			<legend>Search</legend>
 			<dl class="inline">
@@ -46,7 +48,7 @@
 				<td class="number"><%= tag.final_count %></td>
 			</tr>
 			<tr class="detail">
-				<td colspan="9">
+				<td colspan="10">
 					<table>
 						<tbody>
 							<tr><td><%= tag.inventory.item.try(:description) %></td>

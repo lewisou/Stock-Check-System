@@ -4,7 +4,81 @@ require 'pp'
 
 class ReportsController < Adm::BaseController
   before_filter { @nav = :tag }
-  layout 'tags'
+  layout "application"
+
+  before_filter {
+    @check = Check.find(params[:check_id])
+  }
+
+  def inventories
+    @search = Inventory.in_check(@check.id).report_valid.search(params[:search])
+
+    respond_to do |format|
+      format.html { 
+        @inventories = @search.paginate(:page => params[:page])
+      }
+      format.xls {
+        @inventories = @search.all
+        book = Spreadsheet::Workbook.new
+        
+        data = book.generate_xls(
+        "Final Summary by value", @inventories,        
+        %w{Warehouse Part# Desc. Cost Count_1_QTY Count_2_QTY RemoteWS_QTY Frozen_QTY Frozen_Val. Final_SCS_QTY Final_SCS_Val. Adjustment_to_QTY_frozen Adjustment_Value},
+        [[:location, :code], 
+          [:item, :code],
+          [:item, :description],
+          [:item, :cost],
+          :counted_1_qty,
+          :counted_2_qty,
+          :inputed_qty,
+          :quantity,
+          :frozen_value,
+          :result_qty,
+          :result_value,
+          :ao_adj,
+          :ao_adj_value],
+          :summary => [["Net adjustment Value", @check.ao_adj_value],
+          ["Sum of up and down",  @check.ao_adj_abs_value],
+          ["Total Frozen Value", @check.frozen_value],
+          ["Total SCS Value (Remote & Onsite)", @check.final_value]]
+        )
+        
+        send_data data, :filename => "Check_#{@check.description}_summary_by_value.xls", :disposition => 'attachment'
+      }
+    end
+  end
+
+  def tags
+    @check = Check.find(params[:check_id])
+    @search = Tag.in_check(@check.id).countable.search(params[:search])
+
+    respond_to do |format|
+      format.html { @tags = @search.paginate(:page => params[:page]) }
+      format.xls {
+        @tags = @search.all
+        book = Spreadsheet::Workbook.new
+        # data = book.generate_xls("Final Report", @tags, %w{Tag Location Item Description Counted Cost Value}, [:id, [:inventory, :location, :code], [:inventory, :item, :code], [:inventory, :item, :description], :final_count, [:inventory, :item, :cost], :counted_value])
+
+        data = book.generate_xls(
+        "Counts by location", @tags, 
+        %w{Ticket_No Warehouse Shelf_Location Part_Number Description Count_1 Count_2 Count_3 Audit Final}, 
+        [:id, 
+          [:inventory, :location, :code],
+          :sloc,
+          [:inventory, :item, :code], 
+          [:inventory, :item, :description],
+          :count_1,
+          :count_2,
+          :count_3,
+          :audit,
+          :final_count
+        ]
+        )
+
+        send_data data, :filename => "Check_#{@check.description}_counts_by_location.xls", :disposition => 'attachment'
+      }
+    end
+  end
 
   def count_varience
 
@@ -19,7 +93,6 @@ class ReportsController < Adm::BaseController
     respond_to do |format|
       format.html { 
         @tags = @search.paginate(:page => params[:page])
-        render :layout => "tags"
       }
 
       format.xls {
@@ -37,41 +110,6 @@ class ReportsController < Adm::BaseController
     end
   end
 
-  def final_result
-    @search = Tag.in_check(curr_check.id).where(:count_1.gte % 0 & :count_2.gte % 0).search(params[:search])
-    
-    respond_to do |format|
-      format.html { @tags = @search.paginate(:page => params[:page]) }
-      
-      format.xls {
-        @tags = @search.all
-        book = Spreadsheet::Workbook.new
-        # data = book.generate_xls("Final Report", @tags, %w{Tag Location Item Description Counted Cost Value}, [:id, [:inventory, :location, :code], [:inventory, :item, :code], [:inventory, :item, :description], :final_count, [:inventory, :item, :cost], :counted_value])
-        send_data book.render_final_report(@tags), :filename => "Final Report.xls", :disposition => 'attachment'
-      }
-    end
-
-  end
-  
-  def final_frozen
-    @check = Check.find(params[:id])
-    
-    @search = Inventory.in_check(@check.id).search(params[:search])
-    @nav = :archive
-
-    respond_to do |format|
-      format.html { @inventories = @search.paginate(:page => params[:page]) }
-      
-      format.xls {
-        @inventories = @search.all
-        book = Spreadsheet::Workbook.new
-        send_data book.render_inventories(@inventories, "Final Report with Frozen QTY"), :filename => "Final Report with Frozen QTY.xls", :disposition => 'attachment'
-      }
-    end
-
-  end
-
-
   def count_frozen
     @c_i = (params[:count] || "1").to_i
     @c_s = "count_#{@c_i.to_s}".to_sym
@@ -81,7 +119,6 @@ class ReportsController < Adm::BaseController
     respond_to do |format|
       format.html { 
         @inventories = @search.paginate(:page => params[:page])
-        render :layout => "application"
       }
       format.xls {
         @inventories = @search.all

@@ -2,7 +2,7 @@
 
 <article>
 	<h1>Count Result VS Frozen QTY's</h1>
-	<%= form_for @search, :url => count_frozen_reports_path, :method => :get do |f| %>
+	<%= form_for @search, :url => count_frozen_check_reports_path(@check), :method => :get do |f| %>
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">

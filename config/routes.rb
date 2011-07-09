@@ -52,26 +52,6 @@ Scs::Application.routes.draw do
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
   # This route can be invoked with purchase_url(:id => product.id)
 
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Sample resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Sample resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
 
   # Sample resource route with more complex sub-resources
   #   resources :products do
@@ -87,6 +67,9 @@ Scs::Application.routes.draw do
 
   namespace :dataentry do
     resources :inventories
+    resources :items do
+      resources :inventories
+    end
   end
 
   namespace :god do
@@ -101,9 +84,8 @@ Scs::Application.routes.draw do
         get 'current', 'history', 'import_cost'
         put 'do_import_cost'
       end
-      member do
-        put 'change_state'
-      end
+
+      put 'change_state', :on => :member
     end
   end
 
@@ -115,9 +97,7 @@ Scs::Application.routes.draw do
     resources :items do
       resources :tags
 
-      collection do
-        get 'missing_cost'
-      end
+      get 'missing_cost', :on => :collection
 
       member do
         get 'input_price'
@@ -126,9 +106,8 @@ Scs::Application.routes.draw do
     end
 
     resources :tags do
-      collection do
-        get 'adj_list'
-      end
+      get 'adj_list', :on => :collection
+
       member do
         get 'to_adj'
         put 'update_adj'
@@ -144,20 +123,16 @@ Scs::Application.routes.draw do
     resources :inventories do
       resources :tags
     end
-    
+
     resources :counts do
-      collection do
-        get 'missing_tag', 'result'
-      end
+      get 'missing_tag', 'result', :on => :collection
     end
-    
+
     resources :locations do
       resources :assigns
     end
   end
 
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
   root :to => "dashboards#show"
 
   # See how all your routes lay out with "rake routes"

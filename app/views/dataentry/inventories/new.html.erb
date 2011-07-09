@@ -1,0 +1,24 @@
+<article>
+	<%= render :partial => "shared/flash" %>
+
+	<h1>New Remote Warehouse Ticket</h1>
+
+	<%= form_for @inventory, :url => dataentry_item_inventories_path(@item) do |f| %>
+	<fieldset>
+		<dl class='inline'>
+			<dt><%= f.label :item_code, "Item #" %></dt>
+			<dd><%= f.label :item_code, @item.code %></dd>
+
+			<dt><%= f.label :item_description, 'Desc.' %></dt>
+			<dd><%= f.label :item_description, @item.description %></dd>
+
+			<dt><%= f.label :location_id, 'Warehouse' %></dt>
+			<dd>
+				<%= f.collection_select(:location_id, curr_check.locations.not_tagable - curr_check.locations.remote_not_newable(@item), :id, :code, {:include_blank => false}, {:class => "small", :tabindex => 1}) %>
+				<%= f.submit "Save", :class => 'button' %>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<% end %>
+</article>

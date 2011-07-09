@@ -3,6 +3,11 @@ class Dataentry::InventoriesController < Dataentry::BaseController
     @nav = :remote_input
   end
 
+  def new
+    @item = Item.find(params[:item_id])
+    @inventory = @item.inventories.new
+  end
+
   def index
     @search = curr_check.inventories.remote_s.search(params[:search])
 
@@ -19,9 +24,22 @@ class Dataentry::InventoriesController < Dataentry::BaseController
     @inventory = curr_check.inventories.remote_s.find(params[:id])
 
     if @inventory.update_attributes(:inputed_qty => params[:inventory][:inputed_qty])
-      redirect_to dataentry_inventories_path, :notice => "Successfully Saved."
+      render :text => @inventory.inputed_qty
+      # redirect_to dataentry_inventories_path, :notice => "Successfully Saved."
     else
       render :edit
     end
+  end
+  
+  def create
+    @item = Item.find(params[:item_id])
+    @inventory = @item.inventories.build(params[:inventory])
+    
+    if @inventory.save
+      redirect_to dataentry_inventories_path, :notice => "Remote Warehouse Ticket R-#{@inventory.id} created."
+    else
+      render :new
+    end
+
   end
 end

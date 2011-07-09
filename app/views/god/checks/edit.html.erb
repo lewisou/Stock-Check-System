@@ -53,10 +53,26 @@
 		<legend>Instruction Excel</legend>
 
 		<dl class='inline'>
-			<dt><%= f.label :instruction %></dt>
+			<dt><%= f.label :instruction_file, 'Instruction 1' %></dt>
 			<dd>
 				<%= f.file_field :instruction_file, :tabindex => 8 %>
 			</dd>
+			
+			<dt><%= f.label :instruction2_file, 'Instruction 2' %></dt>
+			<dd>
+				<%= f.file_field :instruction2_file, :tabindex => 8 %>
+			</dd>
+			<dt><%= f.label :instruction3_file, 'Instruction 3' %></dt>
+
+			<dd>
+				<%= f.file_field :instruction3_file, :tabindex => 8 %>
+			</dd>
+
+			<dt><%= f.label :instruction4_file, 'Instruction 4' %></dt>
+			<dd>
+				<%= f.file_field :instruction4_file, :tabindex => 8 %>
+			</dd>
+			
 		</dl>
 		</fieldset>
 		

@@ -1,3 +1,19 @@
+<% content_for :head do %>
+	<script>
+		jQuery(function($){ 
+			// alert('document ready');
+
+			$(".qty_form")
+			// .bind('ajax:loading', function() {alert("loading!");})
+			.bind('ajax:success', function(data, status, xhr) {alert("updated successfully!");})
+			.bind('ajax:failure', function(xhr, status, error) {alert("failed to update!");})
+			// .bind('ajax:complete', function() {alert("complete!");});
+
+		});
+
+	</script>
+<% end %>
+
 <article>
 	<%= render :partial => "shared/flash" %>
 
@@ -13,37 +29,29 @@
 </article>
 
 <article>
-	<table id="table2" class="gtable detailtable">
+	<%= link_to "New Remote Warehouse Ticket", dataentry_items_path, :class => 'button' %>
+	<table id="table2" class="gtable">
 		<thead>
 			<tr>
 				<th><%= sort_link @search, :id, 'Ticket #' %></th>
 				<th><%= sort_link @search, :location_code_and_item_code, 'Warehouse' %></th>
 				<th><%= sort_link @search, :item_code_and_location_code, 'Item #' %></th>
+				<th>Description</th>
 				<th class='number'><%= sort_link @search, :inputed_qty %></th>
-				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
 			<% @inventories.each do |inventory| %>
 			<tr>
-				<td><a href="#" class="detail-link">R-<%= inventory.id %></a></td>
+				<td>R-<%= inventory.id %></td>
 				<td><%= inventory.location.try(:code) %></td>
 				<td><%= inventory.item.try(:code) %></td>
-				<td class='number'><%= inventory.inputed_qty %></td>
-				<td>
-					<%= link_to image_tag('icons/edit.png'), edit_dataentry_inventory_path(inventory), :title => 'Input' if allow_data_entry? %>
-				</td>
-			</tr>
-
-			<tr class="detail">
-				<td colspan="5">
-					<table>
-						<tbody>
-							<tr>
-								<td><%= inventory.item.try(:description) %></td>
-							</tr>
-						</tbody>
-					</table>
+				<td><%= inventory.item.try(:description) %></td>
+				<td class='number'>
+					<%= form_for inventory, :url => dataentry_inventory_path(inventory), :remote => true, :html => {:class => 'qty_form'} do |f| %>
+					<%= f.text_field :inputed_qty, :size => 3 %>
+					<%= f.submit 'Save' %>
+					<% end %>
 				</td>
 			</tr>
 			<% end %>

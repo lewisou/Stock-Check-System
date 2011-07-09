@@ -17,6 +17,11 @@
 
 <article>
 	<h1>Count <%= @c_i %> Result</h1>
+
+	<div class="buttons">
+	<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
+	</div>
+
 	<table id="table1" class="gtable">
 		<thead>
 			<tr>

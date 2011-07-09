@@ -38,6 +38,24 @@ class Adm::CountsController < Adm::BaseController
 
   def result
     @search = Tag.in_check(curr_check.id).countable.where(@c_s.gte % 0).search(params[:search])
-    @tags = @search.paginate(:page => params[:page])
+
+    respond_to do |format|
+      format.html { 
+        @tags = @search.paginate(:page => params[:page])
+      }
+      format.xls {
+        @tags = @search.all
+        book = Spreadsheet::Workbook.new
+        data = book.generate_xls("Count #{@c_s} Result", @tags, 
+        %w{TagNumber ItemNumber Description Warehouse ShelfLocation Count},
+        [:id,
+        [:inventory, :item, :code], 
+        [:inventory, :item, :description],
+        [:inventory, :location, :code],
+        :sloc,
+        @c_s])
+        send_data data, :filename => "Count #{@c_i} Result.xls", :disposition => 'attachment'
+      }
+    end
   end
 end

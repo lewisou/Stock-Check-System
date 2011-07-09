@@ -7,7 +7,7 @@
 
 	<section class="icons">
 		<ul>
-			<% if has_curr_check? %>
+<% if has_curr_check? %>
 
 			<% if has_role? :controller && has_curr_check? && allow_data_entry? %>
 			<li>
@@ -29,21 +29,35 @@
 			<% end %>
 
 			<% end %>
-			
-			<li>
-				<% if curr_check && !curr_check.instruction.nil? %>
-				<%= link_to(raw("#{image_tag('eleganticons/Info.png')}<span>Instructions</span>"), attachment_path(curr_check.instruction.id)) %>
-				<% else %>
-				<a href="#">
-					<img src="images/eleganticons/Info.png" />
-					<span>Instructions</span>
-				</a>
-				<% end %>
-			</li>
-			<% end %>
-			<li>
-				<%= link_to raw("#{image_tag('eleganticons/X.png')} <span>Logout</span>"), destroy_admin_session_path %>
-			</li>
+
+		<% if curr_check && !curr_check.instruction.nil? %>
+		<li>
+		<%= link_to(raw("#{image_tag('eleganticons/Paper.png')}<span>Instruction 1</span>"), attachment_path(curr_check.instruction)) %>
+		</li>
+		<% end %>
+
+		<% if curr_check && !curr_check.instruction2.nil? %>
+		<li>
+		<%= link_to(raw("#{image_tag('eleganticons/Paper.png')}<span>Instruction 2</span>"), attachment_path(curr_check.instruction2)) %>
+		</li>
+		<% end %>
+
+		<% if curr_check && !curr_check.instruction3.nil? %>
+		<li>
+		<%= link_to(raw("#{image_tag('eleganticons/Paper.png')}<span>Instruction 3</span>"), attachment_path(curr_check.instruction3)) %>
+		</li>
+		<% end %>
+
+		<% if curr_check && !curr_check.instruction4.nil? %>
+		<li>
+		<%= link_to(raw("#{image_tag('eleganticons/Paper.png')}<span>Instruction 4</span>"), attachment_path(curr_check.instruction4)) %>
+		</li>
+		<% end %>
+<% end %>
+		<li>
+			<%= link_to raw("#{image_tag('eleganticons/X.png')} <span>Logout</span>"), destroy_admin_session_path %>
+		</li>
+
 		</ul>
 	</section>
 </article>

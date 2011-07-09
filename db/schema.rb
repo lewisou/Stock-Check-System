@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110704015627) do
+ActiveRecord::Schema.define(:version => 20110708032519) do
 
   create_table "activities", :force => true do |t|
     t.integer  "admin_id"
@@ -104,6 +104,9 @@ ActiveRecord::Schema.define(:version => 20110704015627) do
     t.integer  "import_items_xls_id"
     t.integer  "import_locations_xls_id"
     t.integer  "import_inventories_xls_id"
+    t.integer  "instruction2_id"
+    t.integer  "instruction3_id"
+    t.integer  "instruction4_id"
   end
 
   add_index "checks", ["state"], :name => "index_checks_on_state"

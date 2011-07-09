@@ -1,0 +1,64 @@
+<article>
+	<%= render :partial => 'shared/flash' %>
+	
+	<%= form_for @search, :url => dataentry_items_path, :method => :get do |f| %>
+		<fieldset>
+			<legend>Filter</legend>
+			<dl class="inline">
+				<dt><%= f.label :code_like, 'Item #' %></dt>
+				<dd>
+				<%= f.text_field :code_like, :class => "small required", :tabindex => 1 %>
+				</dd>
+
+				<dt><%= f.label :is_active_not_eq, 'inActive' %></dt>
+				<dd><%= f.check_box :is_active_not_eq, {}, true, false %></dd>
+
+				<dt>&nbsp;</dt>
+				<dd><%= f.submit 'Search', :class => 'button' %></dd>
+			</dl>
+		</fieldset>
+	<% end %>
+</article>
+
+<article>
+	<h1><%= @search.count %> Items</h1>
+	<table id="table2" class="gtable detailtable">
+		<thead>
+			<tr>
+				<th>Item Number</th>
+				<th>Cost</th>
+				<th>Active</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @items.each do |item| %>
+			<tr>
+				<td><a href="#" class="detail-link"><%= item.code %></a></td>
+				<td class='number'><%=number_to_currency item.cost %></td>
+				<td><%= item.is_active %></td>
+				<td>
+					<% if allow_data_entry? && item.is_active %>
+					<%= link_to('New Remote Warehouse Ticket', new_dataentry_item_inventory_path(item)) if (curr_check.locations.not_tagable.count != curr_check.locations.remote_not_newable(item).count) %>
+					<% end %>
+				</td>
+			</tr>
+			<tr class="detail">
+				<td colspan="5">
+					<table>
+						<tbody>
+							<tr>
+								<td><%= item.try(:description) %></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	
+	<div class="tablefooter clearfix">
+		<%= will_paginate @items %>
+	</div>
+</article>

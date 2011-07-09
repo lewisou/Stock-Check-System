@@ -18,7 +18,12 @@ class Check < ActiveRecord::Base
 
   belongs_to :inv_adj_xls, :class_name => "::Attachment"
   belongs_to :manual_adj_xls, :class_name => "::Attachment"
+
   belongs_to :instruction, :class_name => "::Attachment"
+  belongs_to :instruction2, :class_name => "::Attachment"
+  belongs_to :instruction3, :class_name => "::Attachment"
+  belongs_to :instruction4, :class_name => "::Attachment"
+
 
   belongs_to :import_item_groups_xls, :class_name => "::Attachment"
   belongs_to :import_items_xls, :class_name => "::Attachment"
@@ -35,7 +40,7 @@ class Check < ActiveRecord::Base
     self.import_inventories_xls = ::Attachment.create(:data => @inventories_xls) unless @inventories_xls.blank?
   end
 
-  attr_accessor :reimport_inv_xls, :reimport_cost_xls, :instruction_file, :re_export_qtys_xls
+  attr_accessor :reimport_inv_xls, :reimport_cost_xls, :re_export_qtys_xls, :instruction_file, :instruction2_file, :instruction3_file, :instruction4_file
 
   validate :file_format
   def file_format
@@ -316,9 +321,10 @@ class Check < ActiveRecord::Base
   end
 
   def adj_instruction
-    return if @instruction_file.nil?
-    
-    self.instruction = ::Attachment.create(:data => @instruction_file)
+    self.instruction = ::Attachment.create(:data => @instruction_file) unless @instruction_file.nil?
+    self.instruction2 = ::Attachment.create(:data => @instruction2_file) unless @instruction2_file.nil?
+    self.instruction3 = ::Attachment.create(:data => @instruction3_file) unless @instruction3_file.nil?
+    self.instruction4 = ::Attachment.create(:data => @instruction4_file) unless @instruction4_file.nil?
   end
 
   def create_update_from_row row, options={}

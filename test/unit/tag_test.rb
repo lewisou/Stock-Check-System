@@ -229,6 +229,7 @@ class TagTest < ActiveSupport::TestCase
     assert Tag.create(:count_1 => 1, :count_2 => 1).final_count == 1
     assert Tag.create(:count_1 => 1, :count_2 => 2).final_count == 1
     assert Tag.create(:count_1 => 1, :count_2 => 2, :count_3 => 3).final_count == 3
+    assert Tag.create(:count_1 => 2, :count_2 => 2, :count_3 => 3).final_count == 3
     assert Tag.create(:count_1 => 1).final_count == nil
     assert Tag.create(:count_2 => 2).final_count == nil
     assert Tag.create.final_count == nil

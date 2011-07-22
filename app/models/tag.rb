@@ -67,7 +67,7 @@ class Tag < ActiveRecord::Base
       self.final_count = self.adjustment
     elsif self.count_1.nil? || self.count_2.nil?
       self.final_count = nil
-    elsif self.count_1 == self.count_2
+    elsif self.count_1 == self.count_2 && self.count_3.nil?
       self.final_count = self.count_1
     else
       self.final_count = self.count_3.nil? ? [self.count_1, self.count_2].min : self.count_3

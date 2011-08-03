@@ -20,4 +20,3 @@ group :development, :test do
 	gem 'timecop', '0.3.5'
 	gem 'rake', '0.8.7'
 end
-

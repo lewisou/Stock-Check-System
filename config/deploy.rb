@@ -1,7 +1,7 @@
 require 'bundler/capistrano'
 
 set :application, "scs"
-set :repository,  "git@wordcare.me:scs"
+set :repository,  "scs@222.66.124.18:scs"
 set :scm, :git
 
 set :deploy_to, "/var/www/apps/#{application}"
@@ -13,9 +13,9 @@ ssh_options[:forward_agent] = true
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
 
-role :web, "192.168.1.202"                          # Your HTTP server, Apache/etc
-role :app, "192.168.1.202"                          # This may be the same as your `Web` server
-role :db,  "192.168.1.202", :primary => true # This is where Rails migrations will run
+role :web, "192.168.0.141"                          # Your HTTP server, Apache/etc
+role :app, "192.168.0.141"                          # This may be the same as your `Web` server
+role :db,  "192.168.0.141", :primary => true # This is where Rails migrations will run
 # role :db,  "your slave db-server here"
 
 # if you're still using the script/reaper helper you will need

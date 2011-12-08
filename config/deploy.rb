@@ -1,5 +1,5 @@
 require 'bundler/capistrano'
-set :gateway, "http://192.168.0.10:8011"
+set :http_proxy, "http://192.168.0.10:8011"
 set :application, "scs"
 #set :repository,  "scs@222.66.124.18:scs"
 set :repository,  "scs@192.168.0.10:scs"

@@ -3,6 +3,7 @@ require 'bundler/capistrano'
 set :application, "scs"
 #set :repository,  "scs@222.66.124.18:scs"
 set :repository,  "scs@192.168.0.10:scs"
+set :branch, "master"
 
 set :scm, :git
 

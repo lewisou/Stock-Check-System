@@ -1,4 +1,65 @@
 <% @sub_menu = :remote %>
+
+<% content_for :head do %>
+<script>
+jQuery(function($) {
+	//Ajax submit a single input
+	function save_the_change(input) {
+		$(input).prev().hide();
+		$(input).prev().prev().prev().hide();
+		$(input).prev().prev().show();
+		$(input.form).trigger("submit.rails");
+	}
+
+	//Ajax sumit all inputs with data-needed attribute
+	function manual_save_all() {
+		$('form[data-remote] input[data-needsave]').each(function(){
+			save_the_change(this);
+			$(this).removeAttr("data-needsave");
+		});
+	}
+
+	//handler for auto save
+	var auto_handle = function() {
+		save_the_change(this);
+	};
+
+	//handler for delay save
+	var delay_handle = function() {
+		$(this).prev().hide();
+		$(this).prev().prev().prev().show();
+		$(this).attr('data-needsave', 'yes');
+	}
+	
+	//save all button clicked
+	$('#save_all').live('click', function() {
+		manual_save_all();
+	});
+
+	//autosave check box clicked, switch between two handler.
+	$('#autosave').live('click', function() {
+		$('form[data-remote] input').die('change');
+
+		if($(this).is(':checked')) {
+			manual_save_all();
+			$('form[data-remote] input').live('change', auto_handle);
+		} else {
+			$('form[data-remote] input').live('change', delay_handle);
+		}
+	});
+
+	$('form[data-remote]').live('ajax:success', function(evt, data, status, xhr){
+		$(this.parentNode).html(xhr.responseText);
+	});
+
+	//default to autosave
+	$('#autosave').attr('checked','checked');
+	$('form[data-remote] input').live('change', auto_handle);
+});
+
+</script>
+<% end %>
+
 <article>
 	<%= render :partial => "shared/flash" %>
 	<h1>Remote Warehouse Tickets</h1>	
@@ -15,6 +76,10 @@
 <article>
 	<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
 	<%= link_to "New Remote Warehouse Ticket", adm_items_path(:sub_menu => :remote), :class => 'button' %>
+	<button id='save_all' class='button' href='#'>Save all</button>
+	<span style='display:none'>Saving them all...</span>
+	<input id='autosave' type='checkbox' value='autosave' checked='checked'></input>
+	<label for='autosave'>Auto save</label>
 	<table id="table2" class="gtable detailtable">
 
 		<thead>
@@ -24,7 +89,6 @@
 				<th><%= sort_link @search, :item_code_and_location_code, 'Item #' %></th>
 				<th class='number'><%= sort_link @search, :quantity %></th>
 				<th class='number'><%= sort_link @search, :inputed_qty %></th>
-				<th>Action</th>
 			</tr>
 		</thead>
 
@@ -35,9 +99,12 @@
 				<td><%= inventory.location.try(:code) %></td>
 				<td><%= inventory.item.try(:code) %></td>
 				<td class='number'><%= inventory.quantity %></td>
-				<td class='number'><%= inventory.inputed_qty %></td>
-				<td>
-					<%= link_to image_tag('icons/edit.png'), edit_adm_inventory_path(inventory), :title => 'Input' if allow_data_entry? %>
+				<td class='number'>
+					<%  if allow_data_entry? %>
+					<%= render :partial => 'inputed_qty', :locals => {:inventory => inventory} %>
+					<% else %>
+					<%= inventory.inputed_qty %>
+					<% end %>
 				</td>
 			</tr>
 

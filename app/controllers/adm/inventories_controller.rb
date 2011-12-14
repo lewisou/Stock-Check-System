@@ -54,7 +54,11 @@ class Adm::InventoriesController < Adm::BaseController
     @inventory = Inventory.find(params[:id])
     
     if @inventory.update_attributes(params[:inventory])
-      redirect_to adm_inventories_path, :notice => "Inputed successfully."
+      if request.xhr?
+        render :partial => 'inputed_qty', :locals => {:inventory => @inventory}
+      else
+        redirect_to adm_inventories_path, :notice => "Inputed successfully."
+      end
     else
       render :edit
     end

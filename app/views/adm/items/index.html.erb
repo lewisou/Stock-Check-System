@@ -43,8 +43,8 @@
 					<%= link_to "Change Cost", input_price_adm_item_path(item) %>
 					<% if allow_data_entry? && item.is_active %>
 					<br />
-					<%= link_to 'New Ticket', new_adm_item_tag_path(item) %><br />
-					<%= link_to('New Remote Warehouse Ticket', new_adm_item_inventory_path(item)) if (curr_check.locations.not_tagable.count != curr_check.locations.remote_not_newable(item).count) %>
+					<%= link_to 'Create Ticket', new_adm_item_tag_path(item) %><br />
+					<%= link_to('Create Remote Warehouse Ticket', new_adm_item_inventory_path(item)) if (curr_check.locations.not_tagable.count != curr_check.locations.remote_not_newable(item).count) %>
 					<% end %>
 				</td>
 			</tr>

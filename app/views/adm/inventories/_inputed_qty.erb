@@ -1,0 +1,6 @@
+<%= form_for inventory, :remote => true, :url => adm_inventory_path(inventory) do |f| %>
+	<span style='display:none'>not saved</span>
+	<span style='display:none'>saving...</span>
+	<%= image_tag 'icons/tick-small.png', inventory.inputed_qty.blank? ? {:style => "display:none"} : {} %>
+	<%= f.text_field :inputed_qty, :size => 2 %>
+<% end %>

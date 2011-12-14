@@ -121,9 +121,9 @@ jQuery(function($) {
 					<% end %>
 					
 					<% if has_role?(:dataentry) && allow_data_entry? %>
-					<li <%= "class='current'" if @nav == :remote_input %>>
+					<!--li <%= "class='current'" if @nav == :remote_input %>>
 						<%= link_to 'Remote Warehouse Input', dataentry_inventories_path %>
-					</li>
+					</li-->
 					<% end %>
 				<% end %>
 

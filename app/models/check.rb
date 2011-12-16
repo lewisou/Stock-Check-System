@@ -77,6 +77,16 @@ class Check < ActiveRecord::Base
     self.reload
   end
 
+  def set_onsite_locations ids=[]
+    self.locations.each do |loc|
+      loc.update_attributes(:is_remote => true)
+    end
+
+    self.locations.find(ids || []).each do |location|
+      location.update_attributes(:is_remote => false)
+    end
+  end
+
   def set_remotes ids=[]
     self.locations.each do |loc|
       loc.update_attributes(:is_remote => false)

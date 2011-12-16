@@ -458,7 +458,20 @@ class CheckTest < ActiveSupport::TestCase
     b.make_current!
     assert = Check.opt_s.first == nil
   end
-  
+
+  test "set_onsite_locations" do
+    c = new_blank_check
+    3.times {c.locations.create}
+
+    l = Location.first
+    c.set_onsite_locations [l.id]
+
+    assert c.locations.count == 3
+    assert c.locations.where(:is_remote => false).count == 1
+    assert c.locations.where(:is_remote => true).count == 2
+    assert l.reload.is_remote == false
+  end
+
   test "set_remotes" do
     c = new_blank_check
     3.times {c.locations.create}

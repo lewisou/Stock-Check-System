@@ -95,7 +95,7 @@ class God::ChecksController < God::BaseController
   def create_step_2
     @check = Check.curr_s.first
     
-    @check.set_remotes(params["remote_ids"])
+    @check.set_onsite_locations(params["onsite_ids"])
     
     @check.refresh_item_and_group && @check.refresh_inventories && @check.reload.update_attributes(:state => "open", :admin => current_admin) && @check.generate!
   end

@@ -1,19 +1,19 @@
 <% @sub_menu = :current %>
 <article>
 	<h1>New check step 2</h1>
-	
+
 	<%= render :partial => 'shared/errors', :locals => {:object => @check} %>
-	
+
 	<%= form_for Check.new, :url => god_checks_path, :html => {:class => 'uniform'} do |f| %>
 		<%= hidden_field_tag :step, @step %>
 		<fieldset>
-			<legend>Check the boxes below to set remote warehouses</legend>
-			
+			<legend>Check locations to print tickets and count. (onsite warehouses)</legend>
+
 			<table class="infos">
 				<tr>
 					<% @check.locations.order("code ASC").each_with_index do |location, index| %>
 						<td style="width: 30%">
-						<%= check_box_tag("remote_ids[]", location.id, false, :id => "location_#{location.id}") %>
+						<%= check_box_tag("onsite_ids[]", location.id, false, :id => "location_#{location.id}") %>
 						<%= label_tag "location_#{location.id}", location.code %></td>
 						<%=raw("</tr><tr>") if (index + 1) % 3 == 0 %>
 					<% end %>
@@ -25,9 +25,7 @@
 			<%= loading_submit f, "Finish", :class => 'button', 
 					:message => 'Data import in progress. This process might take 5-10 minutes. Please wait for the process to complete. Do not close or refresh this webpage.' %>
 		</div>
-		
+
 	<% end %>
 
-	
 </article>
-

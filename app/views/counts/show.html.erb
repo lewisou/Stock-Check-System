@@ -1,13 +1,13 @@
 <% @sub_menu = :entry %>
 
-<%= render :partial => 'search' unless @tag %>
+<%= render :partial => 'search' %>
 
 <% if @tag %>
 <article <%= "style='background-color: ##{curr_check.send("color_#{@c_i}".to_sym)}'" if curr_check.send("color_#{@c_i}".to_sym) %>>
-	<h1>Count <%= @c_i %> Data Entry</h1>
+
 	<%= form_for @tag, :url => count_path(@tag) do |f| %>
 		<fieldset style="background-color: white">
-			
+
 			<dl class="inline">
 				<dt><label>Ticket Number</label></dt>
 				<dd><label><%= @tag.id %></label></dd>
@@ -26,26 +26,11 @@
 				<dd><label><%= @tag.sloc || raw('&nbsp;') %></label>
 				</dd>
 
-				
-				<% if @c_i == 3 %>
-				<!--dt><%= f.label :count_1 %></dt>
-				<dd><label><%= @tag.count_1 %></label></dd>
-				<dt><%= f.label :count_2 %></dt>
-				<dd><label><%= @tag.count_2 %></label></dd-->
-				<% end %>
-
 				<dt><%= f.label @c_s %></dt>
 				<dd>
-					<%= f.text_field @c_s, :class => "small required", :size => "50", :tabindex => 1 %>
-					<%= hidden_field_tag :count, @c_i %>
+					<%= @tag.send(@c_s) %>
 				</dd>
-
 			</dl>
-
-			<div class="buttons">
-				<%= f.submit 'Save', :class => "button" %>
-			</div>
-			<%= link_to 'Click to search another ticket.', counts_path(:count => @c_i) %>
 		</fieldset>
 	<% end %>
 </article>

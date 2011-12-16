@@ -35,11 +35,15 @@ class CountsController < ApplicationController
     @tag.update_attributes(vals)
 
     if @tag.save
-      redirect_to(counts_path(:search => {:id_eq => @tag.id}, :count => @c_i), :notice => "Count #{params[:count]} updated.")
+      redirect_to(count_path(@tag, :count => @c_i), :notice => "Ticket No.#{@tag.id} of Count #{params[:count]} was updated to #{@tag.send(@c_s)}.")
     else
       render :index
     end
   end
-  
+
+  def show
+    @tag = Tag.in_check(curr_check.id).countable.find(params[:id])
+    @search = Tag.in_check(curr_check.id).countable.search(params[:search])
+  end
 
 end

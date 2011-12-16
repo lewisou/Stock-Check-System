@@ -11,6 +11,34 @@
 		
 		<% if has_curr_check? %>
 		<table class='infos'>
+
+			<tr>
+				<td>
+					<%= action_link (curr_check.state == 'open'), 'Re-import Cost', import_cost_god_checks_path, :class => "button" %>
+				</td>
+				<td>
+					<%= "(You can not reimport cost now.)" unless (curr_check.state == 'open') %> Import latest AO cost into SCS. <strong>(Items.xls)</strong>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<%= action_link (curr_check.state == 'open'), 'Re-import Qty', reimport_checks_path, :class => "button" %>
+				</td>
+				<td>
+					<%= "(You can not reimport qty now.)" unless (curr_check.state == 'open' && !curr_check.final_inv) %> Re-import frozen quantities from ALL ORDER to SCS. <strong>(Inventory.xls)</strong>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<%= action_link (curr_check.state == 'open' && !curr_check.final_inv), 'Re-import Qty (Final)', reimport_checks_path(:check => {:final_inv => true}), :class => "button orange" %>
+				</td>
+				<td style="color:red; font-weight:bold">
+					<%= "(You can not do the Final Re-Import Qty now.)" unless (curr_check.state == 'open' && !curr_check.final_inv) %> IMPORTANT: One time only, imported quantities should be final. <strong>(Inventory.xls)</strong>
+				</td>
+			</tr>
+
 			<tr>
 				<td>
 					<%= action_link curr_check.can_complete?, 'Complete', change_state_god_check_path(curr_check, :state => :complete), :method => :put, :confirm => "Are you sure to complete the check '#{curr_check.description}' ?", :class => "button" %>
@@ -26,33 +54,6 @@
 				</td>
 				<td>
 					<%= "(You can not cancel the check now.)" unless curr_check.state == 'open' %> Cancel current stock check session.
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<%= action_link (curr_check.state == 'open'), 'Re-import Cost', import_cost_god_checks_path, :class => "button" %>
-				</td>
-				<td>
-					<%= "(You can not reimport cost now.)" unless (curr_check.state == 'open') %> Import latest AO cost into SCS
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<%= action_link (curr_check.state == 'open'), 'Re-import Qty', reimport_checks_path, :class => "button" %>
-				</td>
-				<td>
-					<%= "(You can not reimport qty now.)" unless (curr_check.state == 'open' && !curr_check.final_inv) %> Re-import frozen quantities from ALL ORDER to Stock check system (SCS)
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<%= action_link (curr_check.state == 'open' && !curr_check.final_inv), 'Re-import Qty (Final)', reimport_checks_path(:check => {:final_inv => true}), :class => "button" %>
-				</td>
-				<td>
-					<%= "(You can not do the Final Re-Import Qty now.)" unless (curr_check.state == 'open' && !curr_check.final_inv) %> IMPORTANT: One time only, imported quantities should be final.
 				</td>
 			</tr>
 

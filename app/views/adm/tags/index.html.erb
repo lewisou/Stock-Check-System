@@ -17,8 +17,10 @@
 </article>
 
 <article>
-	<h1><%= @search.count %> Tickets</h1>
-	<%= loading_link 'Print tickets (PDF)', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
+	<h1><%= @search.count %> Tickets, <%= @search.where(:wait_for_print => false).count %> tickets not in the print list.</h1>
+	<!-- loading_link 'Print tickets (PDF)', url_for(request.params.merge(:format => :pdf)), :class => 'button' -->
+
+	<%= loading_link "Add the #{@search.where(:wait_for_print => false).count} tickets to print list", multiple_create_adm_wait_prints_path(:search => params[:search]), :confirm => "Are you sure to add the #{@search.where(:wait_for_print => false).count} tickets to the print list?", :class => 'button', :message => 'processing...' %>
 
 	<table class="gtable detailtable">
 		<thead>

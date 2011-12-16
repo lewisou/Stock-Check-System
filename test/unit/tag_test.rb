@@ -277,7 +277,19 @@ class TagTest < ActiveSupport::TestCase
     assert t2.value_1 == 0
     assert t2.value_2 == 0
   end
-  
+
+  test "ready_to_print" do
+    scope = Item.create(:cost => 2.1).inventories.create(:location => Location.create(:is_remote => false)).tags
+    tag = scope.create(:wait_for_print => false)
+    tag = scope.create(:wait_for_print => false)
+    tag = scope.create(:wait_for_print => true)
+    tag = scope.create(:wait_for_print => true)
+    tag = scope.create(:wait_for_print => true)
+
+    assert Tag.ready_to_print.count == 2
+    assert Tag.ready_to_print.count == 3
+  end
+
 end
 
 

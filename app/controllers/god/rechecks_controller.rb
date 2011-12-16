@@ -19,7 +19,7 @@ class God::RechecksController < God::BaseController
 
   def index
     @check = curr_check
-    @search = Inventory.in_check(@check.id).search(params[:search])
+    @search = Inventory.in_check(@check.id).where(:re_export_offset.not_eq => 0).search(params[:search])
 
     respond_to do |format|
       format.html { @inventories = @search.paginate(:page => params[:page]) }

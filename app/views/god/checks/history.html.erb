@@ -18,6 +18,10 @@
 			<td><%=l check.created_at, :format => :long %></td>
 			<td><%= check.admin.try(:username) %></td>
 			<td>
+				<%= link_to "Variance Count 1 VS 2", count_varience_check_reports_path(check, :nav => :archive) %>
+				<br />
+				<%= link_to "Count Result VS Frozen QTY", count_frozen_check_reports_path(check, :nav => :archive) %>
+				<br />
 				<%= link_to "Final - Summary of counts by location", tags_check_reports_path(check, :nav => :archive) %>
 				<br />
 				<%= link_to "Final - Summary of counts by value", inventories_check_reports_path(check, :nav => :archive) %>

@@ -2,6 +2,17 @@
 
 <% content_for :head do %>
 <%= javascript_include_tag 'jscolor/jscolor.js' %>
+
+<script>
+	jQuery(function($) {
+		$('#edit_ao_adjust_acc_link').bind('click', function(evn){
+			$(this).prev().hide();
+			$(this).prev().prev().show();
+			$(this).hide();
+			evn.preventDefault();
+		});
+	});
+</script>
 <% end %>
 
 <article>
@@ -82,7 +93,9 @@
 		<dl class='inline'>
 			<dt><%= f.label :ao_adjust_acc, 'AO Adjustment Account' %></dt>
 			<dd>
-				<%= f.text_field :ao_adjust_acc, :tabindex => 9 %>
+				<%= f.text_field :ao_adjust_acc, :tabindex => 9, :style => 'display:none' %>
+				<span><%= @check.ao_adjust_acc %></span>
+				<a href='#' id='edit_ao_adjust_acc_link'><%= image_tag 'icons/edit.png' %></a>
 				<small>This is used for exporting the adjustment files back to All Order.</small>
 			</dd>
 		</dl>

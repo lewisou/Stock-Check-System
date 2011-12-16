@@ -5,6 +5,7 @@ class Tag < ActiveRecord::Base
   scope :not_finish, lambda{|count| where("count_#{count}".to_sym.eq % nil).countable}
   scope :finish, lambda{|count| where("count_#{count}".to_sym.not_eq % nil).countable}
   scope :deleted_s, where(:state => "deleted")
+  scope :ready_to_print, where(:wait_for_print => true).countable
 
   belongs_to :inventory
 

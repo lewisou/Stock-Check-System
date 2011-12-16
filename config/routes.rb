@@ -92,7 +92,9 @@ Scs::Application.routes.draw do
   namespace :adm do
     # Directs /admin/products/* to Admin::ProductsController
     # (app/controllers/admin/products_controller.rb)
-    resources :wait_prints
+    resources :wait_prints do
+      get 'multiple_create', :on => :collection
+    end
 
     resources :items do
       resources :tags

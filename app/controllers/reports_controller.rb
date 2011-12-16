@@ -3,7 +3,7 @@ require 'ext/spreadsheet'
 require 'pp'
 
 class ReportsController < Adm::BaseController
-  before_filter { @nav = :tag }
+  before_filter { @nav = params[:nav].blank? ? :tag : params[:nav].to_sym }
   layout "application"
 
   before_filter {

@@ -30,13 +30,13 @@
 			<th>Remote Warehouse</th>
 			<td><strong><%= Inventory.in_check(curr_check.id).remote_s.where(:inputed_qty.eq => nil).count %></strong></td>
 		</tr>
-		
-
 		<tr>
 			<th>Recheck (Number of Discrepancy)</th>
-			<td><strong><%= Inventory.in_check(curr_check.id).where(:re_export_offset.not_eq => 0).count %></strong></td>
+			<td>
+				<strong><%= Inventory.in_check(curr_check.id).where(:re_export_offset.not_eq => 0).count %></strong>
+				<%= link_to 'view list', god_rechecks_path %>
+			</td>
 		</tr>
-
 	</tbody>
 </table>
 

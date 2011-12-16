@@ -3,6 +3,7 @@ require 'ext/tag_table'
 class Adm::WaitPrintsController < Adm::BaseController
   layout "tags"
 
+  
   before_filter do
     @sub_menu = :print_list
   end
@@ -48,7 +49,9 @@ class Adm::WaitPrintsController < Adm::BaseController
         @tags = @search.all
 
         pdf = Prawn::Document.generate_tags @tags
-        send_data pdf.render, :filename => "tickets.pdf", :disposition => 'attachment'
+        @attachment = ::Attachment.create(:data => pdf.render)
+        render :partial => 'adm/wait_prints/download_link', :locals => {:attachment => @attahcment}
+        # send_data pdf.render, :filename => "tickets.pdf", :disposition => 'attachment'
       }
     end
 

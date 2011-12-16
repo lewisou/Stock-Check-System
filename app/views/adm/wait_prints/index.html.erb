@@ -1,3 +1,14 @@
+<% content_for :head do %>
+<script>
+jQuery(function($) {
+	$('#generate_pdf_link').live('ajax:success', function(evt, data, status, xhr){
+		$('#generate_pdf_link_span').html(xhr.responseText);
+	});
+});
+</script>
+
+<% end %>
+
 <article>
 	<%= render :partial => 'shared/flash' %>
 	<%= form_for @search, :url => adm_wait_prints_path do |f| %>
@@ -16,8 +27,9 @@
 
 <article>
 	<h1><%= @search.count %> Tickets</h1>
-	<%= loading_link 'Print tickets (PDF)', url_for(request.params.merge(:format => :pdf)), :class => 'button' %>
-
+	<span id="generate_pdf_link_span">
+	<%= loading_link 'Generate tickets (PDF)', url_for(request.params.merge(:format => :pdf)), :class => 'button', :remote => true, :id => 'generate_pdf_link' %>
+	</span>
 	<table class="gtable detailtable">
 		<thead>
 			<tr>

@@ -28,7 +28,7 @@ jQuery(function($) {
 <article>
 	<h1><%= @search.count %> Tickets</h1>
 	<span id="generate_pdf_link_span">
-	<%= loading_link 'Generate tickets (PDF)', url_for(request.params.merge(:format => :pdf)), :class => 'button', :remote => true, :id => 'generate_pdf_link' %>
+	<%= loading_link 'Generate tickets (PDF)', params, :class => 'button', :remote => true, :id => 'generate_pdf_link' %>
 	</span>
 	<table class="gtable detailtable">
 		<thead>

@@ -3,7 +3,6 @@ require 'ext/tag_table'
 class Adm::WaitPrintsController < Adm::BaseController
   layout "tags"
 
-  
   before_filter do
     @sub_menu = :print_list
   end
@@ -44,16 +43,18 @@ class Adm::WaitPrintsController < Adm::BaseController
 
     respond_to do |format|
       format.html { @tags = @search.paginate(:page => params[:page]) }
+      format.js {
+        file = StringIO.new(Prawn::Document.generate_tags(@search.all).render)
+        file.class.class_eval { attr_accessor :original_filename, :content_type } #add attr's that paperclip needs
+        file.original_filename = "generated_pdf_#{curr_check.generated_pdfs.count + 1}.pdf"
+        file.content_type = "application/pdf"
 
-      format.pdf {
-        @tags = @search.all
+        @attachment = ::Attachment.create(:data => file)
+        curr_check.generated_pdfs << @attachment
 
-        pdf = Prawn::Document.generate_tags @tags
-        @attachment = ::Attachment.create(:data => pdf.render)
-        render :partial => 'adm/wait_prints/download_link', :locals => {:attachment => @attahcment}
+        render :partial => 'adm/wait_prints/download_link', :locals => {:attachment => @attachment}
         # send_data pdf.render, :filename => "tickets.pdf", :disposition => 'attachment'
       }
     end
-
   end
 end

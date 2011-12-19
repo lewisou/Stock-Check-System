@@ -75,7 +75,7 @@ jQuery(function($) {
 
 <article>
 	<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
-	<%= link_to "New Remote Warehouse Ticket", adm_items_path(:sub_menu => :remote), :class => 'button' %>
+	<%= link_to "New Remote Warehouse Ticket", adm_items_path(:sub_menu => :remote, :type => :remote), :class => 'button' %>
 	<button id='save_all' class='button' href='#'>Save all</button>
 	<span style='display:none'>Saving them all...</span>
 	<input id='autosave' type='checkbox' value='autosave' checked='checked'></input>

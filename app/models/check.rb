@@ -14,6 +14,7 @@ class Check < ActiveRecord::Base
   has_many :inventories
   has_many :assigns, :through => :locations
   has_many :activities
+  has_and_belongs_to_many :generated_pdfs, :class_name => "::Attachment", :join_table => 'check_generated_pdf_attachments'
   belongs_to :admin
 
   belongs_to :inv_adj_xls, :class_name => "::Attachment"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110708032519) do
+ActiveRecord::Schema.define(:version => 20111219022538) do
 
   create_table "activities", :force => true do |t|
     t.integer  "admin_id"
@@ -75,6 +75,13 @@ ActiveRecord::Schema.define(:version => 20110708032519) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "check_generated_pdf_attachments", :id => false, :force => true do |t|
+    t.integer "check_id"
+    t.integer "attachment_id"
+  end
+
+  add_index "check_generated_pdf_attachments", ["attachment_id"], :name => "index_check_generated_pdf_attachments_on_attachment_id"
 
   create_table "checks", :force => true do |t|
     t.string   "state",                     :default => "init"

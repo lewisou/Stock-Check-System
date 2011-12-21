@@ -1058,7 +1058,7 @@ div.accordion h3.active {
 
 a#view-site,
 .search {
-	behavior: url(js/PIE.htc);
+	behavior: url(../javascripts/PIE.htc);
 }
 /* you can enable PIE.htc for more selectors below, but it will slow down IE */
 /* header#top,

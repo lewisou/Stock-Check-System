@@ -1,7 +1,6 @@
 require 'bundler/capistrano'
 set :application, "scs"
-#set :repository,  "scs@222.66.124.18:scs"
-set :repository,  "scs@192.168.0.10:scs"
+set :repository,  "git@wordcare.me:scs"
 set :branch, "master"
 
 set :scm, :git
@@ -12,16 +11,10 @@ set :user, "www-data"
 set :use_sudo, false
 ssh_options[:forward_agent] = true
 
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
-
-
-role :web, "192.168.0.203"                          # Your HTTP server, Apache/etc
-role :app, "192.168.0.203"                          # This may be the same as your `Web` server
-role :db,  "192.168.0.203", :primary => true # This is where Rails migrations will run
+role :web, "192.168.1.203"                          # Your HTTP server, Apache/etc
+role :app, "192.168.1.203"                          # This may be the same as your `Web` server
+role :db,  "192.168.1.203", :primary => true # This is where Rails migrations will run
 # role :db,  "your slave db-server here"
-
-# if you're still using the script/reaper helper you will need
-# these http://github.com/rails/irs_process_scripts
 
 desc "Make symlink for database yaml" 
 namespace :db do

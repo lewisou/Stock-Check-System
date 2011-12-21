@@ -54,6 +54,12 @@
 		</li>
 		<% end %>
 <% end %>
+		<% if has_role? :controller %>
+		<li>
+			<%= link_to raw("#{image_tag('eleganticons/Person-group.png')} <span>Accounts</span>"), accounts_path %>
+		</li>
+		<% end %>
+
 		<li>
 			<%= link_to raw("#{image_tag('eleganticons/X.png')} <span>Logout</span>"), destroy_admin_session_path %>
 		</li>

@@ -39,7 +39,7 @@ class Adm::WaitPrintsController < Adm::BaseController
   end
 
   def index
-    @search = Tag.in_check(curr_check.id).where(:wait_for_print => true).search(params[:search])
+    @search = Tag.in_check(curr_check.id).where(:wait_for_print => true).readonly(false).search(params[:search])
 
     respond_to do |format|
       format.html { @tags = @search.paginate(:page => params[:page]) }

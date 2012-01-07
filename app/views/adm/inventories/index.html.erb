@@ -48,6 +48,14 @@ jQuery(function($) {
 		}
 	});
 
+	$('form[data-remote] input').live('keypress', function(e) {
+		if(e.keyCode == 13) {
+			$(this).trigger('change');
+			$(this).parent().parent().parent().next().next().find("form[data-remote] input[id]").focus();
+			e.preventDefault();
+		}
+	});
+
 	$('form[data-remote]').live('ajax:success', function(evt, data, status, xhr){
 		$(this.parentNode).html(xhr.responseText);
 	});

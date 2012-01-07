@@ -48,7 +48,7 @@ jQuery(function($) {
 		}
 	});
 
-	$('form[data-remote] input').live('keypress', function(e) {
+	$('form[data-remote] input').live('keydown', function(e) {
 		var keyCode = (window.event) ? e.which : e.keyCode;
 		
 		if(keyCode == 13) {

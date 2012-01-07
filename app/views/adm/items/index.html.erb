@@ -6,6 +6,7 @@
 		<fieldset>
 			<legend>Filter</legend>
 			<dl class="inline">
+				<%= hidden_field_tag :type, params[:type] %>
 				<dt><%= f.label :code_like, 'Item #' %></dt>
 				<dd>
 				<%= f.text_field :code_like, :class => "small required", :tabindex => 1 %>

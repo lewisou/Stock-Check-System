@@ -49,12 +49,19 @@ jQuery(function($) {
 	});
 
 	$('form[data-remote] input').live('keypress', function(evt) {
+		alert('1');
 		var e = evt || window.event;
+		alert('2');
 		if(e.keyCode == 13) {
+			alert('3');
 			$(this).trigger('change');
+			alert('4');
 			$(this).parent().parent().parent().next().next().find("form[data-remote] input[id]").focus();
+			alert('5');
 			e.preventDefault();
+			alert('6');
 		}
+		alert('7');
 	});
 
 	$('form[data-remote]').live('ajax:success', function(evt, data, status, xhr){

@@ -48,11 +48,12 @@ jQuery(function($) {
 		}
 	});
 
-	$('form[data-remote] input').live('keypress', function(evt) {
+	$('form[data-remote] input').live('keypress', function(e) {
 		alert('1');
-		var e = evt || window.event;
+		var keyCode = (window.event) ? e.which : e.keyCode;
+		
 		alert('2');
-		if(e.keyCode == 13) {
+		if(keyCode == 13) {
 			alert('3');
 			$(this).trigger('change');
 			alert('4');

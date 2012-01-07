@@ -48,7 +48,8 @@ jQuery(function($) {
 		}
 	});
 
-	$('form[data-remote] input').live('keypress', function(e) {
+	$('form[data-remote] input').live('keypress', function(evt) {
+		var e = evt || window.event;
 		if(e.keyCode == 13) {
 			$(this).trigger('change');
 			$(this).parent().parent().parent().next().next().find("form[data-remote] input[id]").focus();

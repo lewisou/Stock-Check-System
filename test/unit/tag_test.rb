@@ -286,7 +286,6 @@ class TagTest < ActiveSupport::TestCase
     tag = scope.create(:wait_for_print => true)
     tag = scope.create(:wait_for_print => true)
 
-    assert Tag.ready_to_print.count == 2
     assert Tag.ready_to_print.count == 3
   end
 

@@ -2,6 +2,9 @@ class Item < ActiveRecord::Base
   scope :missing_cost, where(:cost.eq % nil | :cost.eq % 0).includes(:inventories).where(:inventories => (:quantity.gt % 0 | :result_qty.gt % 0))
   scope :need_adjustment, where(:from_al.eq % false | :data_changed.eq % true)
   
+  # duplicated with inventory.remote_s
+  scope :remoted_s, joins(:inventories => :location).where(:locations => {:is_remote => true})
+
   belongs_to :item_group
   has_many :inventories
   has_one :item_info
@@ -18,7 +21,6 @@ class Item < ActiveRecord::Base
     self.reload
   end
 
-
   def group_name
     self.item_group.try(:name)
   end
@@ -30,14 +32,12 @@ class Item < ActiveRecord::Base
   def adj_max_quantity
     (self.max_quantity && self.max_quantity > 0 && counted_total_qty > self.max_quantity) ? counted_total_qty : nil
   end
-  
+
   def crt_item_info
     self.create_item_info
     self.reload
   end
 end
-
-
 
 
 

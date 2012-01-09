@@ -1,5 +1,5 @@
 <article>
-	<h1>Remote tickets by item#</h1>
+	<h1>Remote tickets by item</h1>
 	<h2>Summary</h2>
 	<table class="infos">
 		<tr>
@@ -80,7 +80,7 @@
 						</thead>
 
 						<tbody>
-							<% item.inventories.remote_s.each do |inven| %>
+							<% item.inventories.remote_s.order("location_id ASC").each do |inven| %>
 								<tr>
 									<td><%= inven.location.code %></td>
 									<td class='number'><%= inven.quantity || 0 %></td>

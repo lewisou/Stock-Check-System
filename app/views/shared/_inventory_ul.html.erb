@@ -29,7 +29,7 @@
 			<li <%= "class='current'" if @sub_menu == :report_inventories %>><%= link_to 'Summary by counts by value', inventories_check_reports_path(curr_check) %></li>
 
 			<li <%= "class='current'" if @sub_menu == :remote_tickets_by_item %>><%= link_to 'Remote Tickets by Item', remote_warehouse_by_item_check_reports_path(curr_check) %></li>
-			<li <%= "class='current'" if @sub_menu == :remote_tickets_by_warehouse %>><%= link_to 'Remote Tickets by warehouse', remote_warehouse_by_warehouse_check_reports_path(curr_check) %></li>
+			<li <%= "class='current'" if @sub_menu == :remote_tickets_by_warehouse %>><%= link_to 'Remote Tickets by Warehouse', remote_warehouse_by_warehouse_check_reports_path(curr_check) %></li>
 
 		</ul>
 	</li>

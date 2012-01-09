@@ -99,8 +99,9 @@ module Spreadsheet
     end
 
     def fill_sheet sheet1, title, list, titles, symbols, start_line = 0,  options = {}
-      title_format = Spreadsheet::Format.new :pattern_fg_color => :builtin_black, :color => :yellow, :pattern => 1, :weight => :bold
-      
+      # title_format = Spreadsheet::Format.new :pattern_fg_color => :builtin_black, :color => :yellow, :pattern => 1, :weight => :bold
+      title_format = Spreadsheet::Format.new :pattern_fg_color => :grey, :color => :black, :weight => :bold, :size => 12, :pattern => 1
+
       start_line ||= 0
       
       sheet1.row(start_line).default_format = title_format

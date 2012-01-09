@@ -155,7 +155,7 @@ class ReportsController < Adm::BaseController
         book = Spreadsheet::Workbook.new
         data = book.advanced_generate_xls("Remote Tickets by Item", [@items, @inventories],
         [%w{Item# Description Cost FrozenQTY InputedQty FrozenValue InputedValue},
-        %w{Item# Warehouse FrozenQTY InputedQty FrozenValue InputedValue}],
+        %w{Item# Description Warehouse Cost FrozenQTY InputedQty FrozenValue InputedValue}],
         [
         [:code,
         :description,
@@ -165,7 +165,9 @@ class ReportsController < Adm::BaseController
         [:item_info, :sum_remote_frozen_value],
         [:item_info, :sum_remote_result_value]],
         [[:item, :code],
+        [:item, :description],
         [:location, :code],
+        [:item, :cost],
         :quantity,
         :result_qty,
         :frozen_value,
@@ -205,7 +207,7 @@ class ReportsController < Adm::BaseController
 
         book = Spreadsheet::Workbook.new
         data = book.advanced_generate_xls("Remote Tickets by Warehouse", [@locations, @inventories],
-        [%w{Warehouse FrozenQTY InputedQty FrozenValue InputedValue}, %w{Warehouse Item FrozenQty InputedQty FrozenValue InputedValue}],
+        [%w{Warehouse FrozenQTY InputedQty FrozenValue InputedValue}, %w{Warehouse Item Description Cost FrozenQty InputedQty FrozenValue InputedValue}],
         [
         [:code,
         [:location_info, :sum_frozen_qty],
@@ -215,6 +217,8 @@ class ReportsController < Adm::BaseController
         ],
         [[:location, :code],
           [:item, :code],
+          [:item, :description],
+          [:item, :cost],          
           :quantity,
           :inputed_qty,
           :frozen_value,

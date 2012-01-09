@@ -49,6 +49,8 @@
 						<thead>
 							<tr>
 								<th>Item#</th>
+								<th>Description</th>
+								<th class='number'>Cost</th>
 								<th class='number'>Frozen QTY</th>
 								<th class='number'>Inputed QTY</th>
 								<th class='number'>Frozen Value</th>
@@ -57,9 +59,11 @@
 						</thead>
 
 						<tbody>
-							<% location.inventories.remote_s.each do |inven| %>
+							<% location.inventories.remote_s.order("item_id ASC").each do |inven| %>
 								<tr>
 									<td><%= inven.item.code %></td>
+									<td><%= inven.item.try(:description).to_s[0, 30] %></td>
+									<td class='number'><%=number_to_currency inven.item.try(:cost) || 0 %></td>
 									<td class='number'><%= inven.quantity || 0 %></td>
 									<td class='number'><%= inven.result_qty || 0 %></td>
 									<td class='number'><%=number_to_currency inven.frozen_value || 0 %></td>

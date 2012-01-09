@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111219022538) do
+ActiveRecord::Schema.define(:version => 20120109041740) do
 
   create_table "activities", :force => true do |t|
     t.integer  "admin_id"
@@ -199,6 +199,10 @@ ActiveRecord::Schema.define(:version => 20111219022538) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "remaining"
+    t.integer  "sum_remote_frozen_qty"
+    t.integer  "sum_remote_result_qty"
+    t.float    "sum_remote_frozen_value"
+    t.float    "sum_remote_result_value"
   end
 
   create_table "items", :force => true do |t|
@@ -220,6 +224,16 @@ ActiveRecord::Schema.define(:version => 20111219022538) do
 
   add_index "items", ["code"], :name => "index_items_on_code"
   add_index "items", ["item_group_id"], :name => "index_items_on_item_group_id"
+
+  create_table "location_infos", :force => true do |t|
+    t.integer  "sum_frozen_qty"
+    t.integer  "sum_result_qty"
+    t.float    "sum_frozen_value"
+    t.float    "sum_result_value"
+    t.integer  "location_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "locations", :force => true do |t|
     t.string   "code"

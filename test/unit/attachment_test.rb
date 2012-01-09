@@ -26,20 +26,17 @@ end
 
 
 
+
 # == Schema Information
 #
-# Table name: activities
+# Table name: attachments
 #
-#  id          :integer         not null, primary key
-#  admin_id    :integer
-#  request     :text
-#  response    :text
-#  ended_at    :datetime
-#  finish      :boolean         default(FALSE)
-#  created_at  :datetime
-#  updated_at  :datetime
-#  description :text
-#  met         :string(255)
-#  check_id    :integer
+#  id                :integer         not null, primary key
+#  data_file_name    :string(255)
+#  data_content_type :string(255)
+#  data_file_size    :integer
+#  data_updated_at   :datetime
+#  created_at        :datetime
+#  updated_at        :datetime
 #
 

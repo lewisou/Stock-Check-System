@@ -36,7 +36,7 @@ Scs::Application.routes.draw do
 
     resources :reports, :only => [] do
       collection do
-        get 'count_varience', 'count_frozen', 'tags', 'inventories'
+        get 'count_varience', 'count_frozen', 'tags', 'inventories', 'remote_warehouse_by_item', 'remote_warehouse_by_warehouse'
       end
     end
   end

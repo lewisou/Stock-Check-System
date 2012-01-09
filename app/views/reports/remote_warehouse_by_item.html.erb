@@ -1,0 +1,105 @@
+<article>
+	<h1>Remote tickets by item#</h1>
+	<h2>Summary</h2>
+	<table class="infos">
+		<tr>
+			<th>Frozen Qty</th>
+			<td class="number"><%= @frozen_qty %></td>
+
+			<th>Frozen Value</th>
+			<td class="number"><%=number_to_currency @frozen_value %></td>
+
+		</tr>
+
+		<tr>
+			<th>Inputed Qty</th>
+			<td class="number"><%= @inputed_qty %></td>
+
+			<th>Inputed Value</th>
+			<td class="number"><%=number_to_currency @inputed_value %></td>
+		</tr>
+	</table>
+</article>
+
+<article>
+	<h2>Search</h2>
+
+	<%= form_for @search, :url => remote_warehouse_by_item_check_reports_path(@check), :method => :get do |f| %>
+		<fieldset>
+			<legend>Filter</legend>
+			<dl class="inline">
+				<dt><%= f.label :code_like, 'Item' %></dt>
+				<dd><%= f.text_field :code_like, :class => "small", :tabindex => 1 %></dd>
+			</dl>
+
+			<div class="buttons">
+				<%= f.submit 'Search', :class => "button" %>
+			</div>
+		</fieldset>
+	<% end %>
+</article>
+
+
+<article>
+	<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
+	<table id="table1" class="gtable detailtable">
+		<thead>
+			<tr>
+				<th><%= sort_link @search, :code, 'Item#' %></th>
+				<th>Description</th>
+				<th class="number">Cost</th>
+				<th class="number">Frozen QTY</th>
+				<th class="number">Inputed QTY</th>
+				<th class="number">Frozen Value</th>
+				<th class="number">Inputed Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @items.each do |item| %>
+			<tr>
+				<td><a href="#" class="detail-link"><%= item.try(:code) %></a></td>
+				<td><%= item.try(:description).to_s[0, 30] %></td>
+				<td class='number'><%=number_to_currency item.try(:cost) %></td>
+				<td class='number'><%= (item.inventories.remote_s.sum(:quantity) || 0) %></td>
+				<td class='number'><%= (item.inventories.remote_s.sum(:result_qty) || 0) %></td>
+				<td class='number'><%=number_to_currency (item.inventories.remote_s.sum(:frozen_value) || 0) %></td>
+				<td class='number'><%=number_to_currency (item.inventories.remote_s.sum(:result_value) || 0) %></td>
+			</tr>
+
+			<tr class="detail">
+				<td colspan="7">
+					<table>
+						<thead>
+							<tr>
+								<th>Warehouse</th>
+								<th class='number'>Frozen QTY</th>
+								<th class='number'>Inputed QTY</th>
+								<th class='number'>Frozen Value</th>
+								<th class='number'>Inputed Value</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<% item.inventories.remote_s.each do |inven| %>
+								<tr>
+									<td><%= inven.location.code %></td>
+									<td class='number'><%= inven.quantity || 0 %></td>
+									<td class='number'><%= inven.result_qty || 0 %></td>
+									<td class='number'><%=number_to_currency inven.frozen_value || 0 %></td>
+									<td class='number'><%=number_to_currency inven.result_value %></td>
+								</tr>
+							<% end %>
+
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<% end %>
+
+		</tbody>
+	</table>
+
+	<div class="tablefooter clearfix">
+		<%= will_paginate @items %>
+	</div>
+</article>

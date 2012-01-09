@@ -67,6 +67,14 @@ module Spreadsheet
       data.string
     end
 
+    def advanced_generate_xls title, list, titles, symbols, options={}
+      advanced_create_and_fill_sheet title, list, titles, symbols, options
+
+      data = StringIO.new
+      self.write(data)
+      data.string
+    end
+
     def generate_xls_file title, list, titles, symbols, options={}
       create_and_fill_sheet title, list, titles, symbols, options
 
@@ -77,29 +85,45 @@ module Spreadsheet
 
     private
     def create_and_fill_sheet title, list, titles, symbols, options={}
-      title_format = Spreadsheet::Format.new :pattern_fg_color => :builtin_black, :color => :yellow, :pattern => 1, :weight => :bold
-
+      sheet1 = self.create_worksheet :name => title
+      fill_sheet(sheet1, title, list, titles, symbols, 0, options)
+    end
+    
+    def advanced_create_and_fill_sheet title, lists = [], titles = [], symbols = [], options={}
       sheet1 = self.create_worksheet :name => title
 
-      sheet1.row(0).default_format = title_format
-      sheet1.row(0).concat [title]
+      start_line = 0
+      lists.each_with_index do |list, index|
+        start_line = fill_sheet(sheet1, title, list, titles[index], symbols[index], start_line, index == 0 ? options : {}) + 2
+      end
+    end
+
+    def fill_sheet sheet1, title, list, titles, symbols, start_line = 0,  options = {}
+      title_format = Spreadsheet::Format.new :pattern_fg_color => :builtin_black, :color => :yellow, :pattern => 1, :weight => :bold
+      
+      start_line ||= 0
+      
+      sheet1.row(start_line).default_format = title_format
+      sheet1.row(start_line).concat [title]
       if options[:summary]
-        sheet1.row(1).default_format = title_format
-        sheet1.row(1).concat ["Summary"]
-        
+        sheet1.row(start_line + 1).default_format = title_format
+        sheet1.row(start_line + 1).concat ["Summary"]
+
         options[:summary].each_with_index do |sum, index|
-          sheet1[index + 2, 0] = sum[0]
-          sheet1[index + 2, 1] = sum[1]
+          sheet1[start_line + index + 2, 0] = sum[0]
+          sheet1[start_line + index + 2, 1] = sum[1]
         end
       end
 
-      start_row = options[:summary].nil? ? 1 : options[:summary].size + 3
+      start_row = options[:summary].nil? ? start_line + 1 : start_line + options[:summary].size + 3
       sheet1.row(start_row).default_format = title_format
       sheet1.row(start_row).concat titles
 
       list.each_with_index do |obj, index|
         fill_sheet_row(sheet1, start_row + index + 1, obj, symbols)
       end
+      
+      start_row + (list.try(:size) || 0)
     end
 
     def fill_sheet_row sheet, row_index, obj, symbols=[]

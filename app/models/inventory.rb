@@ -28,7 +28,7 @@ class Inventory < ActiveRecord::Base
 
   validates_presence_of :location
 
-  after_save :log_qty_and_flag, :refresh_item_res_qty
+  after_save :log_qty_and_flag, :refresh_item_res_qty, :refresh_location_qtys
   before_save :adj_check, :adj_qtys
 
   def item_full_name
@@ -144,14 +144,18 @@ class Inventory < ActiveRecord::Base
     self.reload
   end
 
+  def refresh_location_qtys
+    return if self.location.nil?
+
+    if self.location.location_info.nil?
+      self.location.create_location_info
+      self.location.reload
+    end
+
+    self.location.location_info.save
+  end
+
 end
-
-
-
-
-
-
-
 
 
 

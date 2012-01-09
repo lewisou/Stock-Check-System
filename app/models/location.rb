@@ -7,6 +7,7 @@ class Location < ActiveRecord::Base
   
   has_many :assigns
   has_many :counters, :through => :assigns
+  has_one :location_info
 
   belongs_to :check
   has_many :inventories
@@ -38,6 +39,14 @@ class Location < ActiveRecord::Base
   def launch_inv_save
     self.inventories.each {|inv| inv.try(:save)}
     self.reload
+  end
+
+  after_create :crt_location_info
+  def crt_location_info
+    if self.location_info.nil?
+      self.create_location_info
+      self.reload
+    end
   end
 
   def description

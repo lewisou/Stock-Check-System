@@ -406,6 +406,7 @@ end
 
 
 
+
 # == Schema Information
 #
 # Table name: checks
@@ -438,5 +439,8 @@ end
 #  import_items_xls_id       :integer
 #  import_locations_xls_id   :integer
 #  import_inventories_xls_id :integer
+#  instruction2_id           :integer
+#  instruction3_id           :integer
+#  instruction4_id           :integer
 #
 

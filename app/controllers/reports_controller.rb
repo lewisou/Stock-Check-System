@@ -125,14 +125,111 @@ class ReportsController < Adm::BaseController
         book = Spreadsheet::Workbook.new
         data = book.generate_xls("Count Result VS Frozen", @inventories, %w{Location Item Description FrozenCost Cost FrozenQTY CountedOneQty CountedTwoQty ResultQty FrozenValue CountedOneValueDiffer CountedTwoValueDiffer ResultValueDiffer},
         [[:location, :code],
-        [:item, :code], 
+        [:item, :code],
         [:item, :description],
-        [:item, :al_cost], [:item, :cost], 
+        [:item, :al_cost], [:item, :cost],
         :quantity, :counted_1_qty, :counted_2_qty, :result_qty, :frozen_value, :counted_1_value_differ, :counted_2_value_differ, :result_value_differ
         ])
         send_data data, :filename => "Count Result VS Frozen.xls", :disposition => 'attachment'
       }
     end
   end
-  
+
+  def remote_warehouse_by_item
+    @search = @check.items.remoted_s.search(params[:search])
+    @inventories = Inventory.in_check(@check.id).remote_s.order("item_id ASC, location_id ASC")
+
+    @frozen_qty = @inventories.sum(:quantity) || 0
+    @frozen_value = @inventories.sum(:frozen_value) || 0
+    @inputed_qty = @inventories.sum(:result_qty) || 0
+    @inputed_value = @inventories.sum(:result_value) || 0
+    
+    respond_to do |format|
+      format.html {
+        @items = @search.paginate(:page => params[:page])
+      }
+      
+      format.xls {
+        @items = @search.all
+        
+        book = Spreadsheet::Workbook.new
+        data = book.advanced_generate_xls("Remote Tickets by Item", [@items, @inventories],
+        [%w{Item# Description Cost FrozenQTY InputedQty FrozenValue InputedValue},
+        %w{Item# Warehouse FrozenQTY InputedQty FrozenValue InputedValue}],
+        [
+        [:code,
+        :description,
+        :cost,
+        [:item_info, :sum_remote_frozen_qty],
+        [:item_info, :sum_remote_result_qty],
+        [:item_info, :sum_remote_frozen_value],
+        [:item_info, :sum_remote_result_value]],
+        [[:item, :code],
+        [:location, :code],
+        :quantity,
+        :result_qty,
+        :frozen_value,
+        :result_value,
+        ]
+        ],
+        :summary => [
+        ["Total Frozen Qty", @frozen_qty],
+        ["Total Inputed Qty", @inputed_qty],
+        ["Total Frozen Value", @frozen_value],
+        ["Total Inputed Value", @inputed_value]
+        ])
+
+        send_data data, :filename => "Remote Tickets by Item.xls", :disposition => 'attachment'
+      }
+    end
+    
+  end
+
+  def remote_warehouse_by_warehouse
+    @search = @check.locations.not_tagable.search(params[:search])
+    @inventories = Inventory.in_check(@check.id).remote_s.order("location_id ASC, item_id ASC")
+
+    @frozen_qty = @inventories.sum(:quantity) || 0
+    @frozen_value = @inventories.sum(:frozen_value) || 0
+
+    @inputed_qty = @inventories.sum(:result_qty) || 0
+    @inputed_value = @inventories.sum(:result_value) || 0
+
+    respond_to do |format|
+      format.html {
+        @locations = @search.paginate(:page => params[:page])
+      }
+
+      format.xls {
+        @locations = @search.all
+
+        book = Spreadsheet::Workbook.new
+        data = book.advanced_generate_xls("Remote Tickets by Warehouse", [@locations, @inventories],
+        [%w{Warehouse FrozenQTY InputedQty FrozenValue InputedValue}, %w{Warehouse Item FrozenQty InputedQty FrozenValue InputedValue}],
+        [
+        [:code,
+        [:location_info, :sum_frozen_qty],
+        [:location_info, :sum_result_qty],
+        [:location_info, :sum_frozen_value],
+        [:location_info, :sum_result_value]
+        ],
+        [[:location, :code],
+          [:item, :code],
+          :quantity,
+          :inputed_qty,
+          :frozen_value,
+          :result_value]
+        ],
+        :summary => [
+        ["Total Frozen Qty", @frozen_qty],
+        ["Total Inputed Qty", @inputed_qty],
+        ["Total Frozen Value", @frozen_value],
+        ["Total Inputed Value", @inputed_value]
+        ])
+
+        send_data data, :filename => "Remote Tickets by Warehouse.xls", :disposition => 'attachment'
+      }
+    end
+  end
+
 end

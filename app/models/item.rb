@@ -3,7 +3,7 @@ class Item < ActiveRecord::Base
   scope :need_adjustment, where(:from_al.eq % false | :data_changed.eq % true)
   
   # duplicated with inventory.remote_s
-  scope :remoted_s, joins(:inventories => :location).where(:locations => {:is_remote => true})
+  scope :remoted_s, includes(:inventories => :location).where(:locations => {:is_remote => true})
 
   belongs_to :item_group
   has_many :inventories

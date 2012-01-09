@@ -1,0 +1,83 @@
+<article>
+	<h1>Remote tickets by warehouse</h1>
+	<h2>Summary</h2>
+	<table class="infos">
+		<tr>
+			<th>Frozen Qty</th>
+			<td class="number"><%= @frozen_qty %></td>
+
+			<th>Frozen Value</th>
+			<td class="number"><%=number_to_currency @frozen_value %></td>
+
+		</tr>
+
+		<tr>
+			<th>Inputed Qty</th>
+			<td class="number"><%= @inputed_qty %></td>
+
+			<th>Inputed Value</th>
+			<td class="number"><%=number_to_currency @inputed_value %></td>
+		</tr>
+	</table>
+</article>
+
+<article>
+	<%= link_to 'Export Result to Excel', url_for(request.params.merge(:format => :xls)), :class => 'button' %>
+	<table id="table1" class="gtable detailtable">
+		<thead>
+			<tr>
+				<th><%= sort_link @search, :code, 'Warehouse#' %></th>
+				<th class="number">Frozen QTY</th>
+				<th class="number">Inputed QTY</th>
+				<th class="number">Frozen Value</th>
+				<th class="number">Inputed Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @locations.each do |location| %>
+			<tr>
+				<td><a href="#" class="detail-link"><%= location.try(:code) %></a></td>
+				<td class='number'><%= location.try(:location_info).try(:sum_frozen_qty) || 0 %></td>
+				<td class='number'><%= location.try(:location_info).try(:sum_result_qty) || 0 %></td>
+				<td class='number'><%=number_to_currency (location.try(:location_info).try(:sum_frozen_value) || 0) %></td>
+				<td class='number'><%=number_to_currency (location.try(:location_info).try(:sum_result_value) || 0) %></td>
+			</tr>
+
+			<tr class="detail">
+				<td colspan="7">
+					<table>
+						<thead>
+							<tr>
+								<th>Item#</th>
+								<th class='number'>Frozen QTY</th>
+								<th class='number'>Inputed QTY</th>
+								<th class='number'>Frozen Value</th>
+								<th class='number'>Inputed Value</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<% location.inventories.remote_s.each do |inven| %>
+								<tr>
+									<td><%= inven.item.code %></td>
+									<td class='number'><%= inven.quantity || 0 %></td>
+									<td class='number'><%= inven.result_qty || 0 %></td>
+									<td class='number'><%=number_to_currency inven.frozen_value || 0 %></td>
+									<td class='number'><%=number_to_currency inven.result_value %></td>
+								</tr>
+							<% end %>
+
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<% end %>
+
+		</tbody>
+	</table>
+
+	<div class="tablefooter clearfix">
+		<%= will_paginate @locations %>
+	</div>
+</article>

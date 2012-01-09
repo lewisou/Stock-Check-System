@@ -150,7 +150,7 @@ class ReportsController < Adm::BaseController
       }
       
       format.xls {
-        @items = @search.all
+        @items = @check.items.remoted_s
         
         book = Spreadsheet::Workbook.new
         data = book.advanced_generate_xls("Remote Tickets by Item", [@items, @inventories],

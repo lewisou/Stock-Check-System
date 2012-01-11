@@ -2,18 +2,19 @@ class Inventory < ActiveRecord::Base
   scope :in_check, lambda {|check_id| includes(:location => :check).where(:checks => {:id => check_id}) }
   scope :report_valid, where({:his_max.gt => 0, :from_al => true} | {:from_al => false})
 
-  scope :need_adjustment, includes(:item).includes(:location)\
+  scope :need_adjustment, includes(:item => :item_group).includes(:location)\
     .where(:ao_adj.not_eq => 0)\
     .where(:items => {:is_active => true, :cost.gt => 0, :from_al => true, :is_lotted => false})\
     .where(:locations => {:from_al => true, :is_active => true})\
+    .where(:item_groups => {:item_type_short.not_eq => 'NP'})\
     .report_valid.order([{:locations => :code.asc}, {:items => :code.asc}])
     # .where(:item_infos => (:remaining.eq % nil | :remaining.gte % 0))\
 
 
-  scope :need_manually_adj, includes(:item).includes(:location)\
+  scope :need_manually_adj, includes(:item => :item_group).includes(:location)\
     .where(:ao_adj.not_eq => 0)\
     .where({:items => (:is_active.eq % false | :cost.lte % 0 | :cost.eq % nil | :from_al.eq % false | :is_lotted.eq % true)}\
-    | {:locations => ({:from_al => false} | {:is_active => false})})\
+    | {:locations => ({:from_al => false} | {:is_active => false})} | {:item_groups => {:item_type_short => 'NP'}})\
     .report_valid.order([{:locations => :code.asc}, {:items => :code.asc}])
     # | {:item_infos => {:remaining.lt => 0}})\
 

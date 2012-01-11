@@ -322,8 +322,9 @@ class InventoryTest < ActiveSupport::TestCase
   end
   
   test "need_manually_adj" do
-    # is_active, max_quantity, from_al, is_lotted, cost
-    item = Item.create(:is_active => true, :max_quantity => nil, :from_al => true, :is_lotted => false, :cost => 2)
+    # is_active, max_quantity, from_al, is_lotted, cost, item_group
+    item_group = ItemGroup.create(:item_type_short => 'EA')
+    item = Item.create(:is_active => true, :max_quantity => nil, :from_al => true, :is_lotted => false, :cost => 2, :item_group => item_group)
 
     # is_active, from_al
     location = Location.create(:is_active => true, :from_al => true)
@@ -390,11 +391,18 @@ class InventoryTest < ActiveSupport::TestCase
     assert Inventory.need_manually_adj.include?(inv)
     item.update_attributes(:cost => 1)
     assert !Inventory.need_manually_adj.include?(inv)
+
+    item_group.update_attributes(:item_type_short => "NP")
+    assert Inventory.need_manually_adj.include?(inv)
+    item_group.update_attributes(:item_type_short => "EA")
+    assert !Inventory.need_manually_adj.include?(inv)
+    
   end
 
   test "need_adjustment" do
-    # is_active, max_quantity, from_al, is_lotted, cost
-    item = Item.create(:is_active => true, :max_quantity => nil, :from_al => true, :is_lotted => false, :cost => 2)
+    # is_active, max_quantity, from_al, is_lotted, cost, item_group
+    item_group = ItemGroup.create(:item_type_short => 'EA')
+    item = Item.create(:is_active => true, :max_quantity => nil, :from_al => true, :is_lotted => false, :cost => 2, :item_group => item_group)
 
     # is_active, from_al
     location = Location.create(:is_active => true, :from_al => true)
@@ -465,6 +473,10 @@ class InventoryTest < ActiveSupport::TestCase
     item.update_attributes(:cost => 1)
     assert Inventory.need_adjustment.include?(inv)
 
+    item_group.update_attributes(:item_type_short => "NP")
+    assert !Inventory.need_adjustment.include?(inv)
+    item_group.update_attributes(:item_type_short => "EA")
+    assert Inventory.need_adjustment.include?(inv)
   end
 
   test "his_max" do

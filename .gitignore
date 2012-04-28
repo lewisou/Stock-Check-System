@@ -7,3 +7,13 @@ tmp/
 .DS_Store
 public/images/barcodes/*.*
 *.rbc
+*.sassc
+.sass-cache
+capybara-*.html
+.rspec
+/vendor/bundle
+/coverage/
+/spec/tmp/*
+**.orig
+rerun.txt
+pickle-email-*.html
